@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../styles/styles.css" type="text/css" />
+
+</head>
+
+<body>
+    <div class="game">
+
+        <div class="game-characters">
+
+
+            <div id="player">
+                <p>Player</p>
+                <app-unit team="player"> </app-unit>
+            </div>
+
+            <div id="enemy">
+                <p>Enemy</p>
+                <app-unit team="enemy"> </app-unit>
+            </div>
+
+        </div>
+
+        <br>
+        <hr> <br>
+
+        <div id="game-moves" class="game-moves">
+            <button>Attack</button>
+            <button>Spell 1</button>
+        </div>
+    </div>
+
+
+</body>
+
+<script src="script/game.js" type="module"></script>
+
+
+</html>
