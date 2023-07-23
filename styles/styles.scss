@@ -1,0 +1,90 @@
+@import "./variables.scss";
+@import "./utilityStyle.scss";
+
+html,
+body {
+  margin: 0;
+}
+
+@font-face {
+  font-family: "Tangerine";
+  src: url("/assets/fonts/Tangerine/Tangerine-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Tangerine";
+  src: url("/assets/fonts/Tangerine/Tangerine-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: bold;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cormorant";
+  src: url("/assets/fonts/Cormorant/static/Cormorant-Regular.ttf")
+    format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cormorant";
+  src: url("/assets/fonts/Cormorant/static/Cormorant-bold.ttf")
+    format("truetype");
+  font-style: normal;
+  font-weight: bold;
+  font-display: swap;
+}
+
+body {
+  font-family: "Cormorant", sans-serif;
+  font-size: 16px;
+  background-color: var(--background);
+  color: var(--light);
+}
+
+canvas {
+  position: fixed;
+  /* pointerEvents = 'none'; */
+  /* width: 100%;*/
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.game-characters {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-content: center;
+  align-items: center;
+  gap: 96px;
+}
+
+.game-moves {
+  margin: 16px auto;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.game-moves > button {
+  width: 200px;
+}
+
+.game-moves > button:focus {
+  /* border: solid 1px black; */
+  background-color: black;
+}

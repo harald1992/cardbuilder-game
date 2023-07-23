@@ -1,0 +1,1 @@
+"use strict";self.webpackHotUpdatecardbuilder_game(179,{944:(c,a,d)=>{var e=d(783)(c.id,{locals:!1});c.hot.dispose(e),c.hot.accept(void 0,e)}},(function(c){c.h=()=>"2dcc38c654386a3d55b1"}));
