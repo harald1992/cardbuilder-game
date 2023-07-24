@@ -1,97 +1,72 @@
-// class Layer {
-//   constructor(game, imgWidth, imgHeight, speedModifier = 0, image) {
-//     this.game = game;
-//     this.width = imgWidth;
-//     this.height = imgHeight;
-//     this.speedModifier = speedModifier;
-//     this.image = image;
-//     this.x = 0;
-//     this.y = 0;
-//   }
+import { Game } from "../game";
 
-//   update() {
-//     if (this.x < -this.width) {
-//       // reset background
-//       this.x = 0;
-//     } else {
-//       this.x -= this.game.speed * this.speedModifier;
-//     }
-//   }
+class Layer {
+  game: Game;
+  width: number = 0;
+  height: number = 0;
+  speedModifier = 0;
+  image: any;
+  x = 0;
+  y = 0;
 
-//   draw(ctx) {
-//     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-//     ctx.drawImage(
-//       this.image,
-//       this.x + this.width,
-//       this.y,
-//       this.width,
-//       this.height
-//     );
-//   }
-// }
+  constructor(
+    game: Game,
+    imgWidth: number,
+    imgHeight: number,
+    speedModifier = 0,
+    image: any
+  ) {
+    this.game = game;
+    this.width = imgWidth;
+    this.height = imgHeight;
+    this.speedModifier = speedModifier;
+    this.image = image;
+  }
 
-// export class Background {
-//   constructor(game) {
-//     this.game = game;
-//     this.width = 1667;
-//     this.height = 500;
+  update() {
+    // if (this.x < -this.width) {
+    //   // reset background
+    //   this.x = 0;
+    // } else {
+    //   this.x -= this.game.speed * this.speedModifier;
+    // }
+  }
 
-//     this.layer1image = document.getElementById("background1");
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+  }
+}
 
-//     this.layer1 = new Layer(
-//       this.game,
-//       this.width,
-//       this.height,
-//       0,
-//       this.layer1image
-//     ); //sky
-//     this.layer2 = new Layer(
-//       this.game,
-//       this.width,
-//       this.height,
-//       0.2,
-//       this.layer2image
-//     );
-//     this.layer3 = new Layer(
-//       this.game,
-//       this.width,
-//       this.height,
-//       0.4,
-//       this.layer3image
-//     );
-//     this.layer4 = new Layer(
-//       this.game,
-//       this.width,
-//       this.height,
-//       0.8,
-//       this.layer4image
-//     );
-//     this.layer5 = new Layer(
-//       this.game,
-//       this.width,
-//       this.height,
-//       1,
-//       this.layer5image
-//     );
+export class Background {
+  game: Game;
+  layer1image: HTMLImageElement;
+  layers: Layer[];
+  width = 0;
+  height = 0;
 
-//     this.backgroundLayers = [
-//       this.layer1,
-//       this.layer2,
-//       this.layer3,
-//       this.layer4,
-//       this.layer5,
-//     ];
-//   }
+  constructor(game: Game) {
+    this.game = game;
+    this.width = game.width;
+    this.height = game.height;
 
-//   update() {
-//     this.backgroundLayers.forEach((layer) => {
-//       layer.update();
-//     });
-//   }
+    this.layer1image = document.getElementById(
+      "background1"
+    ) as HTMLImageElement;
 
-//   draw(ctx) {
-//     this.backgroundLayers.forEach((layer) => {
-//       layer.draw(ctx);
-//     });
-//   }
-// }
+    this.layers = [
+      new Layer(this.game, this.width, this.height, 0, this.layer1image),
+    ];
+  }
+
+  update() {
+    this.layers.forEach((layer) => {
+      layer.update();
+    });
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    this.layers.forEach((layer) => {
+      layer.draw(ctx);
+    });
+  }
+}

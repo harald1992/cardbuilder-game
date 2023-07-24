@@ -40,51 +40,154 @@ body {
   font-display: swap;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 8px 0;
+  font-family: "Garamond ";
+}
 body {
-  font-family: "Cormorant", sans-serif;
+  font-family: "Cormorant", Garamond;
   font-size: 16px;
-  background-color: var(--background);
+  //   background-color: var(--background);
   color: var(--light);
+}
+
+.game-container {
+  position: relative; // to allow z-index to go over canvas
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  z-index: 2;
+
+  .header {
+    visibility: hidden;
+    background-color: var(--brown);
+    width: 100%;
+    text-align: center;
+  }
+
+  .card-container {
+    // display: flex;
+    flex-direction: row;
+    display: none;
+
+    .card {
+      width: 100px;
+      height: 200px;
+      max-height: 200px;
+      overflow: hidden;
+      background-color: var(--light);
+      border: 1px solid var(--darkgrey);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--darkgrey);
+      cursor: pointer;
+
+      &:hover {
+        transform: translate(3px, -3px);
+      }
+
+      &__title {
+        text-align: center;
+        font-size: 1.1rem;
+        border-bottom: 1px solid var(--darkgrey);
+        padding: 8px;
+      }
+
+      img {
+        width: 100px;
+        height: 100px;
+        display: block;
+      }
+
+      &__body {
+        padding: 8px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+img {
+  display: none;
+}
+
+// .ui-container {
+//   z-index: 10;
+//   position: absolute;
+//   left: 50%;
+//   top: 50%;
+//   transform: translate(-50%, -50%);
+
+.main-menu {
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  position: absolute;
+  left: 50%;
+  //   top: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  .header {
+    font-size: 1.5rem;
+    padding: 16px 32px;
+  }
+  button {
+    color: inherit;
+    padding: 16px 32px;
+    font-size: 1.25rem;
+    background-color: var(--brown);
+
+    &:hover {
+      color: var(--white);
+      &:disabled {
+        color: inherit;
+      }
+    }
+
+    &:disabled {
+      background-color: var(--darkgrey);
+    }
+  }
+  //   }
 }
 
 canvas {
   position: fixed;
   /* pointerEvents = 'none'; */
-  /* width: 100%;*/
-  height: 100%;
   top: 0;
   left: 0;
+  z-index: -1;
 }
 
-.game {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
-}
+// .game-characters {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-around;
+//   align-content: center;
+//   align-items: center;
+//   gap: 96px;
+// }
 
-.game-characters {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-content: center;
-  align-items: center;
-  gap: 96px;
-}
+// .game-moves {
+//   margin: 16px auto;
+//   max-width: 50%;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+// }
 
-.game-moves {
-  margin: 16px auto;
-  max-width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+// .game-moves > button {
+//   width: 200px;
+// }
 
-.game-moves > button {
-  width: 200px;
-}
-
-.game-moves > button:focus {
-  /* border: solid 1px black; */
-  background-color: black;
-}
+// .game-moves > button:focus {
+//   /* border: solid 1px black; */
+//   background-color: black;
+// }

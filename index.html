@@ -6,17 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 
-    <link rel="stylesheet" href="../styles/main.css" type="text/css" />
-
-    <!-- <link rel="stylesheet" href="../styles/styles.css" type="text/css" /> -->
-    <!-- <link rel="stylesheet" href="../styles/utilityStyle.css" type="text/css" /> -->
+    <link rel="stylesheet" href="main.css" type="text/css" />
   </head>
 
   <body>
-    <h1>LSDFHKJSDGL:SDGHSDG:</h1>
-    <canvas id="canvas-1"></canvas>
-    <div class="game">
-      <div class="game-characters">
+    <div class="game-container">
+      <div class="header"></div>
+
+      <div class="card-container" id="card-container">
+        <app-card></app-card>
+        <app-card></app-card>
+      </div>
+      <!-- <div class="game-characters">
         <div id="enemy-container"></div>
         <div id="player-container"></div>
       </div>
@@ -24,11 +25,21 @@
       <div id="game-moves" class="game-moves">
         <button>Attack</button>
         <button>Spell 1</button>
-      </div>
+      </div> -->
+    </div>
+
+    <!-- // position absolute/fixed -->
+    <canvas id="canvas-1"></canvas>
+
+    <div class="main-menu">
+      <h1 class="header">CardBuilder Game</h1>
+      <button id="continue" disabled>Continue</button>
+      <button id="new">New Game</button>
+      <button id="options">Options</button>
+      <button id="credits">Credits</button>
 
       <button id="store">Get Store Data</button>
     </div>
-
     <!-- // preload images here -->
     <img src="assets/backgrounds/background1.jpg" id="background1" />
   </body>

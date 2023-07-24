@@ -3,7 +3,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 // var ExtractTextPlugin = require("extract-text-webpack-plugin");
 // var ExtractTextPluginConfig = new ExtractTextPlugin("index_bundle.css");
 
-const miniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -20,7 +21,7 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: miniCssExtractPlugin.loader,
+            loader: MiniCssExtractPlugin.loader,
             options: {
               // reloadAll: true,
             },
@@ -38,8 +39,11 @@ module.exports = {
       title: "My generated index file with template",
       template: "index.html",
     }),
-    new miniCssExtractPlugin({
+    new MiniCssExtractPlugin({
       filename: "[name].css",
+    }),
+    new CopyPlugin({
+      patterns: [{ from: "assets", to: "assets" }],
     }),
   ],
 
