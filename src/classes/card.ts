@@ -48,10 +48,10 @@ export class Card extends HTMLElement {
 
   render() {
     this.innerHTML = `
-    <div class="card">
+    <div class="card" title="Play this card">
         <div class="card__title">${this.cardTitle}
           <span class="card__title--cost">${this.cost}</span>
-          <button class="card__title--discard">X</button>
+          <button title="discard"  class="card__title--discard">X</button>
         </div>
 
          <img src="${this.imgSrc}" />
@@ -86,6 +86,7 @@ export class Card extends HTMLElement {
           caster.currentMp -= this.cost;
           this.effect(caster, target);
           caster.discardCard(this);
+          this.game.turnHandler.switchTurns();
         } else {
           alert("you don't have enough mana");
         }
@@ -102,6 +103,7 @@ export class Card extends HTMLElement {
         // caster.cards = caster.cards.filter((card) => card !== this);
         // caster.renderCards();
         caster.discardCard(this);
+        this.game.turnHandler.switchTurns();
       });
     }
   }
