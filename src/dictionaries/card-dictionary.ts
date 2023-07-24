@@ -1,4 +1,6 @@
 import { Card } from "../classes/card";
+import { Enemy } from "../classes/enemy";
+import { Player } from "../classes/player";
 
 type CardDictionary = { [key: number]: Card };
 
@@ -7,7 +9,10 @@ function createCardElement(
   title: string = "Title",
   body: string = "Body",
   imgSrc: string = "assets/units/crusader.webp",
-  effect: (caster: any, target: any) => void = (caster: any, target: any) => {
+  effect: (caster: Player | Enemy, target: Player | Enemy) => void = (
+    caster: Player | Enemy,
+    target: Player | Enemy
+  ) => {
     console.log("No effect yet for this card");
   }
 ): Card {
@@ -28,10 +33,10 @@ export const $cardDictionary: CardDictionary = {
     "Lighning spark",
     "Deal 1 damage",
     "assets/cards/lightning-spark.svg",
-    (caster: any, target: any) => {
+    (caster: Player | Enemy, target: Player | Enemy) => {
       console.log(caster, target);
 
-      target.hp -= 1;
+      target.currentHp -= 1;
     }
   ),
   1: createCardElement(
@@ -39,8 +44,8 @@ export const $cardDictionary: CardDictionary = {
     "Lighning bolt",
     "Deal 2 damage",
     "assets/cards/lightning-bolt.svg",
-    (caster: any, target: any) => {
-      target.hp -= 2;
+    (caster: Player | Enemy, target: Player | Enemy) => {
+      target.currentHp -= 2;
     }
   ),
   2: createCardElement(
@@ -48,8 +53,8 @@ export const $cardDictionary: CardDictionary = {
     "Healing Word",
     "Heal 1 hp",
     "assets/cards/heal.svg",
-    (caster: any, target: any) => {
-      caster.hp += 1;
+    (caster: Player | Enemy, target: Player | Enemy) => {
+      caster.currentHp += 1;
     }
   ),
 };

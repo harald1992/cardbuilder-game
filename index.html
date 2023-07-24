@@ -11,8 +11,19 @@
 
   <body>
     <div class="game-container">
+      <canvas id="canvas-1"></canvas>
+
       <div class="header"></div>
 
+      <div class="main-menu">
+        <h1 class="header">CardBuilder Game</h1>
+        <button id="continue" disabled>Continue</button>
+        <button id="new">New Game</button>
+        <button id="options">Options</button>
+        <button id="credits">Credits</button>
+
+        <button id="store">Get Store Data</button>
+      </div>
       <div class="card-container" id="card-container">
         <app-card></app-card>
         <app-card></app-card>
@@ -28,20 +39,9 @@
       </div> -->
     </div>
 
-    <!-- // position absolute/fixed -->
-    <canvas id="canvas-1"></canvas>
-
-    <div class="main-menu">
-      <h1 class="header">CardBuilder Game</h1>
-      <button id="continue" disabled>Continue</button>
-      <button id="new">New Game</button>
-      <button id="options">Options</button>
-      <button id="credits">Credits</button>
-
-      <button id="store">Get Store Data</button>
-    </div>
     <!-- // preload images here -->
-    <img src="assets/backgrounds/background1.jpg" id="background1" />
+    <img src="assets/backgrounds/main-menu.jpg" id="main-menu" />
+    <img src="assets/backgrounds/background-1.jpg" id="background1" />
   </body>
 
   <script src="bundle.js" type="module"></script>

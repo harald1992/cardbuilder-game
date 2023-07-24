@@ -39,7 +39,8 @@ export class Card extends HTMLElement {
   render() {
     this.innerHTML = `
     <div class="card">
-        <div class="card__title">${this.cardTitle}</div>
+        <div class="card__title">${this.cardTitle}
+          <span class="circle">${this.cost}</span></div>
          <img src="${this.imgSrc}" />
          <div class="card__body">${this.cardBody}
         
@@ -58,15 +59,13 @@ export class Card extends HTMLElement {
   addClickListener() {
     this.addEventListener("click", (event: MouseEvent) => {
       const { caster, target } = $store.getCasterAndTarget();
-      console.log(caster.mp);
-      console.log(this.cost);
 
-      if (caster.mp >= this.cost) {
-        caster.mp -= this.cost;
+      if (caster.currentMp >= this.cost) {
+        caster.currentMp -= this.cost;
         this.effect(caster, target);
         console.log("cast effect");
       } else {
-        console.log("you don't have enough mana");
+        alert("you don't have enough mana");
       }
     });
   }

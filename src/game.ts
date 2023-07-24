@@ -1,5 +1,6 @@
 // import { Unit } from "./classes/unit.js";
 
+import { Main } from ".";
 import { Background } from "./classes/background";
 import { Enemy } from "./classes/enemy";
 import { MainMenu } from "./classes/main-menu";
@@ -8,27 +9,22 @@ import { Player } from "./classes/player";
 // Unit;
 
 export class Game {
-  width: number = 0;
-  height = 0;
   gameOver = false;
-  pause = true;
   background: Background;
   mainMenu: MainMenu;
   player: Player;
   enemy: Enemy;
-
+  main: Main;
   isPlayerTurn = true;
 
   index: any;
 
-  constructor(index: any, width: number, height: number) {
-    this.width = width;
-    this.height = height;
-    this.background = new Background(this);
+  constructor(main: Main) {
+    this.main = main;
+    this.background = new Background(this.main, "background1", 200);
     this.mainMenu = new MainMenu(this);
     this.player = new Player(this);
     this.enemy = new Enemy(this);
-    this.index = index;
   }
 
   update(deltaTime: number) {}
@@ -36,9 +32,9 @@ export class Game {
   draw(ctx: CanvasRenderingContext2D) {
     let itemsToRender: (Background | Player | Enemy)[] = [this.background];
 
-    if (!this.pause) {
-      itemsToRender = [...itemsToRender, this.player, this.enemy];
-    }
+    // if (!this.pause) {
+    itemsToRender = [...itemsToRender, this.player, this.enemy];
+    // }
 
     itemsToRender.forEach((item: any) => {
       item.draw(ctx);
@@ -54,7 +50,6 @@ export class Game {
     this.mainMenu = new MainMenu(this);
     this.player = new Player(this);
     this.enemy = new Enemy(this);
-    this.pause = false;
     this.player.renderCards();
   }
 

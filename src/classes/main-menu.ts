@@ -1,29 +1,32 @@
+import { GameState } from "..";
 import { Game } from "../game";
+import { $store } from "./store";
 
 export class MainMenu {
   game: Game;
-  mainMenu: HTMLElement;
+  mainMenuElement: HTMLElement;
 
   constructor(game: Game) {
     this.game = game;
-    this.mainMenu = document.querySelector(".main-menu") as HTMLElement;
+    this.mainMenuElement = document.querySelector(".main-menu") as HTMLElement;
   }
 
   init() {
-    this.showMenu();
+    console.log("init");
 
     document.addEventListener("keydown", (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        if (this.mainMenu.style.display === "none") {
-          this.showMenu();
+        if (this.mainMenuElement.style.display === "none") {
+          // this.showMenu();
+          this.game.main.changeGameState(GameState.MAINMENU);
         } else {
-          this.hideMenu();
+          this.game.main.changeGameState(GameState.INGAME);
         }
       }
     });
 
     const buttons: NodeListOf<HTMLButtonElement> =
-      this.mainMenu.querySelectorAll("button");
+      this.mainMenuElement.querySelectorAll("button");
 
     buttons.forEach((button: HTMLButtonElement) => {
       button.addEventListener("click", (event: MouseEvent) => {
@@ -31,22 +34,15 @@ export class MainMenu {
 
         switch (id) {
           case "new":
-            this.hideMenu();
+            this.game.main.changeGameState(GameState.INGAME);
             this.game.newGame();
             break;
+          case "store":
+            console.log($store.getGame());
           default:
             console.log(id);
         }
       });
     });
-  }
-
-  showMenu() {
-    this.mainMenu.style.display = "flex";
-    this.game.pause = true;
-  }
-
-  hideMenu() {
-    this.mainMenu.style.display = "none";
   }
 }
