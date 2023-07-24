@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 // var ExtractTextPluginConfig = new ExtractTextPlugin("index_bundle.css");
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -31,6 +31,8 @@ module.exports = {
           "sass-loader",
         ],
       },
+
+      // { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: "assets/resource" },
     ],
   },
 
@@ -42,7 +44,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "[name].css",
     }),
-    new CopyPlugin({
+    new CopyWebpackPlugin({
       patterns: [{ from: "assets", to: "assets" }],
     }),
   ],
@@ -64,6 +66,8 @@ module.exports = {
     publicPath: "public",
     filename: "bundle.js",
     path: path.resolve(__dirname, "public"),
+    clean: true,
+    // assetModuleFileName: "[name][ext]",
   },
 
   performance: {

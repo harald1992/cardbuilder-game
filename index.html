@@ -13,7 +13,7 @@
     <div class="game-container">
       <canvas id="canvas-1"></canvas>
 
-      <div class="header"></div>
+      <div class="card-container" id="enemy-card-container"></div>
 
       <div class="main-menu">
         <h1 class="header">CardBuilder Game</h1>
@@ -24,24 +24,13 @@
 
         <button id="store">Get Store Data</button>
       </div>
-      <div class="card-container" id="card-container">
-        <app-card></app-card>
-        <app-card></app-card>
-      </div>
-      <!-- <div class="game-characters">
-        <div id="enemy-container"></div>
-        <div id="player-container"></div>
-      </div>
-
-      <div id="game-moves" class="game-moves">
-        <button>Attack</button>
-        <button>Spell 1</button>
-      </div> -->
+      <div class="card-container" id="player-card-container"></div>
     </div>
-
     <!-- // preload images here -->
     <img src="assets/backgrounds/main-menu.jpg" id="main-menu" />
     <img src="assets/backgrounds/background-1.jpg" id="background1" />
+
+    <img src="assets/ui/woodpanel.jpg" id="woodpanel" />
   </body>
 
   <script src="bundle.js" type="module"></script>

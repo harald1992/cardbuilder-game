@@ -2,59 +2,73 @@ import { Card } from "../classes/card";
 import { Enemy } from "../classes/enemy";
 import { Player } from "../classes/player";
 
-type CardDictionary = { [key: number]: Card };
+type CardInput = {
+  cost: number;
+  title: string;
+  body: string;
+  imgSrc: string;
+  effect: (caster: Player | Enemy, target: Player | Enemy) => void;
+};
 
-function createCardElement(
-  cost: number = 0,
-  title: string = "Title",
-  body: string = "Body",
-  imgSrc: string = "assets/units/crusader.webp",
-  effect: (caster: Player | Enemy, target: Player | Enemy) => void = (
-    caster: Player | Enemy,
-    target: Player | Enemy
-  ) => {
-    console.log("No effect yet for this card");
-  }
-): Card {
-  const card = document.createElement("app-card") as Card;
+function createCardElement(card: CardInput): Card {
+  const cardEl = document.createElement("app-card") as Card;
 
-  card.setAttribute("cost", cost.toString());
+  cardEl.setAttribute("cost", card.cost.toString());
 
-  card.setAttribute("cardTitle", title);
-  card.setAttribute("cardBody", body);
-  card.setAttribute("imgSrc", imgSrc);
-  card.effect = effect;
-  return card;
+  cardEl.setAttribute("cardTitle", card.title);
+  cardEl.setAttribute("cardBody", card.body);
+  cardEl.setAttribute("imgSrc", card.imgSrc);
+  cardEl.effect = card.effect;
+
+  return cardEl;
 }
 
-export const $cardDictionary: CardDictionary = {
-  0: createCardElement(
-    1,
-    "Lighning spark",
-    "Deal 1 damage",
-    "assets/cards/lightning-spark.svg",
-    (caster: Player | Enemy, target: Player | Enemy) => {
-      console.log(caster, target);
-
+const cards: CardInput[] = [
+  {
+    cost: 1,
+    title: "Lightning Spark",
+    body: "Deal 1 damage",
+    imgSrc: "assets/cards/lightning-spark.jpg",
+    effect: (caster: Player | Enemy, target: Player | Enemy) => {
       target.currentHp -= 1;
-    }
-  ),
-  1: createCardElement(
-    2,
-    "Lighning bolt",
-    "Deal 2 damage",
-    "assets/cards/lightning-bolt.svg",
-    (caster: Player | Enemy, target: Player | Enemy) => {
+    },
+  },
+
+  {
+    cost: 2,
+    title: "Lightning Bolt",
+    body: "Deal 3 damage",
+    imgSrc: "assets/cards/Lightning-bolt.png",
+    effect: (caster: Player | Enemy, target: Player | Enemy) => {
       target.currentHp -= 2;
-    }
-  ),
-  2: createCardElement(
-    1,
-    "Healing Word",
-    "Heal 1 hp",
-    "assets/cards/heal.svg",
-    (caster: Player | Enemy, target: Player | Enemy) => {
-      caster.currentHp += 1;
-    }
-  ),
-};
+    },
+  },
+
+  {
+    cost: 2,
+    title: "Healing Aid",
+    body: "Heal 2 hp",
+    imgSrc: "assets/cards/heal.jpg",
+    effect: (caster: Player | Enemy, target: Player | Enemy) => {
+      caster.currentHp += 2;
+    },
+  },
+
+  {
+    cost: 3,
+    title: "Library",
+    body: "Draw One Card",
+    imgSrc: "assets/cards/book.jpg",
+    effect: (caster: Player | Enemy, target: Player | Enemy) => {
+      caster.drawCards(2);
+    },
+  },
+];
+
+export let $cardDictionary: (() => Card)[] = [];
+
+for (const card of cards) {
+  const cardFunction = () => createCardElement(card);
+
+  $cardDictionary.push(cardFunction);
+}

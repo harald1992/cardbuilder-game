@@ -12,12 +12,9 @@ export class MainMenu {
   }
 
   init() {
-    console.log("init");
-
     document.addEventListener("keydown", (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         if (this.mainMenuElement.style.display === "none") {
-          // this.showMenu();
           this.game.main.changeGameState(GameState.MAINMENU);
         } else {
           this.game.main.changeGameState(GameState.INGAME);

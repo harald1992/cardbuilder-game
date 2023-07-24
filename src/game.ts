@@ -1,16 +1,17 @@
 // import { Unit } from "./classes/unit.js";
 
-import { Main } from ".";
+import { GameState, Main } from ".";
 import { Background } from "./classes/background";
 import { Enemy } from "./classes/enemy";
 import { MainMenu } from "./classes/main-menu";
 import { Player } from "./classes/player";
+import { UI } from "./classes/ui";
 
 // Unit;
 
 export class Game {
   gameOver = false;
-  background: Background;
+  battleBackground: Background;
   mainMenu: MainMenu;
   player: Player;
   enemy: Enemy;
@@ -18,21 +19,25 @@ export class Game {
   isPlayerTurn = true;
 
   index: any;
-
+  ui: UI;
   constructor(main: Main) {
     this.main = main;
-    this.background = new Background(this.main, "background1", 200);
+    this.battleBackground = new Background(this.main, "background1", 200);
     this.mainMenu = new MainMenu(this);
     this.player = new Player(this);
     this.enemy = new Enemy(this);
+    this.ui = new UI(this);
   }
 
   update(deltaTime: number) {}
 
   draw(ctx: CanvasRenderingContext2D) {
-    let itemsToRender: (Background | Player | Enemy)[] = [this.background];
+    let itemsToRender: (Background | Player | Enemy | UI)[] = [
+      this.battleBackground,
+      this.ui,
+    ];
 
-    // if (!this.pause) {
+    // if (this.main.gameState !== GameState.MAINMENU) {
     itemsToRender = [...itemsToRender, this.player, this.enemy];
     // }
 
@@ -50,6 +55,7 @@ export class Game {
     this.mainMenu = new MainMenu(this);
     this.player = new Player(this);
     this.enemy = new Enemy(this);
+    this.enemy.renderCards();
     this.player.renderCards();
   }
 

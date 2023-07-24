@@ -15,11 +15,11 @@ export class Player extends Unit {
     super(game, x, y, imgSrc);
 
     this.cardContainer = document.querySelector(
-      "#card-container"
+      "#player-card-container"
     ) as HTMLElement;
 
-    for (let i = 0; i < 3; i++) {
-      const card = $cardDictionary[i];
+    for (let i = 0; i < 4; i++) {
+      const card = $cardDictionary[i]();
       this.cards.push(card);
     }
   }
@@ -28,11 +28,6 @@ export class Player extends Unit {
 
   draw(ctx: CanvasRenderingContext2D) {
     super.draw(ctx);
-    console.log("drawing");
-    // console.log();
-
-    // ctx.drawImage(this.image, this.x, this.y, 100, 100);
-    // this.healthBar.draw(ctx);
   }
 
   renderCards() {
@@ -40,6 +35,7 @@ export class Player extends Unit {
     this.cardContainer.innerHTML = "";
 
     this.cards.forEach((card: Card) => {
+      // document
       this.cardContainer.appendChild(card);
     });
   }
