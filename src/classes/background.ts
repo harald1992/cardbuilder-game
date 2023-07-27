@@ -16,12 +16,6 @@ class Layer {
   }
 
   update() {
-    // if (this.x < -this.width) {
-    //   // reset background
-    //   this.x = 0;
-    // } else {
-    //   this.x -= this.game.speed * this.speedModifier;
-    // }
   }
 
   draw(ctx: CanvasRenderingContext2D) {

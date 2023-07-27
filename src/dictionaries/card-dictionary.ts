@@ -1,7 +1,7 @@
-import { Enemy } from "../classes/enemy";
+import { Enemy } from "../classes/enemies/enemy";
 import { Player } from "../classes/player";
 import { Unit } from "../classes/unit";
-import { CardType } from "../classes/card";
+import { Card, CardType } from "../classes/card";
 
 export type CardConfig = {
   cost: number;
@@ -13,6 +13,28 @@ export type CardConfig = {
   effect: (caster: Unit, target: Unit) => void;
 
 };
+
+export enum CardTitle {
+  LIGHTNING_SPARK = 'Lightning Spark',
+  LIGHTNING_BOLT = 'Lightning Bolt',
+  HEALING_AID = 'Healing Aid',
+  LIBRARY = 'Library',
+  LEGENDARY_STRIKE = 'Legendary Strike',
+}
+
+export function getCardByTitles(unit: Unit, titles: CardTitle[] | string[]) {
+  let cards: Card[] = [];
+  titles.forEach((title: CardTitle | string) => {
+    $cardDictionary.forEach((cardConfig: CardConfig) => {
+      if (cardConfig.title === title) {
+        cards.push(new Card(unit, cardConfig));
+      }
+    })
+
+  });
+
+  return cards;
+}
 
 // function createCardElement(card: CardInput): Card {
 //   const cardEl = document.createElement("app-card") as CardElement;
@@ -36,6 +58,8 @@ export const $cardDictionary: CardConfig[] = [
     background: CardType.OFFENSIVE,
     effect: (caster: Unit, target: Unit) => {
       target.currentHp -= 1;
+      let isStunned = Math.random() > 0.5;
+      target.isStunned = isStunned;
     },
   },
 
@@ -68,7 +92,7 @@ export const $cardDictionary: CardConfig[] = [
     imgSrc: "assets/cards/book.jpg",
     background: CardType.INCOME,
     effect: (caster: Unit, target: Unit) => {
-      caster.drawCards(2);
+      caster.deck.drawCards(2);
     },
   },
 

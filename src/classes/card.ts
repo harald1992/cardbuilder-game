@@ -1,7 +1,9 @@
-import { CardConfig } from "../dictionaries/card-dictionary";
-import { Enemy } from "./enemy";
+import { $cardDictionary, CardConfig } from "../dictionaries/card-dictionary";
+import { roundedImage } from "../utils/utils";
+import { Enemy } from "./enemies/enemy";
 import { Player } from "./player";
 import { Unit } from "./unit";
+import { v4 as uuidv4 } from 'uuid';
 
 export enum CardType {
     OFFENSIVE = 'assets/cards/background_red.png',
@@ -54,13 +56,21 @@ export class Card {
     title = 'title'
     body = 'body';
     effect: (caster: Unit, target: Unit) => void = (caster: Unit, target: Unit) => console.log('no effect');
-    x = 0;
-    y = 0;
-    width = 100;
-    height = 200;
+    x: number = 2000; // not visible
+    y: number = 2000; // not visible
     background = new Image();
     image = new Image();
     costCircle = new Image();
+    id: string = uuidv4();
+    markedForDeletion = false;
+
+    get width() {
+        return 0.1 * this.unit.game.main.width;
+    }
+
+    get height() {
+        return 0.2 * this.unit.game.main.width;
+    }
 
     constructor(unit: Player | Enemy | Unit, config: CardConfig) {
         this.unit = unit;
@@ -73,7 +83,6 @@ export class Card {
 
         this.background.src = config.background || CardType.OFFENSIVE;
         this.costCircle.src = 'assets/cards/card-cost-circle.png';
-
     }
 
     update(deltaTime: number) { }
@@ -104,7 +113,7 @@ export class Card {
 
 
         ctx.fillStyle = "black";
-        ctx.font = `32px`;
+        ctx.font = `12px Roboto`;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle'
 
@@ -115,12 +124,18 @@ export class Card {
     }
 
     drawCardBackground(ctx: CanvasRenderingContext2D) {
+        ctx.save();
+        roundedImage(ctx, this.x, this.y, this.width, this.height, 4);
+        ctx.clip()
+
         ctx.drawImage(this.background, this.x, this.y, this.width, this.height);
+
+        ctx.restore();
     }
 
     drawCardTitle(ctx: CanvasRenderingContext2D) {
         ctx.fillStyle = "black";
-        ctx.font = `32px`;
+        ctx.font = `12px Roboto`;
         ctx.textAlign = "left";
         ctx.textBaseline = 'middle'
 
@@ -131,12 +146,18 @@ export class Card {
     }
 
     drawCardImage(ctx: CanvasRenderingContext2D) {
+        ctx.save();
+        roundedImage(ctx, this.x + 0.1 * this.width, this.y + 0.1 * this.height, 0.8 * this.width, 0.8 * this.width, 4);
+        ctx.clip()
+
+
         ctx.drawImage(this.image, this.x + 0.1 * this.width, this.y + 0.1 * this.height, 0.8 * this.width, 0.8 * this.width);
+        ctx.restore();
     }
 
     drawCardType(ctx: CanvasRenderingContext2D) {
         ctx.fillStyle = "black";
-        ctx.font = `32px`;
+        ctx.font = `12px Roboto`;
         ctx.textAlign = "left";
         ctx.textBaseline = 'middle';
 
@@ -150,7 +171,7 @@ export class Card {
         ctx.fillStyle = "white";
         ctx.fillRect(this.x + 0.1 * this.width, this.y + 0.6 * this.height, 0.8 * this.width, 0.6 * this.width);
 
-        ctx.font = `16px`;
+        ctx.font = `12px Roboto`;
         ctx.textAlign = "start";
         ctx.textBaseline = 'top';
         ctx.fillStyle = 'black';
@@ -168,17 +189,16 @@ export class Card {
     playCard(caster: Player | Enemy, target: Player | Enemy) {
         if (caster.currentMp >= this.cost) {
             caster.currentMp -= this.cost;
-            this.unit.game.preventCardClick = caster.constructor.name === 'Player';
-
 
             setTimeout(() => {
                 this.effect(caster, target);
-                // caster.discardCard(this);
-                this.unit.game.turnHandler.switchTurns();
+                caster.deck.discardCard(this);
             })
 
         } else {
             console.log("you don't have enough mana");
         }
     }
+
+
 }

@@ -4,23 +4,41 @@ import { Card } from "./card";
 import { Deck } from "./deck";
 import { HealthBar } from "./health-bar";
 
+
+
 export class Unit {
-  x = 500;
-  y = 200;
-  width = 100;
-  height = 100;
+
   #hp = 1;
   #mp = 1;
-  maxHp: number = 10;
-  maxMp = 10;
+  maxHp: number = 1;
+  maxMp = 1;
 
   image = new Image();
+  stunnedImage = new Image();
+
   game: Game;
   healthBar: HealthBar;
 
   deck: Deck = new Deck(this);
 
   isPlayer = false;
+  isStunned = false;
+
+  get x() {
+    return 0;
+  }
+
+  get y() {
+    return 0;
+  }
+
+  get width() {
+    return 0.2 * this.game.main.width;
+  }
+
+  get height() {
+    return 0.2 * this.game.main.width;
+  }
 
   get currentHp() {
     return this.#hp;
@@ -47,17 +65,20 @@ export class Unit {
 
   constructor(
     game: Game,
-    x: number,
-    y: number,
-    imgSrc: string = "assets/units/monster-ghost.png"
   ) {
     this.game = game;
-    this.x = x;
-    this.y = y;
+
     this.currentHp = this.maxHp;
     this.currentMp = this.maxMp;
     this.healthBar = new HealthBar(this);
-    this.image.src = imgSrc;
+    this.image.src = "assets/units/hero.jpg";
+    this.stunnedImage.src = 'assets/icons/lightning-spark.svg';
+  }
+
+  init() {
+    this.currentHp = this.maxHp;
+    this.currentMp = this.maxMp;
+    this.deck.init();
   }
 
   update(deltaTime: number) {
@@ -67,32 +88,27 @@ export class Unit {
   draw(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     this.healthBar.draw(ctx);
-
     this.deck.draw(ctx);
+
+    if (this.isStunned) {
+      let stunX = this.x;
+      let stunY = this.y;
+      let stunWidth = 25;
+      let stunHeight = 25;
+
+      ctx.fillStyle = "white";
+      ctx.fillRect(stunX, stunY, stunWidth, stunHeight);
+      ctx.drawImage(this.stunnedImage, stunX, stunY, stunWidth, stunHeight);
+    }
+
 
     if (this.game.main.debugMode) {
       ctx.strokeStyle = "black";
       ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
 
-
-
   }
 
-  renderCards() { }
 
-  drawCards(amount = 1) {
-    for (let i = 0; i < amount; i++) {
-      const randomIndex = Math.floor(Math.random() * $cardDictionary.length);
-      const cardConfig = $cardDictionary[randomIndex];
-      this.deck.handCards.push(new Card(this, cardConfig));
-    }
 
-    this.renderCards();
-  }
-
-  discardCard(cardToDiscard: Card) {
-    this.deck.handCards = this.deck.handCards.filter((card) => card !== cardToDiscard);
-    this.renderCards();
-  }
 }

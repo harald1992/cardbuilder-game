@@ -1,29 +1,24 @@
-import { $cardDictionary } from "../dictionaries/card-dictionary";
+import { CardTitle, getCardByTitles } from "../dictionaries/card-dictionary";
 import { Game } from "../game";
-import { Card } from "./card";
 import { Unit } from "./unit";
 
 export class Player extends Unit {
-  cards: Card[] = [];
-  cardContainer: HTMLElement;
+  get x() {
+    return 0.05 * this.game.main.width;
+  }
+
+  get y() {
+    return 0.4 * this.game.main.height;
+  }
 
   constructor(game: Game) {
-    const x = 0.2 * game.main.width;
-    const y = 0.5 * game.main.height;
-    const imgSrc = "assets/units/player-wizard.png";
-
-    super(game, x, y, imgSrc);
-
-    this.cardContainer = document.querySelector(
-      "#player-card-container"
-    ) as HTMLElement;
-
+    super(game);
+    this.image.src = "assets/units/player-wizard.png";
     this.isPlayer = true;
-
-    // for (let i = 0; i < 4; i++) {
-    //   const card = $cardDictionary[i]();
-    //   this.cards.push(card);
-    // }
+    this.maxHp = 5;
+    this.maxMp = 3;
+    this.deck.allCards = getCardByTitles(this, [CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK,
+    CardTitle.LIGHTNING_BOLT, CardTitle.LIGHTNING_BOLT, CardTitle.LIGHTNING_BOLT, CardTitle.LIGHTNING_BOLT, CardTitle.LIGHTNING_BOLT,]);
   }
 
   update(deltaTime: number) {
@@ -34,13 +29,5 @@ export class Player extends Unit {
     super.draw(ctx);
   }
 
-  renderCards() {
-    this.cardContainer.style.display = "flex";
-    this.cardContainer.innerHTML = "";
 
-    this.cards.forEach((card: Card) => {
-      // document
-      // this.cardContainer.appendChild(card);
-    });
-  }
 }

@@ -1,5 +1,5 @@
-import { GameState } from "..";
-import { Game } from "../game";
+import { GameState } from ".";
+import { Game } from "./game";
 import { $store } from "./store";
 
 export class MainMenu {

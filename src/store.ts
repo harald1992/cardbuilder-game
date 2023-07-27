@@ -1,10 +1,10 @@
-import { Enemy } from "./enemy";
-import { Player } from "./player";
+import { Enemy } from "./classes/enemies/enemy";
+import { Player } from "./classes/player";
 
 declare const window: any;
 
 class Store {
-  constructor() {}
+  constructor() { }
 
   getGame() {
     const game = window.game;
@@ -19,7 +19,7 @@ class Store {
 
   getCasterAndTarget(): { caster: Player | Enemy; target: Player | Enemy } {
     const game = this.getGame();
-    if (game.isPlayerTurn) {
+    if (game.turnHandler.isPlayersTurn) {
       return { caster: game.player, target: game.enemy };
     } else {
       return { caster: game.enemy, target: game.player };

@@ -1,6 +1,6 @@
 import { Background } from "./classes/background";
 import { Card } from "./classes/card";
-import { $store } from "./classes/store";
+import { $store } from "./store";
 import { Game } from "./game";
 
 declare const window: any;
@@ -61,18 +61,21 @@ export class Main {
   init() {
     this.calculateHeightAndWidth();
     this.changeGameState(GameState.MAINMENU);
+    // this.recalculateObjectPositions();
 
     window.addEventListener("resize", (event: Event) => {
       clearTimeout(this.debounceTime);
 
       this.debounceTime = setTimeout(() => {
         this.calculateHeightAndWidth();
-        this.recalculateObjectPositions();
+        // this.recalculateObjectPositions();
       }, this.timeOutMs);
     });
 
     window.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.key === "d") {
+        console.log(this.game.player.deck);
+
         this.debugMode = !this.debugMode;
       }
     });
@@ -96,31 +99,35 @@ export class Main {
     this.height = height;
   }
 
-  recalculateObjectPositions() {
-    if (!this.game.main.height || !this.game.main.width) {
-      return;
-    }
+  // recalculateObjectPositions() {
+  //   if (!this.game.main.height || !this.game.main.width) {
+  //     return;
+  //   }
 
-    this.game.player.x = 0.2 * this.game.main.width;
-    this.game.player.y = 0.5 * this.game.main.height;
-    this.game.player.deck.allCards.forEach((card: Card) => {
-      card.width = 0.1 * this.game.main.width;
-      card.height = 0.2 * this.game.main.width;
-    })
+  //   this.game.player.resetPosition();
+  //   this.game.player.width = 0.2 * this.game.main.width;
+  //   this.game.player.height = 0.2 * this.game.main.width;
 
-    this.game.enemy.x = 0.8 * this.game.main.width;
-    this.game.enemy.y = 0.5 * this.game.main.height;
-    this.game.enemy.deck.allCards.forEach((card: Card) => {
-      card.width = 0.1 * this.game.main.width;
-      card.height = 0.2 * this.game.main.width;
-    })
+  //   this.game.player.deck.allCards.forEach((card: Card) => {
+  //     card.width = 0.1 * this.game.main.width;
+  //     card.height = 0.2 * this.game.main.width;
+  //   })
 
 
-    this.game.ui.height = 0.2 * this.game.main.width;
-    this.game.battleBackground.layers[0].yOffset = 0.2 * this.game.main.width;
+  //   this.game.enemy.resetPosition();
+  //   this.game.enemy.width = 0.2 * this.game.main.width;
+  //   this.game.enemy.height = 0.2 * this.game.main.width;
+
+  //   this.game.enemy.deck.allCards.forEach((card: Card) => {
+  //     card.width = 0.1 * this.game.main.width;
+  //     card.height = 0.2 * this.game.main.width;
+  //   })
 
 
-  }
+  //   this.game.backgroundUI.height = 0.2 * this.game.main.width;
+
+
+  // }
 
   changeGameState(state: GameState) {
     this.gameState = state;

@@ -1,6 +1,6 @@
 import { Game } from "../game";
 
-export class UI {
+export class BackgroundUI {
   game: Game;
   woodpanel = new Image();
   height = 200;
@@ -8,6 +8,9 @@ export class UI {
   constructor(game: Game) {
     this.game = game;
     this.woodpanel.src = "assets/ui/woodpanel.jpg";
+
+    this.height = 0.2 * this.game.main.width;
+
   }
 
   update(deltaTime: number) {
@@ -15,13 +18,13 @@ export class UI {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.drawImage(
-      this.woodpanel,
-      0,
-      this.game.main.height - this.height,
-      this.game.main.width,
-      this.height
-    );
+    // ctx.drawImage(
+    //   this.woodpanel,
+    //   0,
+    //   this.game.main.height - this.height,
+    //   this.game.main.width,
+    //   this.height
+    // );
 
     // ctx.drawImage();
   }
