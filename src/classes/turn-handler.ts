@@ -11,11 +11,21 @@ export class TurnHandler {
 
   switchTurns() {
     this.isPlayersTurn = !this.isPlayersTurn;
+    this.upkeep();
 
-    if (!this.isPlayersTurn) {
+    if (this.isPlayersTurn) {
+      this.game.preventCardClick = false;
+    } else {
       this.enemyTurn();
     }
   }
+
+  upkeep() {
+    const caster = this.isPlayersTurn ? this.game.player : this.game.enemy;
+    caster.drawCards(1);
+    caster.currentMp += 1;
+  }
+
 
   enemyTurn() {
     let caster = this.game.enemy;
@@ -24,11 +34,16 @@ export class TurnHandler {
     const enemyCards = this.game.enemy.cards;
     const randomIndex = Math.floor(Math.random() * enemyCards.length);
     const randomCard = enemyCards[randomIndex];
+    if (randomCard) {
+      setTimeout(() => {
 
-    setTimeout(() => {
-      randomCard.effect(caster, target);
-    }, 500);
+        randomCard.playCard(caster, target);
 
-    this.switchTurns();
+      }, 500);
+    } else {
+      this.switchTurns();
+    }
+
+
   }
 }

@@ -21,7 +21,7 @@ export class Main {
   ctx: CanvasRenderingContext2D;
   gameContainer: HTMLElement;
   debounceTime: any;
-  timeOutMs = 200;
+  timeOutMs = 100;
   gameState = GameState.MAINMENU;
   background: Background;
   debugMode = false;
@@ -67,6 +67,7 @@ export class Main {
 
       this.debounceTime = setTimeout(() => {
         this.calculateHeightAndWidth();
+        this.recalculateObjectPositions();
       }, this.timeOutMs);
     });
 
@@ -93,6 +94,32 @@ export class Main {
 
     this.width = width;
     this.height = height;
+  }
+
+  recalculateObjectPositions() {
+    if (!this.game.main.height || !this.game.main.width) {
+      return;
+    }
+
+    this.game.player.x = 0.2 * this.game.main.width;
+    this.game.player.y = 0.5 * this.game.main.height;
+    this.game.player.deck.allCards.forEach((card: Card) => {
+      card.width = 0.1 * this.game.main.width;
+      card.height = 0.2 * this.game.main.width;
+    })
+
+    this.game.enemy.x = 0.8 * this.game.main.width;
+    this.game.enemy.y = 0.5 * this.game.main.height;
+    this.game.enemy.deck.allCards.forEach((card: Card) => {
+      card.width = 0.1 * this.game.main.width;
+      card.height = 0.2 * this.game.main.width;
+    })
+
+
+    this.game.ui.height = 0.2 * this.game.main.width;
+    this.game.battleBackground.layers[0].yOffset = 0.2 * this.game.main.width;
+
+
   }
 
   changeGameState(state: GameState) {
@@ -149,74 +176,3 @@ window.onload = () => {
   }
   animate(0);
 };
-//   renderGame() {
-//     this.renderUnits();
-
-//     this.updateMovesUI();
-//   }
-
-//   renderUnits() {
-//     document.querySelector("#player-container").innerHTML = `
-//             <app-unit id="player" team="player"> </app-unit>
-//             `;
-//     document.querySelector("#enemy-container").innerHTML = `
-//         <app-unit id="enemy" team="enemy"> </app-unit>
-//         `;
-//   }
-
-//   updateMovesUI() {
-//     const data = $store.getData();
-//     const isPlayer = $store.getData().isPlayersTurn;
-
-//     const movesUI = document.querySelector("#game-moves");
-//     movesUI.innerHTML = null;
-
-//     const moves = $store.getData().playerData.moves;
-
-//     if (isPlayer) {
-//       for (let i = 0; i < moves.length; i++) {
-//         let newBtn = document.createElement("button");
-//         // newBtn.classList.add("card-hover");
-//         newBtn.innerText = moves[i].name;
-//         if (i === 0) {
-//           newBtn.focus();
-//         }
-//         newBtn.addEventListener("click", (e) => {
-//           const player = $store.getPlayer();
-//           const enemy = $store.getEnemy();
-
-//           const delay = 2000;
-
-//           $store.getPlayerUI().animateUp();
-//           $store.getEnemyUI().blinkAnimation(delay);
-
-//           setTimeout(() => {
-//             moves[i].resolve($store.getPlayer(), $store.getEnemy());
-
-//             $store.nextTurn();
-//             this.renderGame();
-//           }, delay);
-//         });
-
-//         movesUI.appendChild(newBtn);
-
-//         movesUI.querySelector("button:first-child").focus();
-//       }
-//     } else {
-//       const randomEnemyMove = data.enemyData.moves[0];
-
-//       const player = $store.getPlayer();
-//       const enemy = $store.getEnemy();
-
-//       const delay = 1000;
-
-//       $store.getEnemyUI().animateDown();
-//       $store.getPlayerUI().blinkAnimation(delay);
-
-//       setTimeout(() => {
-//         randomEnemyMove.resolve($store.getEnemy(), $store.getPlayer());
-
-//         $store.nextTurn();
-//         this.renderGame();
-//       }, delay);
-//     }

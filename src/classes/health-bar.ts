@@ -11,6 +11,10 @@ export class HealthBar {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
+    ctx.textAlign = "left";
+    ctx.textBaseline = 'middle'
+    ctx.font = `${this.barHeight}px`;
+
     this.drawHealthBar(ctx);
     this.drawManaBar(ctx);
   }
@@ -36,7 +40,7 @@ export class HealthBar {
     ctx.fillText(
       "HP: " + this.gameObject.currentHp,
       x + 10,
-      y + 0.75 * this.barHeight
+      y + 0.6 * this.barHeight
     );
   }
 
@@ -62,7 +66,7 @@ export class HealthBar {
     ctx.fillText(
       "MP: " + this.gameObject.currentMp,
       x + 10,
-      y + 0.75 * this.barHeight
+      y + 0.6 * this.barHeight
     );
   }
 }

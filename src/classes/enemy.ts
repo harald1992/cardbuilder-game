@@ -18,15 +18,17 @@ export class Enemy extends Unit {
       "#enemy-card-container"
     ) as HTMLElement;
 
-    for (let i = 3; i < 5; i++) {
-      const card = $cardDictionary[0]();
-      card.setAttribute("isPlayersCard", "false");
+    // for (let i = 3; i < 5; i++) {
+    //   const card = $cardDictionary[0]();
+    //   card.setAttribute("isPlayersCard", "false");
 
-      this.cards.push(card);
-    }
+    //   this.cards.push(card);
+    // }
   }
 
-  update(deltaTime: number) {}
+  update(deltaTime: number) {
+    super.update(deltaTime);
+  }
 
   draw(ctx: CanvasRenderingContext2D) {
     super.draw(ctx);
@@ -39,7 +41,7 @@ export class Enemy extends Unit {
     this.enemyCardContainer.innerHTML = "";
 
     this.cards.forEach((card: Card) => {
-      this.enemyCardContainer.appendChild(card);
+      // this.enemyCardContainer.appendChild(card);
     });
   }
 }

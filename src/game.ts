@@ -14,10 +14,18 @@ export class Game {
   enemy: Enemy;
   main: Main;
   isPlayerTurn = true;
-
+  #preventCardClick = false;
   index: any;
   ui: UI;
   turnHandler: TurnHandler;
+
+  get preventCardClick() {
+    return this.#preventCardClick;
+  }
+
+  set preventCardClick(value: boolean) {
+    this.#preventCardClick = value;
+  }
 
   constructor(main: Main) {
     this.main = main;
@@ -29,21 +37,13 @@ export class Game {
     this.turnHandler = new TurnHandler(this);
   }
 
-  update(deltaTime: number) {}
+  update(deltaTime: number) {
+    [this.battleBackground, this.ui, this.player, this.enemy].forEach(item => item.update(deltaTime))
+  }
 
   draw(ctx: CanvasRenderingContext2D) {
-    let itemsToRender: (Background | Player | Enemy | UI)[] = [
-      this.battleBackground,
-      this.ui,
-    ];
+    [this.battleBackground, this.ui, this.player, this.enemy].forEach(item => item.draw(ctx))
 
-    // if (this.main.gameState !== GameState.MAINMENU) {
-    itemsToRender = [...itemsToRender, this.player, this.enemy];
-    // }
-
-    itemsToRender.forEach((item: any) => {
-      item.draw(ctx);
-    });
   }
 
   init() {
@@ -51,10 +51,10 @@ export class Game {
   }
 
   newGame() {
-    this.mainMenu = new MainMenu(this);
+    // this.mainMenu = new MainMenu(this);
     this.player = new Player(this);
     this.enemy = new Enemy(this);
-    this.enemy.renderCards();
-    this.player.renderCards();
+    // this.enemy.renderCards();
+    // this.player.renderCards();
   }
 }

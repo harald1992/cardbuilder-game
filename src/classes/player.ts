@@ -18,13 +18,17 @@ export class Player extends Unit {
       "#player-card-container"
     ) as HTMLElement;
 
-    for (let i = 0; i < 4; i++) {
-      const card = $cardDictionary[i]();
-      this.cards.push(card);
-    }
+    this.isPlayer = true;
+
+    // for (let i = 0; i < 4; i++) {
+    //   const card = $cardDictionary[i]();
+    //   this.cards.push(card);
+    // }
   }
 
-  update(deltaTime: number) {}
+  update(deltaTime: number) {
+    super.update(deltaTime);
+  }
 
   draw(ctx: CanvasRenderingContext2D) {
     super.draw(ctx);
@@ -36,7 +40,7 @@ export class Player extends Unit {
 
     this.cards.forEach((card: Card) => {
       // document
-      this.cardContainer.appendChild(card);
+      // this.cardContainer.appendChild(card);
     });
   }
 }

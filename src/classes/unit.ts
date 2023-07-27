@@ -1,6 +1,7 @@
 import { $cardDictionary } from "../dictionaries/card-dictionary";
 import { Game } from "../game";
 import { Card } from "./card";
+import { Deck } from "./deck";
 import { HealthBar } from "./health-bar";
 
 export class Unit {
@@ -17,14 +18,16 @@ export class Unit {
   game: Game;
   healthBar: HealthBar;
 
-  cards: Card[] = [];
+  deck: Deck = new Deck(this);
+
+  isPlayer = false;
 
   get currentHp() {
     return this.#hp;
   }
 
   set currentHp(value: number) {
-    if (value > this.currentHp) {
+    if (value > this.maxHp) {
       value = this.maxHp;
     }
     this.#hp = value;
@@ -35,9 +38,10 @@ export class Unit {
   }
 
   set currentMp(value: number) {
-    if (value > this.currentMp) {
+    if (value > this.maxMp) {
       value = this.maxMp;
     }
+
     this.#mp = value;
   }
 
@@ -56,34 +60,39 @@ export class Unit {
     this.image.src = imgSrc;
   }
 
+  update(deltaTime: number) {
+    this.deck.update(deltaTime);
+  }
+
   draw(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     this.healthBar.draw(ctx);
 
+    this.deck.draw(ctx);
+
     if (this.game.main.debugMode) {
       ctx.strokeStyle = "black";
-      ctx.strokeRect(this.x, this.y, 100, 100);
+      ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
+
+
+
   }
 
-  renderCards() {}
+  renderCards() { }
 
   drawCards(amount = 1) {
     for (let i = 0; i < amount; i++) {
       const randomIndex = Math.floor(Math.random() * $cardDictionary.length);
-      const newCard = $cardDictionary[randomIndex]();
-      this.cards.push(newCard);
+      const cardConfig = $cardDictionary[randomIndex];
+      this.deck.handCards.push(new Card(this, cardConfig));
     }
 
     this.renderCards();
-
-    // let
-    // const card = $cardDictionary[0]();
-    // this.cards.push(card);
   }
 
   discardCard(cardToDiscard: Card) {
-    this.cards = this.cards.filter((card) => card !== cardToDiscard);
+    this.deck.handCards = this.deck.handCards.filter((card) => card !== cardToDiscard);
     this.renderCards();
   }
 }

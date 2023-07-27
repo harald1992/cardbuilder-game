@@ -30,6 +30,9 @@ export class MainMenu {
         const id: string | null = button.getAttribute("id");
 
         switch (id) {
+          case "continue":
+            this.game.main.changeGameState(GameState.INGAME);
+            break;
           case "new":
             this.game.main.changeGameState(GameState.INGAME);
             this.game.newGame();

@@ -7,8 +7,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  mode: "production",
-  entry: ["./src/index.ts", "./styles/styles.scss"],
+  // mode: "production",
+  mode: "development",
+  entry: ["./src/index.ts", "./styles.scss"],
   module: {
     rules: [
       {
@@ -31,6 +32,21 @@ module.exports = {
           "sass-loader",
         ],
       },
+      // {
+      //   test: /\.(jpg|png|svg|gif)$/,
+      //   type: "asset/resource",
+      //   use: [
+      //     {
+      //       loader: "url-loader",
+      //       options: {
+      //         limit: 8192,
+      //       },
+      //     },
+      //   ],
+      //   type: "javascript/auto",
+      //   // type: "asset/resource",
+      //   // use: ["url-loader", "file-loader"],
+      // },
 
       // { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: "assets/resource" },
     ],

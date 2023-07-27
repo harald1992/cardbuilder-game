@@ -1,35 +1,40 @@
-import { Card } from "../classes/card";
 import { Enemy } from "../classes/enemy";
 import { Player } from "../classes/player";
+import { Unit } from "../classes/unit";
+import { CardType } from "../classes/card";
 
-type CardInput = {
+export type CardConfig = {
   cost: number;
   title: string;
   body: string;
   imgSrc: string;
-  effect: (caster: Player | Enemy, target: Player | Enemy) => void;
+  background?: string,
+  // effect: (caster: Player | Enemy, target: Player | Enemy) => void;
+  effect: (caster: Unit, target: Unit) => void;
+
 };
 
-function createCardElement(card: CardInput): Card {
-  const cardEl = document.createElement("app-card") as Card;
+// function createCardElement(card: CardInput): Card {
+//   const cardEl = document.createElement("app-card") as CardElement;
 
-  cardEl.setAttribute("cost", card.cost.toString());
+//   cardEl.setAttribute("cost", card.cost.toString());
 
-  cardEl.setAttribute("cardTitle", card.title);
-  cardEl.setAttribute("cardBody", card.body);
-  cardEl.setAttribute("imgSrc", card.imgSrc);
-  cardEl.effect = card.effect;
+//   cardEl.setAttribute("cardTitle", card.title);
+//   cardEl.setAttribute("cardBody", card.body);
+//   cardEl.setAttribute("imgSrc", card.imgSrc);
+//   cardEl.effect = card.effect;
 
-  return cardEl;
-}
+//   return cardEl;
+// }
 
-const cards: CardInput[] = [
+export const $cardDictionary: CardConfig[] = [
   {
     cost: 1,
     title: "Lightning Spark",
-    body: "Deal 1 damage",
+    body: "Deal 1 damage. 50% stun",
     imgSrc: "assets/cards/lightning-spark.jpg",
-    effect: (caster: Player | Enemy, target: Player | Enemy) => {
+    background: CardType.OFFENSIVE,
+    effect: (caster: Unit, target: Unit) => {
       target.currentHp -= 1;
     },
   },
@@ -39,7 +44,8 @@ const cards: CardInput[] = [
     title: "Lightning Bolt",
     body: "Deal 3 damage",
     imgSrc: "assets/cards/Lightning-bolt.png",
-    effect: (caster: Player | Enemy, target: Player | Enemy) => {
+    background: CardType.OFFENSIVE,
+    effect: (caster: Unit, target: Unit) => {
       target.currentHp -= 2;
     },
   },
@@ -49,7 +55,8 @@ const cards: CardInput[] = [
     title: "Healing Aid",
     body: "Heal 2 hp",
     imgSrc: "assets/cards/heal.jpg",
-    effect: (caster: Player | Enemy, target: Player | Enemy) => {
+    background: CardType.DEFENSIVE,
+    effect: (caster: Unit, target: Unit) => {
       caster.currentHp += 2;
     },
   },
@@ -59,16 +66,29 @@ const cards: CardInput[] = [
     title: "Library",
     body: "Draw One Card",
     imgSrc: "assets/cards/book.jpg",
-    effect: (caster: Player | Enemy, target: Player | Enemy) => {
+    background: CardType.INCOME,
+    effect: (caster: Unit, target: Unit) => {
       caster.drawCards(2);
     },
   },
+
+  {
+    cost: 5,
+    title: "Legendary Strike",
+    body: "Deal 10 damage",
+    imgSrc: "assets/cards/slash.jpg",
+    background: CardType.MISC,
+    effect: (caster: Unit, target: Unit) => {
+      target.currentHp -= 10;
+    },
+  },
+
 ];
 
-export let $cardDictionary: (() => Card)[] = [];
+// export let $cardDictionary: (() => Card)[] = [];
 
-for (const card of cards) {
-  const cardFunction = () => createCardElement(card);
+// for (const card of cards) {
+//   const cardFunction = () => createCardElement(card);
 
-  $cardDictionary.push(cardFunction);
-}
+//   $cardDictionary.push(cardFunction);
+// }
