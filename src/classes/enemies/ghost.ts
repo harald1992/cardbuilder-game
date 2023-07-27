@@ -10,9 +10,7 @@ export class Ghost extends Enemy {
         this.game = game;
         this.image.src = "assets/units/monster-ghost.png";
         this.maxHp = 5;
-        this.currentHp = this.maxHp;
-        this.maxMp = 1;
-        this.currentMp = this.maxMp;
+        this.maxMp = 3;
 
         this.deck.allCards = getCardByTitles(this, [CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK, CardTitle.LIGHTNING_SPARK,]);
     }

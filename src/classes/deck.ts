@@ -3,10 +3,7 @@ import { Card } from "./card";
 import { Unit } from "./unit";
 
 function duplicateCard(unit: Unit, card: Card) {
-    console.log(card.title);
-
     const newCard = getCardByTitles(unit, [card.title])[0];
-
     return newCard;
 }
 

@@ -53,13 +53,16 @@ export const $cardDictionary: CardConfig[] = [
   {
     cost: 1,
     title: "Lightning Spark",
-    body: "Deal 1 damage. 50% stun",
+    body: "Deal 1 damage. 20% stun",
     imgSrc: "assets/cards/lightning-spark.jpg",
     background: CardType.OFFENSIVE,
     effect: (caster: Unit, target: Unit) => {
       target.currentHp -= 1;
-      let isStunned = Math.random() > 0.5;
-      target.isStunned = isStunned;
+
+      // todo: fix stun loop
+      // if (target.isStunned) { return; }
+      // let isStunned = Math.random() <= 0.2;
+      // target.isStunned = isStunned;
     },
   },
 

@@ -17,10 +17,11 @@ export class TurnHandler {
   }
 
   switchTurns() {
-    const caster = this.isPlayersTurn ? this.game.player : this.game.enemy;
-    caster.deck.discardHand();
+    const previousCaster = this.isPlayersTurn ? this.game.player : this.game.enemy;
+    previousCaster.deck.discardHand();
 
     this.isPlayersTurn = !this.isPlayersTurn;
+
     console.log('isPlayersturn = ', this.isPlayersTurn);
     this.upkeep();
 
@@ -34,10 +35,9 @@ export class TurnHandler {
     let caster = this.isPlayersTurn ? this.game.player : this.game.enemy;
     console.log(caster);
 
-    // let caster = this.game.player;
-
     caster.deck.drawCards(5);
     caster.currentMp = caster.maxMp;
+
     if (caster.isStunned) {
       console.log(typeof caster, ' is stunned');
 
@@ -55,7 +55,9 @@ export class TurnHandler {
 
   playPossibleCard(caster: Unit, target: Unit) {
 
-    const possibleCardsToPlay = this.game.enemy.deck.cardsInHand.filter((card: Card) => { card.cost <= caster.currentMp });
+    const possibleCardsToPlay = [...this.game.enemy.deck.cardsInHand].filter((card: Card) => card.cost <= caster.currentMp);
+    console.log('possible cards to play', possibleCardsToPlay);
+
     if (possibleCardsToPlay.length === 0) {
       return this.switchTurns();
     }
@@ -64,10 +66,12 @@ export class TurnHandler {
     if (randomCard) {
       setTimeout(() => {
         randomCard.playCard(caster, target);
-
-      }, 500);
+        this.playPossibleCard(caster, target);
+      }, 100);
     } else {
-      this.switchTurns();
+      setTimeout(() => {
+        return this.switchTurns();
+      }, 100);
     }
   }
 }
