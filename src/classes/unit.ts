@@ -4,10 +4,7 @@ import { Card } from "./card";
 import { Deck } from "./deck";
 import { HealthBar } from "./health-bar";
 
-
-
 export class Unit {
-
   #hp = 1;
   #mp = 1;
   maxHp: number = 1;
@@ -63,16 +60,14 @@ export class Unit {
     this.#mp = value;
   }
 
-  constructor(
-    game: Game,
-  ) {
+  constructor(game: Game) {
     this.game = game;
 
     this.currentHp = this.maxHp;
     this.currentMp = this.maxMp;
     this.healthBar = new HealthBar(this);
     this.image.src = "assets/units/hero.jpg";
-    this.stunnedImage.src = 'assets/icons/lightning-spark.svg';
+    this.stunnedImage.src = "assets/icons/lightning-spark.svg";
   }
 
   init() {
@@ -101,14 +96,9 @@ export class Unit {
       ctx.drawImage(this.stunnedImage, stunX, stunY, stunWidth, stunHeight);
     }
 
-
     if (this.game.main.debugMode) {
       ctx.strokeStyle = "black";
       ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
-
   }
-
-
-
 }

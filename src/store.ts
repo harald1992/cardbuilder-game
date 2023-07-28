@@ -4,7 +4,7 @@ import { Player } from "./classes/player";
 declare const window: any;
 
 class Store {
-  constructor() { }
+  constructor() {}
 
   getGame() {
     const game = window.game;

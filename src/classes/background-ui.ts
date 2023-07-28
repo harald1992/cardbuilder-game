@@ -10,12 +10,9 @@ export class BackgroundUI {
     this.woodpanel.src = "assets/ui/woodpanel.jpg";
 
     this.height = 0.2 * this.game.main.width;
-
   }
 
-  update(deltaTime: number) {
-
-  }
+  update(deltaTime: number) {}
 
   draw(ctx: CanvasRenderingContext2D) {
     // ctx.drawImage(
@@ -25,7 +22,6 @@ export class BackgroundUI {
     //   this.game.main.width,
     //   this.height
     // );
-
     // ctx.drawImage();
   }
 }

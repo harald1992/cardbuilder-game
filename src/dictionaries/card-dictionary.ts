@@ -8,18 +8,17 @@ export type CardConfig = {
   title: string;
   body: string;
   imgSrc: string;
-  background?: string,
+  background?: string;
   // effect: (caster: Player | Enemy, target: Player | Enemy) => void;
   effect: (caster: Unit, target: Unit) => void;
-
 };
 
 export enum CardTitle {
-  LIGHTNING_SPARK = 'Lightning Spark',
-  LIGHTNING_BOLT = 'Lightning Bolt',
-  HEALING_AID = 'Healing Aid',
-  LIBRARY = 'Library',
-  LEGENDARY_STRIKE = 'Legendary Strike',
+  LIGHTNING_SPARK = "Lightning Spark",
+  LIGHTNING_BOLT = "Lightning Bolt",
+  HEALING_AID = "Healing Aid",
+  LIBRARY = "Library",
+  LEGENDARY_STRIKE = "Legendary Strike",
 }
 
 export function getCardByTitles(unit: Unit, titles: CardTitle[] | string[]) {
@@ -29,8 +28,7 @@ export function getCardByTitles(unit: Unit, titles: CardTitle[] | string[]) {
       if (cardConfig.title === title) {
         cards.push(new Card(unit, cardConfig));
       }
-    })
-
+    });
   });
 
   return cards;
@@ -109,7 +107,6 @@ export const $cardDictionary: CardConfig[] = [
       target.currentHp -= 10;
     },
   },
-
 ];
 
 // export let $cardDictionary: (() => Card)[] = [];

@@ -50,7 +50,7 @@ export class Main {
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.gameContainer = document.querySelector(
-      ".game-container"
+      ".game-container",
     ) as HTMLElement;
 
     this.background = new Background(this);
@@ -113,7 +113,6 @@ export class Main {
   //     card.height = 0.2 * this.game.main.width;
   //   })
 
-
   //   this.game.enemy.resetPosition();
   //   this.game.enemy.width = 0.2 * this.game.main.width;
   //   this.game.enemy.height = 0.2 * this.game.main.width;
@@ -123,9 +122,7 @@ export class Main {
   //     card.height = 0.2 * this.game.main.width;
   //   })
 
-
   //   this.game.backgroundUI.height = 0.2 * this.game.main.width;
-
 
   // }
 

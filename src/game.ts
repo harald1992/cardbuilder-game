@@ -28,8 +28,6 @@ export class Game {
     return [...this.player.deck.cardsInHand, this.ui.endTurnButton];
   }
 
-
-
   constructor(main: Main) {
     this.main = main;
     this.battleBackground = new Background(this.main, "forest1", 0);
@@ -41,17 +39,26 @@ export class Game {
     this.mouse = new Mouse(this);
     this.mouseHandler = new MouseHandler(this);
     this.ui = new UI(this);
-
-
   }
 
   update(deltaTime: number) {
-    [this.battleBackground, this.backgroundUI, this.player, this.enemy, this.ui].forEach(item => item.update(deltaTime))
+    [
+      this.battleBackground,
+      this.backgroundUI,
+      this.player,
+      this.enemy,
+      this.ui,
+    ].forEach((item) => item.update(deltaTime));
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    [this.battleBackground, this.backgroundUI, this.player, this.enemy, this.ui].forEach(item => item.draw(ctx))
-
+    [
+      this.battleBackground,
+      this.backgroundUI,
+      this.player,
+      this.enemy,
+      this.ui,
+    ].forEach((item) => item.draw(ctx));
   }
 
   init() {
@@ -59,14 +66,11 @@ export class Game {
   }
 
   newGame() {
-    // this.mainMenu = new MainMenu(this);
     this.player = new Player(this);
     this.player.init();
     this.enemy = new Ghost(this);
     this.enemy.init();
 
     this.turnHandler.init();
-    // this.enemy.renderCards();
-    // this.player.renderCards();
   }
 }

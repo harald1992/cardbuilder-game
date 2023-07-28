@@ -15,8 +15,7 @@ class Layer {
     this.image = image;
   }
 
-  update() {
-  }
+  update() {}
 
   draw(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(
@@ -24,7 +23,7 @@ class Layer {
       this.x,
       this.y,
       this.main.width,
-      this.main.height - this.yOffset
+      this.main.height - this.yOffset,
     );
   }
 }

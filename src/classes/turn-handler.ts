@@ -17,12 +17,14 @@ export class TurnHandler {
   }
 
   switchTurns() {
-    const previousCaster = this.isPlayersTurn ? this.game.player : this.game.enemy;
+    const previousCaster = this.isPlayersTurn
+      ? this.game.player
+      : this.game.enemy;
     previousCaster.deck.discardHand();
 
     this.isPlayersTurn = !this.isPlayersTurn;
 
-    console.log('isPlayersturn = ', this.isPlayersTurn);
+    console.log("isPlayersturn = ", this.isPlayersTurn);
     this.upkeep();
 
     if (this.isPlayersTurn) {
@@ -39,13 +41,12 @@ export class TurnHandler {
     caster.currentMp = caster.maxMp;
 
     if (caster.isStunned) {
-      console.log(typeof caster, ' is stunned');
+      console.log(typeof caster, " is stunned");
 
       caster.isStunned = false;
       return this.switchTurns();
     }
   }
-
 
   enemyTurn() {
     let caster = this.game.enemy;
@@ -54,9 +55,10 @@ export class TurnHandler {
   }
 
   playPossibleCard(caster: Unit, target: Unit) {
-
-    const possibleCardsToPlay = [...this.game.enemy.deck.cardsInHand].filter((card: Card) => card.cost <= caster.currentMp);
-    console.log('possible cards to play', possibleCardsToPlay);
+    const possibleCardsToPlay = [...this.game.enemy.deck.cardsInHand].filter(
+      (card: Card) => card.cost <= caster.currentMp,
+    );
+    console.log("possible cards to play", possibleCardsToPlay);
 
     if (possibleCardsToPlay.length === 0) {
       return this.switchTurns();

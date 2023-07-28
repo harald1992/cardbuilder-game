@@ -93,7 +93,6 @@
 //       caster.currentMp -= this.cost;
 //       this.game.preventCardClick = caster.constructor.name === 'Player';
 
-
 //       setTimeout(() => {
 //         this.effect(caster, target);
 //         // caster.discardCard(this);
@@ -112,9 +111,7 @@
 
 //         if (!this.game.preventCardClick) {
 
-
 //           const { caster, target } = $store.getCasterAndTarget();
-
 
 //           caster.currentMp += 1;
 //           this.game.preventCardClick = caster.constructor.name === 'Player';
