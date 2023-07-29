@@ -18,14 +18,14 @@ export class Player extends Unit {
     this.maxHp = 5;
     this.maxMp = 3;
     this.deck.allCards = getCardByTitles(this, [
+      CardTitle.JUNK,
+      CardTitle.JUNK,
+      CardTitle.JUNK,
+      CardTitle.JUNK,
+      CardTitle.JUNK,
       CardTitle.LIGHTNING_SPARK,
       CardTitle.LIGHTNING_SPARK,
       CardTitle.LIGHTNING_SPARK,
-      CardTitle.LIGHTNING_SPARK,
-      CardTitle.LIGHTNING_SPARK,
-      CardTitle.LIGHTNING_BOLT,
-      CardTitle.LIGHTNING_BOLT,
-      CardTitle.LIGHTNING_BOLT,
       CardTitle.LIGHTNING_BOLT,
       CardTitle.LIGHTNING_BOLT,
     ]);

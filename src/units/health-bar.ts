@@ -1,5 +1,5 @@
-import { Enemy } from "./enemies/enemy";
-import { Player } from "./player";
+import { Enemy } from "../units/enemies/enemy";
+import { Player } from "../units/player";
 import { Unit } from "./unit";
 
 export class HealthBar {

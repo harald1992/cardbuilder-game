@@ -1,14 +1,14 @@
-import { GameState, Main } from ".";
+import { Main } from ".";
 import { Background } from "./classes/background";
-import { Enemy } from "./classes/enemies/enemy";
+import { Enemy } from "./units/enemies/enemy";
 import { MainMenu } from "./main-menu";
-import { Mouse } from "./classes/mouse";
-import { MouseHandler } from "./classes/mouse-handler";
-import { Player } from "./classes/player";
-import { TurnHandler } from "./classes/turn-handler";
+import { Mouse } from "./mouse";
+import { Player } from "./units/player";
+import { TurnHandler } from "./battle/turn-handler";
 import { BackgroundUI } from "./classes/background-ui";
 import { UI } from "./ui-elements/ui";
-import { Ghost } from "./classes/enemies/ghost";
+import { Ghost } from "./units/enemies/ghost";
+import { MouseHandler } from "./mouse-handler";
 
 export class Game {
   gameOver = false;

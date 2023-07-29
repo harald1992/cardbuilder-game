@@ -1,7 +1,6 @@
-import { $cardDictionary } from "../dictionaries/card-dictionary";
 import { Game } from "../game";
-import { Card } from "./card";
-import { Unit } from "./unit";
+import { Unit } from "../units/unit";
+import { Card } from "./deck/card";
 
 export class TurnHandler {
   game: Game;

@@ -1,6 +1,4 @@
-import { $cardDictionary } from "../../dictionaries/card-dictionary";
 import { Game } from "../../game";
-import { Card } from "../card";
 import { Unit } from "../unit";
 
 export class Enemy extends Unit {

@@ -2,9 +2,9 @@ import {
   $cardDictionary,
   CardConfig,
   getCardByTitles,
-} from "../dictionaries/card-dictionary";
+} from "../../dictionaries/card-dictionary";
+import { Unit } from "../../units/unit";
 import { Card } from "./card";
-import { Unit } from "./unit";
 
 function duplicateCard(unit: Unit, card: Card) {
   const newCard = getCardByTitles(unit, [card.title])[0];

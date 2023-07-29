@@ -1,12 +1,9 @@
 import { Background } from "./classes/background";
-import { Card } from "./classes/card";
-import { $store } from "./store";
 import { Game } from "./game";
 
 declare const window: any;
 
 // initialize web components;
-Card;
 
 export enum GameState {
   MAINMENU,
@@ -98,33 +95,6 @@ export class Main {
     this.width = width;
     this.height = height;
   }
-
-  // recalculateObjectPositions() {
-  //   if (!this.game.main.height || !this.game.main.width) {
-  //     return;
-  //   }
-
-  //   this.game.player.resetPosition();
-  //   this.game.player.width = 0.2 * this.game.main.width;
-  //   this.game.player.height = 0.2 * this.game.main.width;
-
-  //   this.game.player.deck.allCards.forEach((card: Card) => {
-  //     card.width = 0.1 * this.game.main.width;
-  //     card.height = 0.2 * this.game.main.width;
-  //   })
-
-  //   this.game.enemy.resetPosition();
-  //   this.game.enemy.width = 0.2 * this.game.main.width;
-  //   this.game.enemy.height = 0.2 * this.game.main.width;
-
-  //   this.game.enemy.deck.allCards.forEach((card: Card) => {
-  //     card.width = 0.1 * this.game.main.width;
-  //     card.height = 0.2 * this.game.main.width;
-  //   })
-
-  //   this.game.backgroundUI.height = 0.2 * this.game.main.width;
-
-  // }
 
   changeGameState(state: GameState) {
     this.gameState = state;

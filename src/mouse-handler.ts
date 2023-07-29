@@ -1,7 +1,7 @@
-import { Game } from "../game";
-import { rectRectCollision } from "../utils/utils";
-import { Card } from "./card";
+import { Game } from "./game";
+import { rectRectCollision } from "./utils/utils";
 import { Mouse } from "./mouse";
+import { Card } from "./battle/deck/card";
 
 export class MouseHandler {
   game: Game;
@@ -38,7 +38,7 @@ export class MouseHandler {
   }
 
   listenForMouseClick() {
-    this.game.main.canvas.addEventListener("click", (e) => {
+    this.game.main.canvas.addEventListener("click", (e: Event) => {
       if (!this.game.turnHandler.isPlayersTurn) {
         return;
       }

@@ -1,7 +1,7 @@
-import { Enemy } from "../classes/enemies/enemy";
-import { Player } from "../classes/player";
-import { Unit } from "../classes/unit";
-import { Card, CardType } from "../classes/card";
+import { Card, CardType } from "../battle/deck/card";
+import { Enemy } from "../units/enemies/enemy";
+import { Player } from "../units/player";
+import { Unit } from "../units/unit";
 
 export type CardConfig = {
   cost: number;
@@ -14,6 +14,7 @@ export type CardConfig = {
 };
 
 export enum CardTitle {
+  JUNK = "Junk",
   LIGHTNING_SPARK = "Lightning Spark",
   LIGHTNING_BOLT = "Lightning Bolt",
   HEALING_AID = "Healing Aid",
@@ -34,20 +35,16 @@ export function getCardByTitles(unit: Unit, titles: CardTitle[] | string[]) {
   return cards;
 }
 
-// function createCardElement(card: CardInput): Card {
-//   const cardEl = document.createElement("app-card") as CardElement;
-
-//   cardEl.setAttribute("cost", card.cost.toString());
-
-//   cardEl.setAttribute("cardTitle", card.title);
-//   cardEl.setAttribute("cardBody", card.body);
-//   cardEl.setAttribute("imgSrc", card.imgSrc);
-//   cardEl.effect = card.effect;
-
-//   return cardEl;
-// }
-
 export const $cardDictionary: CardConfig[] = [
+  {
+    cost: 0,
+    title: "Junk",
+    body: "Does nothing",
+    imgSrc: "assets/cards/junk.jpg",
+    background: CardType.MISC,
+    effect: (caster: Unit, target: Unit) => {},
+  },
+
   {
     cost: 1,
     title: "Lightning Spark",

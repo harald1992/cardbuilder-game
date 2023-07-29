@@ -1,9 +1,12 @@
-import { $cardDictionary, CardConfig } from "../dictionaries/card-dictionary";
-import { roundedImage } from "../utils/utils";
-import { Enemy } from "./enemies/enemy";
-import { Player } from "./player";
-import { Unit } from "./unit";
+import {
+  $cardDictionary,
+  CardConfig,
+} from "../../dictionaries/card-dictionary";
+import { roundedImage } from "../../utils/utils";
+import { Enemy } from "../../units/enemies/enemy";
+import { Player } from "../../units/player";
 import { v4 as uuidv4 } from "uuid";
+import { Unit } from "../../units/unit";
 
 export enum CardType {
   OFFENSIVE = "assets/cards/background_red.png",

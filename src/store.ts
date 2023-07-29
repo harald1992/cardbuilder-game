@@ -1,5 +1,5 @@
-import { Enemy } from "./classes/enemies/enemy";
-import { Player } from "./classes/player";
+import { Enemy } from "./units/enemies/enemy";
+import { Player } from "./units/player";
 
 declare const window: any;
 

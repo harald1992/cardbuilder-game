@@ -1,7 +1,5 @@
-import { $cardDictionary } from "../dictionaries/card-dictionary";
+import { Deck } from "../battle/deck/deck";
 import { Game } from "../game";
-import { Card } from "./card";
-import { Deck } from "./deck";
 import { HealthBar } from "./health-bar";
 
 export class Unit {
