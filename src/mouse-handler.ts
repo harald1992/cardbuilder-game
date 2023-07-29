@@ -20,7 +20,7 @@ export class MouseHandler {
 
     this.mouseHoverEffects();
 
-    this.listenForMouseClick();
+    // this.listenForMouseClick();
   }
 
   mouseHoverEffects() {
@@ -37,22 +37,24 @@ export class MouseHandler {
     });
   }
 
-  listenForMouseClick() {
-    this.game.main.canvas.addEventListener("click", (e: Event) => {
-      if (!this.game.turnHandler.isPlayersTurn) {
-        return;
-      }
-      this.game.player.deck.cardsInHand.forEach((card: Card) => {
-        if (rectRectCollision(card, this.mouse)) {
-          if (this.game.turnHandler.isPlayersTurn) {
-            card.playCard(this.game.player, this.game.enemy);
-          }
-        }
-      });
+  // listenForMouseClick() {
+  //   this.game.main.canvas.addEventListener("click", (e: Event) => {
+  //     const isPlayersTurn = this.game.battleManager.turnCycle?.isPlayersTurn;
 
-      if (rectRectCollision(this.game.ui.endTurnButton, this.mouse)) {
-        this.game.turnHandler.switchTurns();
-      }
-    });
-  }
+  //     if (!isPlayersTurn) {
+  //       return;
+  //     }
+  //     this.game.player.deck.cardsInHand.forEach((card: Card) => {
+  //       if (rectRectCollision(card, this.mouse)) {
+  //         if (isPlayersTurn) {
+  //           card.playCard(this.game.player, this.game.enemy);
+  //         }
+  //       }
+  //     });
+
+  //     if (rectRectCollision(this.game.ui.endTurnButton, this.mouse)) {
+  //       this.game.turnHandler.switchTurns();
+  //     }
+  //   });
+  // }
 }

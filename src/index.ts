@@ -1,5 +1,6 @@
 import { Background } from "./classes/background";
 import { Game } from "./game";
+import { $store } from "./store";
 
 declare const window: any;
 
@@ -119,7 +120,7 @@ export class Main {
 window.onload = () => {
   const main = new Main();
   main.init();
-  window.game = main.game;
+  $store.setGame(main.game);
 
   main.game.init();
 

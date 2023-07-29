@@ -14,7 +14,8 @@ export class Player extends Unit {
   constructor(game: Game) {
     super(game);
     this.image.src = "assets/units/player-wizard.png";
-    this.isPlayer = true;
+    // this.isPlayer = true;
+    this.team = 'player';
     this.maxHp = 5;
     this.maxMp = 3;
     this.deck.allCards = getCardByTitles(this, [

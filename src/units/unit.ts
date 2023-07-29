@@ -16,8 +16,19 @@ export class Unit {
 
   deck: Deck = new Deck(this);
 
-  isPlayer = false;
   isStunned = false;
+
+  didTurn = false;
+  team: "player" | "enemy" = "enemy";
+
+  // todo: remove and go to currentTeam
+  get isPlayer() {
+    return this.team === "player";
+  }
+
+  // set isPlayer(value: any) {
+  //   this.currentTeam
+  // }
 
   get x() {
     return 0;
