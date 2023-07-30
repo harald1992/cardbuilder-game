@@ -1,7 +1,7 @@
 import { Game } from "../game";
 import { EndTurnButton } from "./end-turn-button";
 
-export class UI {
+export class BattleUI {
   game: Game;
   endTurnButton: EndTurnButton;
 

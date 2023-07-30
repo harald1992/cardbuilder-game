@@ -52,8 +52,6 @@ export class Deck {
   }
 
   updateCardPositions() {
-    console.log("update card positions");
-
     const main = this.unit.game.main;
     this.cardsInHand.forEach((card: Card, index: number) => {
       card.xPercentage = this.startingX + (index * card.width) / main.width;

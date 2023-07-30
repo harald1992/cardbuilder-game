@@ -12,22 +12,12 @@ export class MainMenu {
   }
 
   init() {
-    document.addEventListener("keydown", (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        if (this.mainMenuElement.style.display === "none") {
-          this.game.main.changeGameState(GameState.INGAMEPAUSE);
-        } else {
-          this.game.main.changeGameState(GameState.INGAME);
-        }
-      }
-    });
-
     const buttons: NodeListOf<HTMLButtonElement> =
       this.mainMenuElement.querySelectorAll("button");
 
     buttons.forEach((button: HTMLButtonElement) => {
       button.addEventListener("click", (event: MouseEvent) => {
-        this.playSound();
+        this.game.main.soundManager.playUiClick();
 
         const id: string | null = button.getAttribute("id");
 
@@ -46,13 +36,5 @@ export class MainMenu {
         }
       });
     });
-  }
-
-  playSound() {
-    const audio = document.querySelector("audio#sound") as HTMLAudioElement;
-    audio.src =
-      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_autorun2.wav";
-    audio.volume = 0.2;
-    audio.play();
   }
 }

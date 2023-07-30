@@ -1,7 +1,6 @@
 import { Game } from "./game";
 import { rectRectCollision } from "./utils/utils";
 import { Mouse } from "./mouse";
-import { Card } from "./battle/deck/card";
 
 export class MouseHandler {
   game: Game;
@@ -19,8 +18,6 @@ export class MouseHandler {
     this.mouse = game.mouse;
 
     this.mouseHoverEffects();
-
-    // this.listenForMouseClick();
   }
 
   mouseHoverEffects() {
@@ -43,25 +40,4 @@ export class MouseHandler {
       console.log(item);
     });
   }
-
-  // listenForMouseClick() {
-  //   this.game.main.canvas.addEventListener("click", (e: Event) => {
-  //     const isPlayersTurn = this.game.battleManager.turnCycle?.isPlayersTurn;
-
-  //     if (!isPlayersTurn) {
-  //       return;
-  //     }
-  //     this.game.player.deck.cardsInHand.forEach((card: Card) => {
-  //       if (rectRectCollision(card, this.mouse)) {
-  //         if (isPlayersTurn) {
-  //           card.playCard(this.game.player, this.game.enemy);
-  //         }
-  //       }
-  //     });
-
-  //     if (rectRectCollision(this.game.ui.endTurnButton, this.mouse)) {
-  //       this.game.turnHandler.switchTurns();
-  //     }
-  //   });
-  // }
 }

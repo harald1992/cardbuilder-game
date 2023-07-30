@@ -1,8 +1,8 @@
 import { roundedImage } from "../utils/utils";
-import { UI } from "./ui";
+import { BattleUI } from "./battle-ui";
 
 export class EndTurnButton {
-  ui: UI;
+  ui: BattleUI;
 
   image = new Image();
 
@@ -21,10 +21,12 @@ export class EndTurnButton {
   get y() {
     return 0.8 * this.ui.game.main.height;
   }
-  constructor(ui: UI) {
+  constructor(ui: BattleUI) {
     this.ui = ui;
     this.image.src = "assets/cards/background_red.png";
   }
+
+  update(deltaTime: number) {}
 
   draw(ctx: CanvasRenderingContext2D) {
     this.drawBackgroundImage(ctx);
@@ -37,7 +39,7 @@ export class EndTurnButton {
     ctx.fillText(
       "End Turn",
       this.x + 0.5 * this.width,
-      this.y + 0.5 * this.height,
+      this.y + 0.5 * this.height
     );
   }
 

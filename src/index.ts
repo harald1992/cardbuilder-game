@@ -1,3 +1,5 @@
+import { MusicManager } from "./audio/music-manager";
+import { SoundManager } from "./audio/sound-manager";
 import { Background } from "./classes/background";
 import { Game } from "./game";
 import { $store } from "./store";
@@ -9,6 +11,7 @@ declare const window: any;
 export enum GameState {
   MAINMENU,
   INGAME,
+  INGAMEMENU,
   INGAMEPAUSE,
   GAMEOVER,
 }
@@ -23,6 +26,9 @@ export class Main {
   gameState = GameState.MAINMENU;
   background: Background;
   debugMode = false;
+
+  soundManager: SoundManager;
+  musicManager: MusicManager;
 
   get width() {
     return this.canvas.width;
@@ -54,6 +60,9 @@ export class Main {
     this.background = new Background(this);
 
     this.game = new Game(this);
+
+    this.soundManager = new SoundManager();
+    this.musicManager = new MusicManager();
   }
 
   init() {
@@ -96,8 +105,8 @@ export class Main {
   }
 
   changeGameState(state: GameState) {
-    console.log(this.gameState);
-    console.log(state);
+    // console.log(this.gameState);
+    // console.log(state);
 
     switch (state) {
       case GameState.MAINMENU:
@@ -105,12 +114,13 @@ export class Main {
         this.game.mainMenu.mainMenuElement.style.display = "flex";
 
         break;
-      case GameState.INGAMEPAUSE:
-        this.game.mainMenu.mainMenuElement.style.display = "flex";
+      case GameState.INGAMEMENU:
+        console.log("INGAME MENU");
+
         break;
       case GameState.INGAME:
         if (this.gameState !== GameState.INGAMEPAUSE) {
-          this.playBattleMusic();
+          this.musicManager.playBattleMusic();
         }
         this.game.mainMenu.mainMenuElement.style.display = "none";
 
@@ -123,21 +133,13 @@ export class Main {
   }
 
   playMainMenuMusic() {
-    const audio = document.querySelector("audio#music") as HTMLAudioElement;
-    audio.muted = true;
-    audio.src =
-      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_autorun.wav";
-    audio.volume = 0.2;
-    audio.muted = false;
-    audio.play();
-  }
-
-  playBattleMusic() {
-    const audio = document.querySelector("audio#music") as HTMLAudioElement;
-    audio.src =
-      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_bat_aribeth.bmu";
-    audio.volume = 0.2;
-    audio.play();
+    /* Cannot play music without user clicking first. Maybe add splash screen */
+    // const audio = document.querySelector("audio#music") as HTMLAudioElement;
+    // audio.src =
+    //   "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_autorun.wav";
+    // audio.volume = 0.2;
+    // // audio.volume = 0;
+    // audio.play();
   }
 }
 

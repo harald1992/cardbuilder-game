@@ -1,11 +1,14 @@
+import { BackgroundUI } from "../classes/background-ui";
 import { Game } from "../game";
 import { $store } from "../store";
+import { BattleUI } from "../ui-elements/battle-ui";
 import { Ghost } from "../units/enemies/ghost";
 import { Player } from "../units/player";
 import { Unit } from "../units/unit";
 import { rectRectCollision } from "../utils/utils";
 // import { BattleEvent } from "./battle-event";
 import { Card } from "./deck/card";
+import { IngameMenu } from "./ingame-menu";
 // import { TurnCycle } from "./turn-cycle";
 
 function wait(ms: number) {
@@ -47,23 +50,34 @@ function getXRightpage(object: Unit | Card) {
 export class BattleManager {
   game: Game;
   player: Player;
-  // turnCycle: TurnCycle | undefined = undefined;
   enemies: Unit[] = [];
+  ingameMenu: IngameMenu = new IngameMenu(this);
+
+  backgroundUI: BackgroundUI;
+  battleUI: BattleUI;
 
   get clickableItems() {
-    let clickableItems = [...this.enemies, this.player, this.player.deck];
-    this.enemies.forEach((enemy: Unit) => {
-      clickableItems.push(enemy.deck);
-    });
+    let clickableItems = [
+      ...this.enemies,
+      this.player,
+      ...this.player.deck.cardsInHand,
+      this.battleUI.endTurnButton,
+    ];
+
     return clickableItems;
   }
 
   constructor(game: Game) {
     this.game = game;
+    this.backgroundUI = new BackgroundUI(this.game);
+    this.battleUI = new BattleUI(this.game);
+
     this.player = new Player(this.game, 0, 0);
   }
 
   init() {
+    this.ingameMenu.init();
+
     this.gameInit();
 
     this.gameLoop();
@@ -74,20 +88,21 @@ export class BattleManager {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    this.clickableItems.forEach((object) => object.draw(ctx));
+    [this.backgroundUI, ...this.clickableItems].forEach((object) =>
+      object.draw(ctx)
+    );
   }
 
   async gameLoop() {
+    await wait(1000);
     this.enemyUpkeep();
 
     await this.cpuTurn();
     this.enemyDiscardPhase();
-    // if playerHP is x -> end game
 
     this.playerUpkeep();
     await this.playerTurn();
     this.playerDiscardPhase();
-    // if enemy Hp =x   -> end game
 
     this.gameLoop();
   }
@@ -117,36 +132,35 @@ export class BattleManager {
     this.player = new Player(this.game, 0, 0);
     this.player.yPercentage = getYBottomPage(this.player);
 
-    console.log(this.player.yPercentage);
-
     const enemy1 = new Ghost(this.game, 0, 0);
 
-    const enemy2 = new Ghost(this.game, 0.5, 0);
+    const enemy2 = new Ghost(this.game, 0.0, 0);
     enemy2.xPercentage = getXRightpage(enemy2);
 
-    const enemy3 = new Ghost(this.game, 0.5, 0);
+    const enemy3 = new Ghost(this.game, 0.0, 0);
     enemy3.xPercentage = getXMidpage(enemy3);
 
     this.enemies = [enemy1, enemy2, enemy3];
     [...this.enemies, this.player].forEach((unit) => unit.init());
   }
 
-  async cpuTurn() {
+  async cpuTurn(): Promise<void> {
     return new Promise((resolve: Function) => {
-      this.performAllEnemyTurns(this.enemies);
-      resolve();
-    }); //which is also when the promise resolves
+      this.performAllEnemyTurns(this.enemies, resolve);
+    });
   }
 
-  async performAllEnemyTurns(enemies: Unit[]) {
+  async performAllEnemyTurns(enemies: Unit[], resolveCpuTurn: Function) {
     for await (const enemy of enemies) {
       await this.performEnemyUnitTurn(enemy);
     }
+
+    resolveCpuTurn();
   }
 
   performEnemyUnitTurn(enemy: Unit): Promise<void> {
     return new Promise((resolve: Function) => {
-      setTimeout(function () {
+      setTimeout(() => {
         console.log("enemy attacks", enemy);
 
         resolve();
@@ -168,7 +182,12 @@ export class BattleManager {
           }
         });
 
-        if (rectRectCollision(game.ui.endTurnButton, game.mouse)) {
+        if (
+          rectRectCollision(
+            game.battleManager.battleUI.endTurnButton,
+            game.mouse
+          )
+        ) {
           console.log("End Player Turn");
           canvas.removeEventListener("click", mouseClickListener);
           resolve();
