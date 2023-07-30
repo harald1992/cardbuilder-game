@@ -21,7 +21,7 @@ const wrapText = function (
   x: number,
   y: number,
   maxWidth: number,
-  lineHeight: number,
+  lineHeight: number
 ): any {
   // First, start by splitting all of our text into words, but splitting it into an array split by spaces
   let words = text.split(" ");
@@ -64,23 +64,44 @@ export class Card {
   body = "body";
   effect: (caster: Unit, target: Unit) => void = (caster: Unit, target: Unit) =>
     console.log("no effect");
-  x: number = 2000; // not visible
-  y: number = 2000; // not visible
+  //   x: number = 2000; // not visible
+  //   y: number = 2000; // not visible
   background = new Image();
   image = new Image();
   costCircle = new Image();
   id: string = uuidv4();
   markedForDeletion = false;
 
+  xPercentage = 0;
+  yPercentage = 0;
+
+  widthPercentage = 0.1;
+  heightPercentage = 0.2;
+
+  get x() {
+    // return 0.75 * this.game.main.width;
+    return this.xPercentage * this.unit.game.main.width;
+  }
+
+  get y() {
+    // return 0.4 * this.game.main.height;
+    return this.yPercentage * this.unit.game.main.height;
+  }
+
   get width() {
-    return 0.1 * this.unit.game.main.width;
+    return this.widthPercentage * this.unit.game.main.width;
   }
 
   get height() {
-    return 0.2 * this.unit.game.main.width;
+    return this.heightPercentage * this.unit.game.main.width;
   }
 
-  constructor(unit: Player | Enemy | Unit, config: CardConfig) {
+  constructor(
+    unit: Player | Enemy | Unit,
+    config: CardConfig,
+    xPercentage = 0.75,
+    yPercentage = 0.4
+  ) {
     this.unit = unit;
     this.cost = config.cost;
     this.title = config.title;
@@ -91,6 +112,8 @@ export class Card {
 
     this.background.src = config.background || CardType.OFFENSIVE;
     this.costCircle.src = "assets/cards/card-cost-circle.png";
+    this.xPercentage = xPercentage;
+    this.yPercentage = yPercentage;
   }
 
   update(deltaTime: number) {}
@@ -115,7 +138,7 @@ export class Card {
       8,
       0,
       2 * Math.PI,
-      false,
+      false
     );
     ctx.fillStyle = "white";
     ctx.fill();
@@ -131,7 +154,7 @@ export class Card {
     ctx.fillText(
       this.cost.toString(),
       this.x + 0.1 * this.width,
-      this.y + 0.1 * this.width,
+      this.y + 0.1 * this.width
     );
   }
 
@@ -154,7 +177,7 @@ export class Card {
     ctx.fillText(
       this.title,
       this.x + 0.1 * this.width + 12,
-      this.y + 0.1 * this.width,
+      this.y + 0.1 * this.width
     );
   }
 
@@ -166,7 +189,7 @@ export class Card {
       this.y + 0.1 * this.height,
       0.8 * this.width,
       0.8 * this.width,
-      4,
+      4
     );
     ctx.clip();
 
@@ -175,7 +198,7 @@ export class Card {
       this.x + 0.1 * this.width,
       this.y + 0.1 * this.height,
       0.8 * this.width,
-      0.8 * this.width,
+      0.8 * this.width
     );
     ctx.restore();
   }
@@ -189,7 +212,7 @@ export class Card {
     ctx.fillText(
       "Spell",
       this.x + 0.1 * this.width + 4,
-      this.y + 0.55 * this.height,
+      this.y + 0.55 * this.height
     );
   }
 
@@ -199,7 +222,7 @@ export class Card {
       this.x + 0.1 * this.width,
       this.y + 0.6 * this.height,
       0.8 * this.width,
-      0.6 * this.width,
+      0.6 * this.width
     );
 
     ctx.font = `12px Roboto`;
@@ -216,7 +239,7 @@ export class Card {
       textX,
       textY,
       0.8 * this.width,
-      16,
+      16
     );
     wrappedText.forEach(function (item: any) {
       ctx.fillText(item[0], item[1], item[2]);

@@ -1,6 +1,7 @@
 import { Game } from "../game";
 import { $store } from "../store";
 import { Ghost } from "../units/enemies/ghost";
+import { Player } from "../units/player";
 import { Unit } from "../units/unit";
 import { rectRectCollision } from "../utils/utils";
 // import { BattleEvent } from "./battle-event";
@@ -15,14 +16,51 @@ function wait(ms: number) {
   });
 }
 
+function getYBottomPage(object: Unit | Card) {
+  const height = object.height;
+  const gameHeight = $store.getGame().main.height;
+  const difference = gameHeight - height;
+
+  const yPercentage = difference / gameHeight;
+  return yPercentage;
+}
+
+function getXMidpage(object: Unit | Card) {
+  // todo: is this really mid? Probably not
+  const width = object.width;
+  const gameWidth = $store.getGame().main.width;
+  const difference = gameWidth - width;
+
+  const xPercentage = difference / gameWidth;
+  return xPercentage / 2;
+}
+
+function getXRightpage(object: Unit | Card) {
+  const width = object.width;
+  const gameWidth = $store.getGame().main.width;
+  const difference = gameWidth - width;
+
+  const xPercentage = difference / gameWidth;
+  return xPercentage;
+}
+
 export class BattleManager {
   game: Game;
-
+  player: Player;
   // turnCycle: TurnCycle | undefined = undefined;
   enemies: Unit[] = [];
 
+  get clickableItems() {
+    let clickableItems = [...this.enemies, this.player, this.player.deck];
+    this.enemies.forEach((enemy: Unit) => {
+      clickableItems.push(enemy.deck);
+    });
+    return clickableItems;
+  }
+
   constructor(game: Game) {
     this.game = game;
+    this.player = new Player(this.game, 0, 0);
   }
 
   init() {
@@ -31,10 +69,12 @@ export class BattleManager {
     this.gameLoop();
   }
 
-  update(deltaTime: number) {}
+  update(deltaTime: number) {
+    this.clickableItems.forEach((object) => object.update(deltaTime));
+  }
 
   draw(ctx: CanvasRenderingContext2D) {
-    this.enemies.forEach((enemy) => enemy.draw(ctx));
+    this.clickableItems.forEach((object) => object.draw(ctx));
   }
 
   async gameLoop() {
@@ -54,18 +94,29 @@ export class BattleManager {
   }
 
   playerUpkeep() {
-    const player = this.game.player;
+    const player = this.player;
+    console.log(player);
+
     player.deck.drawCards(3);
     player.currentMp = player.maxMp;
   }
 
   gameInit() {
-    const enemy1 = new Ghost(this.game, 0.75, 0.2);
+    this.player = new Player(this.game, 0, 0);
+    this.player.yPercentage = getYBottomPage(this.player);
 
-    const enemy2 = new Ghost(this.game, 0.75, 0.3);
-    this.enemies = [enemy1, enemy2];
-    this.enemies.forEach((enemy) => enemy.init());
-    //...set CPU and player HP each to 40
+    console.log(this.player.yPercentage);
+
+    const enemy1 = new Ghost(this.game, 0, 0);
+
+    const enemy2 = new Ghost(this.game, 0.5, 0);
+    enemy2.xPercentage = getXRightpage(enemy2);
+
+    const enemy3 = new Ghost(this.game, 0.5, 0);
+    enemy3.xPercentage = getXMidpage(enemy3);
+
+    this.enemies = [enemy1, enemy2, enemy3];
+    [...this.enemies, this.player].forEach((unit) => unit.init());
   }
 
   async cpuTurn() {
@@ -102,9 +153,9 @@ export class BattleManager {
     return new Promise<void>((resolve) => {
       /* The listener */
       function mouseClickListener(event: Event) {
-        game.player.deck.cardsInHand.forEach((card: Card) => {
+        game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
           if (rectRectCollision(card, game.mouse)) {
-            card.playCard(game.player, enemy);
+            card.playCard(game.battleManager.player, enemy);
           }
         });
 

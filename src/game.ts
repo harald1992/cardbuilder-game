@@ -14,7 +14,7 @@ import { BattleManager } from "./battle/battle-manager";
 export class Game {
   battleBackground: Background;
   mainMenu: MainMenu;
-  player: Player;
+  // player: Player;
   // enemy: Enemy;
   main: Main;
   index: any;
@@ -27,17 +27,24 @@ export class Game {
   battleManager: BattleManager;
 
   get clickableItems() {
-    return [...this.player.deck.cardsInHand, this.ui.endTurnButton];
+    let clickableItems = [
+      this.battleManager.player,
+      ...this.battleManager.player.deck.cardsInHand,
+      this.ui.endTurnButton,
+    ];
+    this.battleManager.enemies.forEach((enemy: Enemy) => {
+      clickableItems.push(enemy);
+    });
+
+    return clickableItems;
   }
 
   constructor(main: Main) {
     this.main = main;
-    this.battleBackground = new Background(this.main, "forest1", 0);
+    this.battleBackground = new Background(this.main, "particle-background", 0);
     this.mainMenu = new MainMenu(this);
-    this.player = new Player(this);
-    // this.enemy = new Enemy(this);
+    // this.player = new Player(this, 0, 0);
     this.backgroundUI = new BackgroundUI(this);
-    // this.turnHandler = new TurnHandler(this);
     this.mouse = new Mouse(this);
     this.mouseHandler = new MouseHandler(this);
     this.ui = new UI(this);
@@ -49,7 +56,7 @@ export class Game {
     [
       this.battleBackground,
       this.backgroundUI,
-      this.player,
+      // this.player,
       this.battleManager,
       this.ui,
     ].forEach((item) => item.update(deltaTime));
@@ -59,10 +66,17 @@ export class Game {
     [
       this.battleBackground,
       this.backgroundUI,
-      this.player,
+      // this.player,
       this.battleManager,
       this.ui,
     ].forEach((item) => item.draw(ctx));
+
+    if (this.main.debugMode) {
+      ctx.strokeStyle = "black";
+      this.clickableItems.forEach((item) => {
+        ctx.strokeRect(item.x, item.y, item.width, item.height);
+      });
+    }
   }
 
   init() {
@@ -70,12 +84,6 @@ export class Game {
   }
 
   newGame() {
-    this.player = new Player(this);
-    this.player.init();
-    // this.enemy = new Ghost(this);
-    // this.enemy.init();
-
-    // this.turnHandler.init();
     this.battleManager.init();
   }
 }

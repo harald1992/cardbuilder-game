@@ -27,13 +27,20 @@ export class MouseHandler {
     this.game.main.canvas.addEventListener("mousemove", (event: MouseEvent) => {
       if (
         this.game.clickableItems.some((item: any) =>
-          rectRectCollision(item, this.mouse),
+          rectRectCollision(item, this.mouse)
         )
       ) {
         this.cursor = "pointer";
       } else {
         this.cursor = "default";
       }
+    });
+
+    this.game.main.canvas.addEventListener("click", (event: MouseEvent) => {
+      const item = this.game.clickableItems.find((item: any) =>
+        rectRectCollision(item, this.mouse)
+      );
+      console.log(item);
     });
   }
 

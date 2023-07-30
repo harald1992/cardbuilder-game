@@ -28,7 +28,7 @@ class Store {
   // }
 
   getPlayer(): Player {
-    return this.getGame().player;
+    return this.getGame().battleManager.player;
   }
 
   // getEnemies(): Enemy[] {

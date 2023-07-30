@@ -3,19 +3,11 @@ import { Game } from "../game";
 import { Unit } from "./unit";
 
 export class Player extends Unit {
-  get x() {
-    return 0.05 * this.game.main.width;
-  }
-
-  get y() {
-    return 0.4 * this.game.main.height;
-  }
-
-  constructor(game: Game) {
-    super(game);
+  constructor(game: Game, xPercentage: number, yPercentage: number) {
+    super(game, xPercentage, yPercentage);
     this.image.src = "assets/units/player-wizard.png";
     // this.isPlayer = true;
-    this.team = 'player';
+    this.team = "player";
     this.maxHp = 5;
     this.maxMp = 3;
     this.deck.allCards = getCardByTitles(this, [

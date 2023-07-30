@@ -3,6 +3,9 @@ import { Game } from "../game";
 import { HealthBar } from "./health-bar";
 
 export class Unit {
+  xPercentage = 0;
+  yPercentage = 0;
+
   #hp = 1;
   #mp = 1;
   maxHp: number = 1;
@@ -31,11 +34,11 @@ export class Unit {
   // }
 
   get x() {
-    return 0;
+    return this.xPercentage * this.game.main.width;
   }
 
   get y() {
-    return 0;
+    return this.yPercentage * this.game.main.height;
   }
 
   get width() {
@@ -69,7 +72,7 @@ export class Unit {
     this.#mp = value;
   }
 
-  constructor(game: Game) {
+  constructor(game: Game, xPercentage = 0, yPercentage = 0) {
     this.game = game;
 
     this.currentHp = this.maxHp;
@@ -77,6 +80,8 @@ export class Unit {
     this.healthBar = new HealthBar(this);
     this.image.src = "assets/units/hero.jpg";
     this.stunnedImage.src = "assets/icons/lightning-spark.svg";
+    this.xPercentage = xPercentage;
+    this.yPercentage = yPercentage;
   }
 
   init() {
@@ -103,11 +108,6 @@ export class Unit {
       ctx.fillStyle = "white";
       ctx.fillRect(stunX, stunY, stunWidth, stunHeight);
       ctx.drawImage(this.stunnedImage, stunX, stunY, stunWidth, stunHeight);
-    }
-
-    if (this.game.main.debugMode) {
-      ctx.strokeStyle = "black";
-      ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
   }
 }

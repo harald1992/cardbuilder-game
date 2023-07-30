@@ -48,7 +48,7 @@ export class Main {
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.gameContainer = document.querySelector(
-      ".game-container",
+      ".game-container"
     ) as HTMLElement;
 
     this.background = new Background(this);
@@ -72,9 +72,7 @@ export class Main {
 
     window.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.key === "d") {
-        console.log(this.game.player.deck);
-
-        this.debugMode = !this.debugMode;
+        // this.debugMode = !this.debugMode;
       }
     });
   }

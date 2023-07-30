@@ -4,7 +4,7 @@ import { Enemy } from "./enemy";
 
 export class Ghost extends Enemy {
   game: Game;
-  constructor(game: Game, xPercentage = 0.75, yPercentage = 0.4) {
+  constructor(game: Game, xPercentage: number, yPercentage: number) {
     super(game, xPercentage, yPercentage);
     this.game = game;
     this.image.src = "assets/units/monster-ghost.png";
