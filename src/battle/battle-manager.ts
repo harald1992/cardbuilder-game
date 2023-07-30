@@ -2,6 +2,7 @@ import { BackgroundUI } from "../classes/background-ui";
 import { Game } from "../game";
 import { $store } from "../store";
 import { BattleUI } from "../ui-elements/battle-ui";
+import { Enemy } from "../units/enemies/enemy";
 import { Ghost } from "../units/enemies/ghost";
 import { Player } from "../units/player";
 import { Unit } from "../units/unit";
@@ -55,6 +56,7 @@ export class BattleManager {
 
   backgroundUI: BackgroundUI;
   battleUI: BattleUI;
+  selectedCard: Card | undefined;
 
   get clickableItems() {
     let clickableItems = [
@@ -73,6 +75,7 @@ export class BattleManager {
     this.battleUI = new BattleUI(this.game);
 
     this.player = new Player(this.game, 0, 0);
+    // this.selectedCard = this.player.deck.cardsInHand[0];
   }
 
   init() {
@@ -94,15 +97,14 @@ export class BattleManager {
   }
 
   async gameLoop() {
-    await wait(1000);
-    this.enemyUpkeep();
-
-    await this.cpuTurn();
-    this.enemyDiscardPhase();
-
+    // await wait(500);
     this.playerUpkeep();
     await this.playerTurn();
     this.playerDiscardPhase();
+
+    this.enemyUpkeep();
+    await this.cpuTurn();
+    this.enemyDiscardPhase();
 
     this.gameLoop();
   }
@@ -173,14 +175,16 @@ export class BattleManager {
     const canvas = $store.getGame().main.canvas;
     const enemy = this.enemies[0];
 
+    this.dragAndDropCards();
+
     return new Promise<void>((resolve) => {
       /* The listener */
-      function mouseClickListener(event: Event) {
-        game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
-          if (rectRectCollision(card, game.mouse)) {
-            card.playCard(game.battleManager.player, enemy);
-          }
-        });
+      function turnEndListener(event: Event) {
+        // game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
+        //   if (rectRectCollision(card, game.mouse)) {
+        //     card.playCard(game.battleManager.player, enemy);
+        //   }
+        // });
 
         if (
           rectRectCollision(
@@ -188,13 +192,77 @@ export class BattleManager {
             game.mouse
           )
         ) {
-          console.log("End Player Turn");
-          canvas.removeEventListener("click", mouseClickListener);
+          canvas.removeEventListener("click", turnEndListener);
+
+          canvas.removeEventListener(
+            "mousedown",
+            game.battleManager.onMouseDown
+          );
           resolve();
         }
       }
 
-      canvas.addEventListener("click", mouseClickListener);
+      canvas.addEventListener("click", turnEndListener);
+    });
+  }
+
+  dragAndDropCards() {
+    const game = $store.getGame();
+    const canvas = $store.getGame().main.canvas;
+    canvas.addEventListener("mousedown", this.onMouseDown);
+  }
+
+  onMouseDown(event: Event) {
+    const game = $store.getGame();
+    const canvas = game.main.canvas;
+    const battleManager = game.battleManager;
+
+    game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
+      if (rectRectCollision(card, game.mouse)) {
+        battleManager.selectedCard = card;
+
+        canvas.addEventListener("mousemove", battleManager.onMouseMove);
+
+        canvas.addEventListener("mouseup", battleManager.onMouseUp);
+      }
+    });
+  }
+
+  onMouseMove(event: Event) {
+    const game = $store.getGame();
+
+    // console.log("on mouse move", event);
+    const mouse = $store.getGame().mouse;
+    const selectedCard = game.battleManager.selectedCard;
+
+    if (selectedCard) {
+      selectedCard.xPercentage = mouse.xPercentage;
+      selectedCard.yPercentage = mouse.yPercentage;
+    }
+  }
+
+  onMouseUp(event: Event) {
+    const game = $store.getGame();
+    const selectedCard = game.battleManager.selectedCard;
+    console.log();
+    game.battleManager.enemies.forEach((enemy: Unit) => {
+      if (
+        game.battleManager.enemies.some((enemy: Enemy) =>
+          rectRectCollision(enemy, game.mouse)
+        )
+      ) {
+        game.main.canvas.removeEventListener(
+          "mouseup",
+          game.battleManager.onMouseUp
+        );
+
+        if (rectRectCollision(enemy, game.mouse)) {
+          selectedCard?.playCard(game.battleManager.player, enemy);
+        }
+      } else {
+        game.battleManager.selectedCard = undefined;
+        selectedCard?.deck.updateCardPositions();
+      }
     });
   }
 }

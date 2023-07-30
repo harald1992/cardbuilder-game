@@ -6,8 +6,8 @@ import {
 import { Unit } from "../../units/unit";
 import { Card } from "./card";
 
-function duplicateCard(unit: Unit, card: Card) {
-  const newCard = getCardByTitles(unit, [card.title])[0];
+function duplicateCard(deck: Deck, card: Card) {
+  const newCard = getCardByTitles(deck, [card.title])[0];
   return newCard;
 }
 
@@ -100,7 +100,7 @@ export class Deck {
   }
 
   shuffleDiscardCardInDeck(cardToShuffleBack: Card) {
-    const newCard = duplicateCard(this.unit, cardToShuffleBack);
+    const newCard = duplicateCard(this, cardToShuffleBack);
     this.cardsInDiscard = this.cardsInDiscard.filter(
       (card: Card) => card.id !== cardToShuffleBack.id
     );
@@ -108,7 +108,7 @@ export class Deck {
   }
 
   discardCard(cardToDiscard: Card) {
-    const newCard = duplicateCard(this.unit, cardToDiscard);
+    const newCard = duplicateCard(this, cardToDiscard);
     this.cardsInHand = this.cardsInHand.filter(
       (card: Card) => card.id !== cardToDiscard.id
     );

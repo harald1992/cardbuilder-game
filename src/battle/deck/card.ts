@@ -7,6 +7,7 @@ import { Enemy } from "../../units/enemies/enemy";
 import { Player } from "../../units/player";
 import { v4 as uuidv4 } from "uuid";
 import { Unit } from "../../units/unit";
+import { Deck } from "./deck";
 
 export enum CardType {
   OFFENSIVE = "assets/cards/background_red.png",
@@ -58,6 +59,7 @@ const wrapText = function (
 };
 
 export class Card {
+  deck: Deck;
   unit: Unit;
   cost = 0;
   title = "title";
@@ -97,12 +99,13 @@ export class Card {
   }
 
   constructor(
-    unit: Player | Enemy | Unit,
+    deck: Deck,
     config: CardConfig,
     xPercentage = 0.75,
     yPercentage = 0.4
   ) {
-    this.unit = unit;
+    this.deck = deck;
+    this.unit = deck.unit;
     this.cost = config.cost;
     this.title = config.title;
     this.body = config.body;

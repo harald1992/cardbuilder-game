@@ -13,7 +13,7 @@ export class Ghost extends Enemy {
     this.maxHp = 5;
     this.maxMp = 2;
 
-    this.deck.allCards = getCardByTitles(this, [
+    this.deck.allCards = getCardByTitles(this.deck, [
       CardTitle.JUNK,
       CardTitle.JUNK,
       CardTitle.JUNK,

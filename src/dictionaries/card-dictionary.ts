@@ -1,4 +1,5 @@
 import { Card, CardType } from "../battle/deck/card";
+import { Deck } from "../battle/deck/deck";
 import { Enemy } from "../units/enemies/enemy";
 import { Player } from "../units/player";
 import { Unit } from "../units/unit";
@@ -22,12 +23,12 @@ export enum CardTitle {
   LEGENDARY_STRIKE = "Legendary Strike",
 }
 
-export function getCardByTitles(unit: Unit, titles: CardTitle[] | string[]) {
+export function getCardByTitles(deck: Deck, titles: CardTitle[] | string[]) {
   let cards: Card[] = [];
   titles.forEach((title: CardTitle | string) => {
     $cardDictionary.forEach((cardConfig: CardConfig) => {
       if (cardConfig.title === title) {
-        cards.push(new Card(unit, cardConfig));
+        cards.push(new Card(deck, cardConfig));
       }
     });
   });

@@ -9,6 +9,20 @@ export class Mouse {
   canvas: HTMLCanvasElement;
   canvasPosition: DOMRect;
 
+  get xPercentage() {
+    if (!this.x) {
+      return 0;
+    }
+    return this.x / this.game.main.width;
+  }
+
+  get yPercentage() {
+    if (!this.y) {
+      return 0;
+    }
+    return this.y / this.game.main.width;
+  }
+
   constructor(game: Game) {
     this.game = game;
     this.canvas = this.game.main.canvas;

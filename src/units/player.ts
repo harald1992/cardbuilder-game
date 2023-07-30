@@ -12,7 +12,7 @@ export class Player extends Unit {
     this.team = "player";
     this.maxHp = 5;
     this.maxMp = 3;
-    this.deck.allCards = getCardByTitles(this, [
+    this.deck.allCards = getCardByTitles(this.deck, [
       CardTitle.JUNK,
       CardTitle.JUNK,
       CardTitle.JUNK,
