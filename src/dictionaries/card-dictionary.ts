@@ -10,6 +10,7 @@ export type CardConfig = {
   body: string;
   imgSrc: string;
   background?: string;
+  isUnPlayable?: boolean;
   // effect: (caster: Player | Enemy, target: Player | Enemy) => void;
   effect: (caster: Unit, target: Unit) => void;
 };
@@ -40,25 +41,28 @@ export const $cardDictionary: CardConfig[] = [
   {
     cost: 0,
     title: "Junk",
-    body: "Does nothing",
-    imgSrc: "assets/cards/junk.jpg",
+    body: "Unplayable",
+    imgSrc: "assets/cards/po_plc_a03_m.png",
     background: CardType.MISC,
+    isUnPlayable: true,
     effect: (caster: Unit, target: Unit) => {},
   },
 
   {
     cost: 1,
     title: "Lightning Spark",
-    body: "Deal 1 damage. 20% stun",
+    body: "Deal 1 damage. 5% stun",
     imgSrc: "assets/cards/lightning-spark.jpg",
     background: CardType.OFFENSIVE,
     effect: (caster: Unit, target: Unit) => {
       target.currentHp -= 1;
 
       // todo: fix stun loop
-      // if (target.isStunned) { return; }
-      // let isStunned = Math.random() <= 0.2;
-      // target.isStunned = isStunned;
+      if (target.isStunned) {
+        return;
+      }
+      let isStunned = Math.random() <= 0.05;
+      target.isStunned = isStunned;
     },
   },
 
@@ -80,23 +84,23 @@ export const $cardDictionary: CardConfig[] = [
     imgSrc: "assets/cards/heal.jpg",
     background: CardType.DEFENSIVE,
     effect: (caster: Unit, target: Unit) => {
-      caster.currentHp += 2;
+      target.currentHp += 2;
     },
   },
 
   {
-    cost: 3,
+    cost: 1,
     title: "Library",
-    body: "Draw One Card",
+    body: "Draw 3 Cards",
     imgSrc: "assets/cards/book.jpg",
     background: CardType.INCOME,
     effect: (caster: Unit, target: Unit) => {
-      caster.deck.drawCards(2);
+      target.deck.drawCards(3);
     },
   },
 
   {
-    cost: 5,
+    cost: 4,
     title: "Legendary Strike",
     body: "Deal 10 damage",
     imgSrc: "assets/cards/slash.jpg",

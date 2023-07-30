@@ -5,25 +5,21 @@ import { HealthBar } from "./health-bar";
 export class Unit {
   xPercentage = 0;
   yPercentage = 0;
-
   #hp = 1;
   #mp = 1;
   maxHp: number = 1;
   maxMp = 1;
-
   image = new Image();
   stunnedImage = new Image();
-
   game: Game;
   healthBar: HealthBar;
-
   deck: Deck = new Deck(this);
-
   isStunned = false;
 
-  didTurn = false;
+  // didTurn = false;
   team: "player" | "enemy" = "enemy";
 
+  targetMark = false;
   // todo: remove and go to currentTeam
   get isPlayer() {
     return this.team === "player";
@@ -108,6 +104,12 @@ export class Unit {
       ctx.fillStyle = "white";
       ctx.fillRect(stunX, stunY, stunWidth, stunHeight);
       ctx.drawImage(this.stunnedImage, stunX, stunY, stunWidth, stunHeight);
+    }
+
+    if (this.targetMark) {
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
   }
 }

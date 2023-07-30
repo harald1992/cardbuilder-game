@@ -23,8 +23,9 @@ export class MouseHandler {
   mouseHoverEffects() {
     this.game.main.canvas.addEventListener("mousemove", (event: MouseEvent) => {
       if (
-        this.game.clickableItems.some((item: any) =>
-          rectRectCollision(item, this.mouse)
+        this.game.clickableItems.some(
+          (item: any) =>
+            rectRectCollision(item, this.mouse) && !item.isUnPlayable
         )
       ) {
         this.cursor = "pointer";

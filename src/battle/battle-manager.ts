@@ -75,7 +75,6 @@ export class BattleManager {
     this.battleUI = new BattleUI(this.game);
 
     this.player = new Player(this.game, 0, 0);
-    // this.selectedCard = this.player.deck.cardsInHand[0];
   }
 
   init() {
@@ -162,10 +161,17 @@ export class BattleManager {
 
   performEnemyUnitTurn(enemy: Unit): Promise<void> {
     return new Promise((resolve: Function) => {
-      setTimeout(() => {
-        console.log("enemy attacks", enemy);
+      if (enemy.isStunned) {
+        console.log("enemy is stunned");
 
-        resolve();
+        enemy.isStunned = false;
+        return resolve();
+      }
+
+      setTimeout(() => {
+        this.playPossibleCards(enemy, this.player, resolve);
+
+        // resolve();
       }, 1000); //the attack will happen after 1 second,
     });
   }
@@ -178,14 +184,12 @@ export class BattleManager {
     this.dragAndDropCards();
 
     return new Promise<void>((resolve) => {
-      /* The listener */
-      function turnEndListener(event: Event) {
-        // game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
-        //   if (rectRectCollision(card, game.mouse)) {
-        //     card.playCard(game.battleManager.player, enemy);
-        //   }
-        // });
+      if (this.player.isStunned) {
+        this.player.isStunned = false;
+        resolve();
+      }
 
+      function turnEndListener(event: Event) {
         if (
           rectRectCollision(
             game.battleManager.battleUI.endTurnButton,
@@ -218,7 +222,7 @@ export class BattleManager {
     const battleManager = game.battleManager;
 
     game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
-      if (rectRectCollision(card, game.mouse)) {
+      if (rectRectCollision(card, game.mouse) && !card.isUnPlayable) {
         battleManager.selectedCard = card;
 
         canvas.addEventListener("mousemove", battleManager.onMouseMove);
@@ -231,7 +235,16 @@ export class BattleManager {
   onMouseMove(event: Event) {
     const game = $store.getGame();
 
-    // console.log("on mouse move", event);
+    [game.battleManager.player, ...game.battleManager.enemies].forEach(
+      (unit: Unit) => {
+        if (rectRectCollision(game.mouse, unit)) {
+          unit.targetMark = true;
+        } else {
+          unit.targetMark = false;
+        }
+      }
+    );
+
     const mouse = $store.getGame().mouse;
     const selectedCard = game.battleManager.selectedCard;
 
@@ -244,25 +257,59 @@ export class BattleManager {
   onMouseUp(event: Event) {
     const game = $store.getGame();
     const selectedCard = game.battleManager.selectedCard;
-    console.log();
-    game.battleManager.enemies.forEach((enemy: Unit) => {
-      if (
-        game.battleManager.enemies.some((enemy: Enemy) =>
-          rectRectCollision(enemy, game.mouse)
-        )
-      ) {
-        game.main.canvas.removeEventListener(
-          "mouseup",
-          game.battleManager.onMouseUp
-        );
 
-        if (rectRectCollision(enemy, game.mouse)) {
-          selectedCard?.playCard(game.battleManager.player, enemy);
+    const target: Unit | undefined = [
+      game.battleManager.player,
+      ...game.battleManager.enemies,
+    ].find((unit: Unit) => rectRectCollision(unit, game.mouse));
+
+    if (target) {
+      selectedCard?.playCard(game.battleManager.player, target);
+      game.main.canvas.removeEventListener(
+        "mouseup",
+        game.battleManager.onMouseUp
+      );
+      game.main.canvas.removeEventListener(
+        "mousemove",
+        game.battleManager.onMouseMove
+      );
+
+      [game.battleManager.player, ...game.battleManager.enemies].forEach(
+        (unit: Unit) => {
+          unit.targetMark = false;
         }
-      } else {
-        game.battleManager.selectedCard = undefined;
-        selectedCard?.deck.updateCardPositions();
-      }
-    });
+      );
+
+      selectedCard?.deck.updateCardPositions();
+      game.battleManager.selectedCard = undefined;
+    } else {
+      selectedCard?.deck.updateCardPositions();
+      game.battleManager.selectedCard = undefined;
+
+      game.main.canvas.removeEventListener(
+        "mouseup",
+        game.battleManager.onMouseUp
+      );
+
+      game.main.canvas.removeEventListener(
+        "mousemove",
+        game.battleManager.onMouseMove
+      );
+    }
+  }
+
+  playPossibleCards(caster: Unit, target: Unit, resolve: Function) {
+    const possibleCardsToPlay = [...caster.deck.cardsInHand].filter(
+      (card: Card) => card.cost <= caster.currentMp && !card.isUnPlayable
+    );
+    if (possibleCardsToPlay.length === 0) {
+      return resolve();
+    }
+    const randomIndex = Math.floor(Math.random() * possibleCardsToPlay.length);
+    const randomCard = possibleCardsToPlay[randomIndex];
+    if (randomCard) {
+      randomCard.playCard(caster, target);
+    }
+    this.playPossibleCards(caster, target, resolve);
   }
 }

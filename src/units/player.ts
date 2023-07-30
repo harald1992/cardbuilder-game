@@ -10,7 +10,7 @@ export class Player extends Unit {
 
     // this.isPlayer = true;
     this.team = "player";
-    this.maxHp = 5;
+    this.maxHp = 20;
     this.maxMp = 3;
     this.deck.allCards = getCardByTitles(this.deck, [
       CardTitle.JUNK,
@@ -19,9 +19,9 @@ export class Player extends Unit {
       CardTitle.JUNK,
       CardTitle.JUNK,
       CardTitle.LIGHTNING_SPARK,
-      CardTitle.LIGHTNING_SPARK,
-      CardTitle.LIGHTNING_SPARK,
-      CardTitle.LIGHTNING_BOLT,
+      CardTitle.LIBRARY,
+      CardTitle.HEALING_AID,
+      CardTitle.LEGENDARY_STRIKE,
       CardTitle.LIGHTNING_BOLT,
     ]);
   }

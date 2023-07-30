@@ -76,6 +76,7 @@ export class Card {
 
   xPercentage = 0;
   yPercentage = 0;
+  isUnPlayable = false;
 
   widthPercentage = 0.1;
   heightPercentage = 0.2;
@@ -109,6 +110,7 @@ export class Card {
     this.cost = config.cost;
     this.title = config.title;
     this.body = config.body;
+    this.isUnPlayable = config.isUnPlayable || false;
     this.effect = config.effect;
 
     this.image.src = config.imgSrc;
@@ -253,10 +255,8 @@ export class Card {
     if (caster.currentMp >= this.cost) {
       caster.currentMp -= this.cost;
 
-      setTimeout(() => {
-        this.effect(caster, target);
-        caster.deck.discardCard(this);
-      });
+      this.effect(caster, target);
+      caster.deck.discardCard(this);
     } else {
       console.log("you don't have enough mana");
     }
