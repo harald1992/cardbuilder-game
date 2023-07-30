@@ -92,6 +92,7 @@ export class Deck {
 
       this.drawCard();
     }
+    this.updateCardPositions();
   }
 
   shuffleDiscardPileInDeck() {

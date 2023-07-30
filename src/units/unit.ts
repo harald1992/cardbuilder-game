@@ -42,7 +42,7 @@ export class Unit {
   }
 
   get width() {
-    return 0.2 * this.game.main.width;
+    return 0.1 * this.game.main.width;
   }
 
   get height() {

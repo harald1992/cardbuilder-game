@@ -15,7 +15,7 @@ export class MainMenu {
     document.addEventListener("keydown", (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         if (this.mainMenuElement.style.display === "none") {
-          this.game.main.changeGameState(GameState.MAINMENU);
+          this.game.main.changeGameState(GameState.INGAMEPAUSE);
         } else {
           this.game.main.changeGameState(GameState.INGAME);
         }
@@ -27,6 +27,8 @@ export class MainMenu {
 
     buttons.forEach((button: HTMLButtonElement) => {
       button.addEventListener("click", (event: MouseEvent) => {
+        this.playSound();
+
         const id: string | null = button.getAttribute("id");
 
         switch (id) {
@@ -44,5 +46,13 @@ export class MainMenu {
         }
       });
     });
+  }
+
+  playSound() {
+    const audio = document.querySelector("audio#sound") as HTMLAudioElement;
+    audio.src =
+      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_autorun2.wav";
+    audio.volume = 0.2;
+    audio.play();
   }
 }

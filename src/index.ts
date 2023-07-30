@@ -96,22 +96,48 @@ export class Main {
   }
 
   changeGameState(state: GameState) {
-    this.gameState = state;
+    console.log(this.gameState);
+    console.log(state);
 
     switch (state) {
       case GameState.MAINMENU:
+        this.playMainMenuMusic();
         this.game.mainMenu.mainMenuElement.style.display = "flex";
 
         break;
       case GameState.INGAMEPAUSE:
+        this.game.mainMenu.mainMenuElement.style.display = "flex";
         break;
       case GameState.INGAME:
+        if (this.gameState !== GameState.INGAMEPAUSE) {
+          this.playBattleMusic();
+        }
         this.game.mainMenu.mainMenuElement.style.display = "none";
 
         break;
       case GameState.GAMEOVER:
         alert("game over");
     }
+
+    this.gameState = state;
+  }
+
+  playMainMenuMusic() {
+    const audio = document.querySelector("audio#music") as HTMLAudioElement;
+    audio.muted = true;
+    audio.src =
+      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_autorun.wav";
+    audio.volume = 0.2;
+    audio.muted = false;
+    audio.play();
+  }
+
+  playBattleMusic() {
+    const audio = document.querySelector("audio#music") as HTMLAudioElement;
+    audio.src =
+      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_bat_aribeth.bmu";
+    audio.volume = 0.2;
+    audio.play();
   }
 }
 

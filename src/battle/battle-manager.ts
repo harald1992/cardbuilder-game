@@ -78,9 +78,15 @@ export class BattleManager {
   }
 
   async gameLoop() {
+    this.enemyUpkeep();
+
     await this.cpuTurn();
+    this.enemyDiscardPhase();
     // if playerHP is x -> end game
+
+    this.playerUpkeep();
     await this.playerTurn();
+    this.playerDiscardPhase();
     // if enemy Hp =x   -> end game
 
     this.gameLoop();
@@ -95,10 +101,16 @@ export class BattleManager {
 
   playerUpkeep() {
     const player = this.player;
-    console.log(player);
-
     player.deck.drawCards(3);
     player.currentMp = player.maxMp;
+  }
+
+  enemyDiscardPhase() {
+    this.enemies.forEach((enemy: Unit) => enemy.deck.discardHand());
+  }
+
+  playerDiscardPhase() {
+    this.player.deck.discardHand();
   }
 
   gameInit() {
@@ -120,8 +132,6 @@ export class BattleManager {
   }
 
   async cpuTurn() {
-    this.enemyUpkeep();
-
     return new Promise((resolve: Function) => {
       this.performAllEnemyTurns(this.enemies);
       resolve();
@@ -145,7 +155,6 @@ export class BattleManager {
   }
 
   playerTurn(): Promise<void> {
-    this.playerUpkeep();
     const game = $store.getGame();
     const canvas = $store.getGame().main.canvas;
     const enemy = this.enemies[0];
