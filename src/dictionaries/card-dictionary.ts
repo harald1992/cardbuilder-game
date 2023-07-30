@@ -73,7 +73,7 @@ export const $cardDictionary: CardConfig[] = [
     imgSrc: "assets/cards/Lightning-bolt.png",
     background: CardType.OFFENSIVE,
     effect: (caster: Unit, target: Unit) => {
-      target.currentHp -= 2;
+      target.currentHp -= 3;
     },
   },
 

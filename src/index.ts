@@ -146,7 +146,7 @@ export class Main {
 window.onload = () => {
   const main = new Main();
   main.init();
-  $store.setGame(main.game);
+  $store.game = main.game;
 
   main.game.init();
 

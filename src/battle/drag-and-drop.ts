@@ -1,106 +1,90 @@
-// export function $dragAndDrop() = {
+import { Game } from "../game";
+import { $store } from "../store";
+import { Unit } from "../units/unit";
+import { rectRectCollision } from "../utils/utils";
+import { Card } from "./deck/card";
 
-//    function dragAndDropCards() {
-//         const game = $store.getGame();
-//         const canvas = $store.getGame().main.canvas;
-//         canvas.addEventListener("mousedown", this.onMouseDown);
-//       }
+export class DragAndDrop {
+  dragAndDropCards() {
+    const canvas = $store.canvas;
+    canvas.addEventListener("mousedown", this.onMouseDown);
+  }
 
-//       function   onMouseDown(event: Event) {
-//         const game = $store.getGame();
-//         const canvas = game.main.canvas;
-//         const battleManager = game.battleManager;
+  onMouseDown(event: Event) {
+    const game = $store.game;
+    const canvas = $store.canvas;
+    const battleManager = $store.battleManager;
+    const dragAndDrop = $store.dragAndDrop;
 
-//         game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
-//           if (rectRectCollision(card, game.mouse) && !card.isUnPlayable) {
-//             battleManager.selectedCard = card;
+    game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
+      if (rectRectCollision(card, game.mouse) && !card.isUnPlayable) {
+        battleManager.selectedCard = card;
 
-//             canvas.addEventListener("mousemove", battleManager.onMouseMove);
+        canvas.addEventListener("mousemove", dragAndDrop.onMouseMove);
 
-//             canvas.addEventListener("mouseup", battleManager.onMouseUp);
-//           }
-//         });
-//       }
+        canvas.addEventListener("mouseup", dragAndDrop.onMouseUp);
+      }
+    });
+  }
 
-//       function onMouseMove(event: Event) {
-//         const game = $store.getGame();
+  onMouseMove(event: Event) {
+    const game = $store.game;
 
-//         [game.battleManager.player, ...game.battleManager.enemies].forEach(
-//           (unit: Unit) => {
-//             if (rectRectCollision(game.mouse, unit)) {
-//               unit.targetMark = true;
-//             } else {
-//               unit.targetMark = false;
-//             }
-//           }
-//         );
+    [game.battleManager.player, ...game.battleManager.enemies].forEach(
+      (unit: Unit) => {
+        if (rectRectCollision(game.mouse, unit)) {
+          unit.targetMark = true;
+        } else {
+          unit.targetMark = false;
+        }
+      }
+    );
 
-//         const mouse = $store.getGame().mouse;
-//         const selectedCard = game.battleManager.selectedCard;
+    const mouse = $store.mouse;
+    const selectedCard = $store.battleManager.selectedCard;
 
-//         if (selectedCard) {
-//           selectedCard.xPercentage = mouse.xPercentage;
-//           selectedCard.yPercentage = mouse.yPercentage;
-//         }
-//       }
+    if (selectedCard) {
+      selectedCard.xPercentage = mouse.xPercentage;
+      selectedCard.yPercentage = mouse.yPercentage;
+    }
+  }
 
-//       function onMouseUp(event: Event) {
-//         const game = $store.getGame();
-//         const selectedCard = game.battleManager.selectedCard;
+  onMouseUp(event: Event) {
+    const game = $store.game;
+    const selectedCard = game.battleManager.selectedCard;
+    const dragAndDrop = $store.dragAndDrop;
 
-//         const target: Unit | undefined = [
-//           game.battleManager.player,
-//           ...game.battleManager.enemies,
-//         ].find((unit: Unit) => rectRectCollision(unit, game.mouse));
+    const target: Unit | undefined = [
+      game.battleManager.player,
+      ...game.battleManager.enemies,
+    ].find((unit: Unit) => rectRectCollision(unit, game.mouse));
 
-//         if (target) {
-//           selectedCard?.playCard(game.battleManager.player, target);
-//           game.main.canvas.removeEventListener(
-//             "mouseup",
-//             game.battleManager.onMouseUp
-//           );
-//           game.main.canvas.removeEventListener(
-//             "mousemove",
-//             game.battleManager.onMouseMove
-//           );
+    if (target) {
+      selectedCard?.playCard(game.battleManager.player, target);
+      game.main.canvas.removeEventListener("mouseup", dragAndDrop.onMouseUp);
+      game.main.canvas.removeEventListener(
+        "mousemove",
+        dragAndDrop.onMouseMove
+      );
 
-//           [game.battleManager.player, ...game.battleManager.enemies].forEach(
-//             (unit: Unit) => {
-//               unit.targetMark = false;
-//             }
-//           );
+      [game.battleManager.player, ...game.battleManager.enemies].forEach(
+        (unit: Unit) => {
+          unit.targetMark = false;
+        }
+      );
 
-//           selectedCard?.deck.updateCardPositions();
-//           game.battleManager.selectedCard = undefined;
-//         } else {
-//           selectedCard?.deck.updateCardPositions();
-//           game.battleManager.selectedCard = undefined;
+      selectedCard?.deck.updateCardPositions();
+      game.battleManager.selectedCard = undefined;
+    } else {
+      selectedCard?.deck.updateCardPositions();
+      game.battleManager.selectedCard = undefined;
 
-//           game.main.canvas.removeEventListener(
-//             "mouseup",
-//             game.battleManager.onMouseUp
-//           );
+      game.main.canvas.removeEventListener("mouseup", dragAndDrop.onMouseUp);
 
-//           game.main.canvas.removeEventListener(
-//             "mousemove",
-//             game.battleManager.onMouseMove
-//           );
-//         }
-//       }
-
-//       function  playPossibleCards(caster: Unit, target: Unit, resolve: Function) {
-//         const possibleCardsToPlay = [...caster.deck.cardsInHand].filter(
-//           (card: Card) => card.cost <= caster.currentMp && !card.isUnPlayable
-//         );
-//         if (possibleCardsToPlay.length === 0) {
-//           return resolve();
-//         }
-//         const randomIndex = Math.floor(Math.random() * possibleCardsToPlay.length);
-//         const randomCard = possibleCardsToPlay[randomIndex];
-//         if (randomCard) {
-//           randomCard.playCard(caster, target);
-//         }
-//         playPossibleCards(caster, target, resolve);
-//       }
-
-// };
+      game.main.canvas.removeEventListener(
+        "mousemove",
+        dragAndDrop.onMouseMove
+      );
+    }
+  }
+}

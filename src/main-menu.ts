@@ -30,7 +30,7 @@ export class MainMenu {
             this.game.newGame();
             break;
           case "store":
-            console.log($store.getGame());
+            console.log($store.game);
           default:
             console.log(id);
         }

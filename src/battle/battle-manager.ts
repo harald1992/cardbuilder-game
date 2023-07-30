@@ -9,6 +9,7 @@ import { Unit } from "../units/unit";
 import { rectRectCollision } from "../utils/utils";
 // import { BattleEvent } from "./battle-event";
 import { Card } from "./deck/card";
+import { DragAndDrop } from "./drag-and-drop";
 import { IngameMenu } from "./ingame-menu";
 // import { TurnCycle } from "./turn-cycle";
 
@@ -22,7 +23,7 @@ function wait(ms: number) {
 
 function getYBottomPage(object: Unit | Card) {
   const height = object.height;
-  const gameHeight = $store.getGame().main.height;
+  const gameHeight = $store.game.main.height;
   const difference = gameHeight - height;
 
   const yPercentage = difference / gameHeight;
@@ -32,7 +33,7 @@ function getYBottomPage(object: Unit | Card) {
 function getXMidpage(object: Unit | Card) {
   // todo: is this really mid? Probably not
   const width = object.width;
-  const gameWidth = $store.getGame().main.width;
+  const gameWidth = $store.game.main.width;
   const difference = gameWidth - width;
 
   const xPercentage = difference / gameWidth;
@@ -41,7 +42,7 @@ function getXMidpage(object: Unit | Card) {
 
 function getXRightpage(object: Unit | Card) {
   const width = object.width;
-  const gameWidth = $store.getGame().main.width;
+  const gameWidth = $store.game.main.width;
   const difference = gameWidth - width;
 
   const xPercentage = difference / gameWidth;
@@ -57,6 +58,8 @@ export class BattleManager {
   backgroundUI: BackgroundUI;
   battleUI: BattleUI;
   selectedCard: Card | undefined;
+
+  dragAndDrop: DragAndDrop = new DragAndDrop();
 
   get clickableItems() {
     let clickableItems = [
@@ -177,11 +180,11 @@ export class BattleManager {
   }
 
   playerTurn(): Promise<void> {
-    const game = $store.getGame();
-    const canvas = $store.getGame().main.canvas;
+    const game = $store.game;
+    const canvas = $store.game.main.canvas;
     const enemy = this.enemies[0];
 
-    this.dragAndDropCards();
+    this.dragAndDrop.dragAndDropCards();
 
     return new Promise<void>((resolve) => {
       if (this.player.isStunned) {
@@ -200,7 +203,7 @@ export class BattleManager {
 
           canvas.removeEventListener(
             "mousedown",
-            game.battleManager.onMouseDown
+            $store.dragAndDrop.onMouseDown
           );
           resolve();
         }
@@ -208,94 +211,6 @@ export class BattleManager {
 
       canvas.addEventListener("click", turnEndListener);
     });
-  }
-
-  dragAndDropCards() {
-    const game = $store.getGame();
-    const canvas = $store.getGame().main.canvas;
-    canvas.addEventListener("mousedown", this.onMouseDown);
-  }
-
-  onMouseDown(event: Event) {
-    const game = $store.getGame();
-    const canvas = game.main.canvas;
-    const battleManager = game.battleManager;
-
-    game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
-      if (rectRectCollision(card, game.mouse) && !card.isUnPlayable) {
-        battleManager.selectedCard = card;
-
-        canvas.addEventListener("mousemove", battleManager.onMouseMove);
-
-        canvas.addEventListener("mouseup", battleManager.onMouseUp);
-      }
-    });
-  }
-
-  onMouseMove(event: Event) {
-    const game = $store.getGame();
-
-    [game.battleManager.player, ...game.battleManager.enemies].forEach(
-      (unit: Unit) => {
-        if (rectRectCollision(game.mouse, unit)) {
-          unit.targetMark = true;
-        } else {
-          unit.targetMark = false;
-        }
-      }
-    );
-
-    const mouse = $store.getGame().mouse;
-    const selectedCard = game.battleManager.selectedCard;
-
-    if (selectedCard) {
-      selectedCard.xPercentage = mouse.xPercentage;
-      selectedCard.yPercentage = mouse.yPercentage;
-    }
-  }
-
-  onMouseUp(event: Event) {
-    const game = $store.getGame();
-    const selectedCard = game.battleManager.selectedCard;
-
-    const target: Unit | undefined = [
-      game.battleManager.player,
-      ...game.battleManager.enemies,
-    ].find((unit: Unit) => rectRectCollision(unit, game.mouse));
-
-    if (target) {
-      selectedCard?.playCard(game.battleManager.player, target);
-      game.main.canvas.removeEventListener(
-        "mouseup",
-        game.battleManager.onMouseUp
-      );
-      game.main.canvas.removeEventListener(
-        "mousemove",
-        game.battleManager.onMouseMove
-      );
-
-      [game.battleManager.player, ...game.battleManager.enemies].forEach(
-        (unit: Unit) => {
-          unit.targetMark = false;
-        }
-      );
-
-      selectedCard?.deck.updateCardPositions();
-      game.battleManager.selectedCard = undefined;
-    } else {
-      selectedCard?.deck.updateCardPositions();
-      game.battleManager.selectedCard = undefined;
-
-      game.main.canvas.removeEventListener(
-        "mouseup",
-        game.battleManager.onMouseUp
-      );
-
-      game.main.canvas.removeEventListener(
-        "mousemove",
-        game.battleManager.onMouseMove
-      );
-    }
   }
 
   playPossibleCards(caster: Unit, target: Unit, resolve: Function) {
