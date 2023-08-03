@@ -1,7 +1,9 @@
 import { MusicManager } from "./audio/music-manager";
 import { SoundManager } from "./audio/sound-manager";
-import { Background } from "./classes/background";
+import { GameObject } from "./classes/game-object";
 import { Game } from "./game";
+import { MainMenu } from "./main-menu";
+import { Overworld } from "./overworld/overworld";
 import { $store } from "./store";
 
 declare const window: any;
@@ -10,25 +12,31 @@ declare const window: any;
 
 export enum GameState {
   MAINMENU,
-  INGAME,
-  INGAMEMENU,
-  INGAMEPAUSE,
+  OVERWORLD,
+  BATTLE,
   GAMEOVER,
 }
 
 export class Main {
-  game: Game;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  mainMenu: MainMenu;
+  overworld: Overworld;
+  game: Game;
   gameContainer: HTMLElement;
   debounceTime: any;
   timeOutMs = 100;
+  previousGameState = GameState.MAINMENU;
   gameState = GameState.MAINMENU;
-  background: Background;
+  // background: Background;
+
   debugMode = false;
 
   soundManager: SoundManager;
   musicManager: MusicManager;
+
+  oldWidth = 0;
+  oldHeight = 0;
 
   get width() {
     return this.canvas.width;
@@ -50,43 +58,60 @@ export class Main {
 
   constructor() {
     this.canvas = document.getElementById("canvas-1") as HTMLCanvasElement;
-
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-
     this.gameContainer = document.querySelector(
       ".game-container"
     ) as HTMLElement;
 
-    this.background = new Background(this);
+    this.calculateHeightAndWidth();
 
+    this.overworld = new Overworld(this);
     this.game = new Game(this);
+    this.mainMenu = new MainMenu(this);
 
     this.soundManager = new SoundManager();
     this.musicManager = new MusicManager();
   }
 
   init() {
+    this.mainMenu.init();
+
     this.calculateHeightAndWidth();
+
     this.changeGameState(GameState.MAINMENU);
-    // this.recalculateObjectPositions();
 
     window.addEventListener("resize", (event: Event) => {
       clearTimeout(this.debounceTime);
 
       this.debounceTime = setTimeout(() => {
         this.calculateHeightAndWidth();
-        // this.recalculateObjectPositions();
       }, this.timeOutMs);
     });
 
     window.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.key === "d") {
-        // this.debugMode = !this.debugMode;
+        this.debugMode = !this.debugMode;
+        console.log($store.game);
       }
     });
   }
 
+  newGame() {
+    this.changeGameState(GameState.BATTLE);
+    this.game.init();
+    // this.overworld.init();
+  }
+
+  recalculateObjectPositions() {
+    this.game?.drawableItems.forEach((object: GameObject) => {
+      object.updatePositions();
+    });
+  }
+
   calculateHeightAndWidth() {
+    this.oldWidth = this.width;
+    this.oldHeight = this.height;
+
     let width = 0;
     let height = 0;
 
@@ -102,27 +127,23 @@ export class Main {
 
     this.width = width;
     this.height = height;
+
+    this.recalculateObjectPositions();
   }
 
   changeGameState(state: GameState) {
-    // console.log(this.gameState);
-    // console.log(state);
+    this.previousGameState = this.gameState;
 
     switch (state) {
       case GameState.MAINMENU:
-        this.playMainMenuMusic();
-        this.game.mainMenu.mainMenuElement.style.display = "flex";
+        this.mainMenu.mainMenuElement.style.display = "flex";
+        break;
+      case GameState.OVERWORLD:
+        this.musicManager.playOverworldMusic();
 
         break;
-      case GameState.INGAMEMENU:
-        console.log("INGAME MENU");
-
-        break;
-      case GameState.INGAME:
-        if (this.gameState !== GameState.INGAMEPAUSE) {
-          this.musicManager.playBattleMusic();
-        }
-        this.game.mainMenu.mainMenuElement.style.display = "none";
+      case GameState.BATTLE:
+        this.musicManager.playBattleMusic();
 
         break;
       case GameState.GAMEOVER:
@@ -131,39 +152,32 @@ export class Main {
 
     this.gameState = state;
   }
-
-  playMainMenuMusic() {
-    /* Cannot play music without user clicking first. Maybe add splash screen */
-    // const audio = document.querySelector("audio#music") as HTMLAudioElement;
-    // audio.src =
-    //   "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_autorun.wav";
-    // audio.volume = 0.2;
-    // // audio.volume = 0;
-    // audio.play();
-  }
 }
 
 window.onload = () => {
   const main = new Main();
   main.init();
   $store.game = main.game;
-
-  main.game.init();
-
   let lastTime = 0;
 
   function animate(timeStamp: number) {
+    let deltaTime = 0;
+
     main.ctx.clearRect(0, 0, main.width, main.height);
 
     switch (main.gameState) {
       case GameState.MAINMENU:
-        main.background.draw(main.ctx);
+        main.mainMenu.draw(main.ctx);
+        main.musicManager.stopMusic();
         break;
-      case GameState.INGAMEPAUSE:
-        main.game.draw(main.ctx);
+      case GameState.OVERWORLD:
+        deltaTime = timeStamp - lastTime;
+        lastTime = timeStamp;
+        main.overworld.update(deltaTime);
+        main.overworld.draw(main.ctx);
         break;
-      case GameState.INGAME:
-        const deltaTime = timeStamp - lastTime;
+      case GameState.BATTLE:
+        deltaTime = timeStamp - lastTime;
         lastTime = timeStamp;
 
         main.game.update(deltaTime);

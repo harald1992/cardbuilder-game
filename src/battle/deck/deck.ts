@@ -5,6 +5,7 @@ import {
 } from "../../dictionaries/card-dictionary";
 import { Unit } from "../../units/unit";
 import { Card } from "./card";
+import { DeckAndDiscardPile } from "./deck-and-discard-pile";
 
 function duplicateCard(deck: Deck, card: Card) {
   const newCard = getCardByTitles(deck, [card.title])[0];
@@ -18,6 +19,8 @@ export class Deck {
   cardsInDeck: Card[] = [];
   cardsInDiscard: Card[] = [];
   lastCardAmount = 0;
+
+  deckAndDiscardPile: DeckAndDiscardPile;
 
   get startingX() {
     let gameWidth = this.unit.game.main.width;
@@ -38,10 +41,18 @@ export class Deck {
 
   constructor(unit: Unit) {
     this.unit = unit;
+
+    this.deckAndDiscardPile = new DeckAndDiscardPile(this);
   }
 
   init() {
     this.cardsInDeck.push(...this.allCards.sort(() => Math.random() - 0.5));
+  }
+
+  shuffledDeck(deck: Card[]): Card[] {
+    let shuffledDeck: Card[] = [];
+    shuffledDeck.push(...deck.sort(() => Math.random() - 0.5));
+    return shuffledDeck;
   }
 
   update(deltaTime: number) {
@@ -61,6 +72,7 @@ export class Deck {
 
   draw(ctx: CanvasRenderingContext2D) {
     if (this.unit.isPlayer) {
+      this.deckAndDiscardPile.draw(ctx);
       this.cardsInHand.forEach((card) => card.draw(ctx));
     } else {
       // this.cardsInHand.forEach((card) => card.draw(ctx));
@@ -105,6 +117,8 @@ export class Deck {
       (card: Card) => card.id !== cardToShuffleBack.id
     );
     this.cardsInDeck.push(newCard);
+
+    this.cardsInDeck = this.shuffledDeck(this.cardsInDeck);
   }
 
   discardCard(cardToDiscard: Card) {

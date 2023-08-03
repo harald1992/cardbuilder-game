@@ -5,12 +5,14 @@ export class BattleUI {
   game: Game;
   endTurnButton: EndTurnButton;
 
+  get drawableItems() {
+    return this.endTurnButton;
+  }
+
   constructor(game: Game) {
     this.game = game;
     this.endTurnButton = new EndTurnButton(this);
   }
-
-  update() {}
 
   draw(ctx: CanvasRenderingContext2D) {
     this.endTurnButton.draw(ctx);

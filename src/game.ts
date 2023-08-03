@@ -1,58 +1,56 @@
 import { Main } from ".";
-import { Background } from "./classes/background";
-import { Enemy } from "./units/enemies/enemy";
 import { MainMenu } from "./main-menu";
 import { Mouse } from "./mouse";
-import { Player } from "./units/player";
-// import { TurnHandler } from "./battle/turn-handler";
-import { BackgroundUI } from "./classes/background-ui";
-import { Ghost } from "./units/enemies/ghost";
 import { MouseHandler } from "./mouse-handler";
 import { BattleManager } from "./battle/battle-manager";
+import { HeaderUI } from "./ui-elements/header-ui";
+import { IngameMenu } from "./battle/battle-ui/ingame-menu";
 
 export class Game {
-  battleBackground: Background;
-  mainMenu: MainMenu;
   main: Main;
-  index: any;
   mouse: Mouse;
   mouseHandler: MouseHandler;
   battleManager: BattleManager;
+  playerGold = 0;
+  ingameMenu: IngameMenu;
+
+  headerUI: HeaderUI;
 
   get clickableItems() {
-    return this.battleManager.clickableItems;
+    return [...this.battleManager.clickableItems];
+  }
+
+  get drawableItems() {
+    return [...this.battleManager.drawableItems, this.headerUI];
   }
 
   constructor(main: Main) {
     this.main = main;
-    this.battleBackground = new Background(this.main, "particle-background", 0);
-    this.mainMenu = new MainMenu(this);
     this.mouse = new Mouse(this);
     this.mouseHandler = new MouseHandler(this);
     this.battleManager = new BattleManager(this);
+    this.headerUI = new HeaderUI(this);
+    this.ingameMenu = new IngameMenu(this);
   }
 
   update(deltaTime: number) {
-    [this.battleBackground, this.battleManager].forEach((item) =>
-      item.update(deltaTime)
-    );
+    this.drawableItems.forEach((item) => item.update(deltaTime));
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    [this.battleBackground, this.battleManager].forEach((item) =>
-      item.draw(ctx)
-    );
+    this.drawableItems.forEach((item) => item.draw(ctx));
 
     if (this.main.debugMode) {
       ctx.strokeStyle = "black";
-      this.clickableItems.forEach((item) => {
+      this.drawableItems.forEach((item) => {
         ctx.strokeRect(item.x, item.y, item.width, item.height);
       });
     }
   }
 
   init() {
-    this.mainMenu.init();
+    this.mouseHandler.init();
+    this.ingameMenu.init();
   }
 
   newGame() {

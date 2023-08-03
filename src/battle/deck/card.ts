@@ -3,11 +3,12 @@ import {
   CardConfig,
 } from "../../dictionaries/card-dictionary";
 import { roundedImage } from "../../utils/utils";
-import { Enemy } from "../../units/enemies/enemy";
+import { Enemy } from "../../units/enemy";
 import { Player } from "../../units/player";
 import { v4 as uuidv4 } from "uuid";
 import { Unit } from "../../units/unit";
 import { Deck } from "./deck";
+import { GameObject } from "../../classes/game-object";
 
 export enum CardType {
   OFFENSIVE = "assets/cards/background_red.png",
@@ -58,7 +59,7 @@ const wrapText = function (
   return lineArray;
 };
 
-export class Card {
+export class Card extends GameObject {
   deck: Deck;
   unit: Unit;
   cost = 0;
@@ -74,37 +75,15 @@ export class Card {
   id: string = uuidv4();
   markedForDeletion = false;
 
-  xPercentage = 0;
-  yPercentage = 0;
   isUnPlayable = false;
-
-  widthPercentage = 0.1;
-  heightPercentage = 0.2;
-
-  get x() {
-    // return 0.75 * this.game.main.width;
-    return this.xPercentage * this.unit.game.main.width;
-  }
-
-  get y() {
-    // return 0.4 * this.game.main.height;
-    return this.yPercentage * this.unit.game.main.height;
-  }
-
-  get width() {
-    return this.widthPercentage * this.unit.game.main.width;
-  }
-
-  get height() {
-    return this.heightPercentage * this.unit.game.main.width;
-  }
 
   constructor(
     deck: Deck,
     config: CardConfig,
-    xPercentage = 0.75,
-    yPercentage = 0.4
+    xPercentage = 0,
+    yPercentage = 0
   ) {
+    super(deck.unit.game, xPercentage, yPercentage, 0.1, 0.2);
     this.deck = deck;
     this.unit = deck.unit;
     this.cost = config.cost;
@@ -117,8 +96,6 @@ export class Card {
 
     this.background.src = config.background || CardType.OFFENSIVE;
     this.costCircle.src = "assets/cards/card-cost-circle.png";
-    this.xPercentage = xPercentage;
-    this.yPercentage = yPercentage;
   }
 
   update(deltaTime: number) {}

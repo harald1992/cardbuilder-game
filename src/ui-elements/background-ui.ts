@@ -1,22 +1,20 @@
+import { GameObject } from "../classes/game-object";
 import { Game } from "../game";
 
-export class BackgroundUI {
+export class BackgroundUI extends GameObject {
   game: Game;
   woodpanel = new Image();
 
-  get height() {
-    return 0.2 * this.game.main.width;
-  }
   constructor(game: Game) {
+    super(game, 0, 0, 1, 0.2);
+
     this.game = game;
     this.woodpanel.src = "assets/ui/woodpanel.jpg";
   }
 
-  update(deltaTime: number) {}
-
   draw(ctx: CanvasRenderingContext2D) {
     ctx.save();
-    ctx.globalAlpha = 0.6;
+    ctx.globalAlpha = 1;
     ctx.drawImage(
       this.woodpanel,
       0,

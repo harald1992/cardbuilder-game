@@ -1,3 +1,8 @@
+import { Card } from "../battle/deck/card";
+import { DeckAndDiscardPile } from "../battle/deck/deck-and-discard-pile";
+import { $store } from "../store";
+import { Unit } from "../units/unit";
+
 export function getCenterPos(ob: any) {
   const x = ob?.x + ob?.width / 2;
   const y = ob?.y + ob?.height / 2;
@@ -25,7 +30,7 @@ export function circleCircleColliding(circle1: any, circle2: any) {
 // return true if the rectangle and circle are colliding
 export function rectCircleColliding(
   circle: any, // 0{x, y, r}
-  rect: any, // { x, y, w, h}
+  rect: any // { x, y, w, h}
 ) {
   var distX = Math.abs(circle.x - rect.x - rect.w / 2);
   var distY = Math.abs(circle.y - rect.y - rect.h / 2);
@@ -69,7 +74,7 @@ export function roundedImage(
   y: number,
   width: number,
   height: number,
-  radius: number,
+  radius: number
 ) {
   ctx.beginPath();
   ctx.moveTo(x + radius, y);
@@ -82,4 +87,32 @@ export function roundedImage(
   ctx.lineTo(x, y + radius);
   ctx.quadraticCurveTo(x, y, x + radius, y);
   ctx.closePath();
+}
+
+export function getYBottomPage(object: Unit | Card | DeckAndDiscardPile) {
+  const height = object.height;
+  const gameHeight = $store.game.main.height;
+  const difference = gameHeight - height;
+
+  const yPercentage = difference / gameHeight;
+  return yPercentage;
+}
+
+export function getXMidpage(object: Unit | Card) {
+  // todo: is this really mid? Probably not
+  const width = object.width;
+  const gameWidth = $store.game.main.width;
+  const difference = gameWidth - width;
+
+  const xPercentage = difference / gameWidth;
+  return xPercentage / 2;
+}
+
+export function getXRightpage(object: Unit | Card) {
+  const width = object.width;
+  const gameWidth = $store.game.main.width;
+  const difference = gameWidth - width;
+
+  const xPercentage = difference / gameWidth;
+  return xPercentage;
 }

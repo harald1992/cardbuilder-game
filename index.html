@@ -5,24 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="shortcut icon" href="#" />
 
     <link rel="stylesheet" href="main.css" type="text/css" />
   </head>
 
   <body>
     <div class="game-container">
+      <div class="backdrop" style="display: none"></div>
+
       <canvas id="canvas-1"></canvas>
 
       <div class="card-container" id="enemy-card-container"></div>
 
-      <div class="main-menu">
+      <div class="menu" id="main-menu">
         <h1 class="header">CardBuilder Game</h1>
-        <button id="continue" disabled>Continue</button>
+        <!-- <button id="continue" disabled>Continue</button> -->
         <button id="new">New Game</button>
-        <button id="options">Options</button>
-        <button id="credits">Credits</button>
+        <!-- <button id="options">Options</button>
+        <button id="credits">Credits</button> -->
+      </div>
 
-        <button id="store">Get Store Data</button>
+      <div class="menu" id="ingame-menu" style="display: none">
+        <h1 class="header">CardBuilder Game</h1>
+        <button id="continue">Continue</button>
+        <button id="nav-main-menu">Go To Main Menu</button>
       </div>
       <div class="card-container" id="player-card-container"></div>
     </div>
@@ -30,7 +37,7 @@
     <div class="backgroundimagetryout"></div>
 
     <!-- // preload images here -->
-    <img src="assets/backgrounds/main-menu.jpg" id="main-menu" />
+    <img src="assets/backgrounds/main-menu.jpg" id="img-main-menu" />
     <img src="assets/backgrounds/background-1.jpg" id="background1" />
     <img src="assets/backgrounds/forest1.jpg" id="forest1" />
     <img
@@ -42,7 +49,15 @@
 
     <audio id="music"></audio>
 
-    <audio id="sound"></audio>
+    <audio
+      src="assets/Neverwinter Nights Definitive Edition Assets/mus/mus_autorun2.wav"
+      id="sound"
+    ></audio>
+
+    <audio
+      src="assets/Neverwinter Nights Definitive Edition Assets/mus/mus_dag_forest.bmu"
+      id="music"
+    ></audio>
   </body>
 
   <script src="bundle.js" type="module"></script>

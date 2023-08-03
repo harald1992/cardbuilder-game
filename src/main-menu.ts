@@ -1,14 +1,16 @@
-import { GameState } from ".";
+import { GameState, Main } from ".";
 import { Game } from "./game";
 import { $store } from "./store";
 
 export class MainMenu {
-  game: Game;
+  main: Main;
   mainMenuElement: HTMLElement;
+  image: HTMLImageElement;
 
-  constructor(game: Game) {
-    this.game = game;
-    this.mainMenuElement = document.querySelector(".main-menu") as HTMLElement;
+  constructor(main: Main) {
+    this.main = main;
+    this.mainMenuElement = document.querySelector("#main-menu") as HTMLElement;
+    this.image = document.getElementById("img-main-menu") as HTMLImageElement;
   }
 
   init() {
@@ -17,17 +19,14 @@ export class MainMenu {
 
     buttons.forEach((button: HTMLButtonElement) => {
       button.addEventListener("click", (event: MouseEvent) => {
-        this.game.main.soundManager.playUiClick();
+        this.main.soundManager.playUiClick();
 
         const id: string | null = button.getAttribute("id");
 
         switch (id) {
-          case "continue":
-            this.game.main.changeGameState(GameState.INGAME);
-            break;
           case "new":
-            this.game.main.changeGameState(GameState.INGAME);
-            this.game.newGame();
+            this.mainMenuElement.style.display = "none";
+            this.main.newGame();
             break;
           case "store":
             console.log($store.game);
@@ -36,5 +35,9 @@ export class MainMenu {
         }
       });
     });
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.drawImage(this.image, 0, 0, this.main.width, this.main.height);
   }
 }

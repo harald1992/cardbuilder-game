@@ -1,16 +1,12 @@
 import { Main } from "..";
 import { Game } from "../game";
+import { GameObject } from "./game-object";
 
-class Layer {
-  main: Main;
-  image: any;
-  x = 0;
-  y = 0;
-  yOffset = 0;
+class Layer extends GameObject {
+  image: HTMLImageElement;
 
-  constructor(main: Main, image: HTMLImageElement, yOffset: number = 0) {
-    this.main = main;
-    this.yOffset = yOffset;
+  constructor(game: Game, image: HTMLImageElement) {
+    super(game, 0, 0, 1, 1);
 
     this.image = image;
   }
@@ -18,27 +14,20 @@ class Layer {
   update() {}
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.drawImage(
-      this.image,
-      this.x,
-      this.y,
-      this.main.width,
-      this.main.height - this.yOffset,
-    );
+    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
 
-export class Background {
-  main: Main;
+export class Background extends GameObject {
   layer1image: HTMLImageElement;
   layers: Layer[];
 
-  constructor(main: Main, imageId = "main-menu", yOffset = 0) {
-    this.main = main;
+  constructor(game: Game, imageId = "img-main-menu") {
+    super(game, 0, 0, 1, 1);
 
     this.layer1image = document.getElementById(imageId) as HTMLImageElement;
 
-    this.layers = [new Layer(this.main, this.layer1image, yOffset)];
+    this.layers = [new Layer(this.game, this.layer1image)];
   }
 
   update() {

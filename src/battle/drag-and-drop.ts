@@ -1,4 +1,3 @@
-import { Game } from "../game";
 import { $store } from "../store";
 import { Unit } from "../units/unit";
 import { rectRectCollision } from "../utils/utils";
@@ -11,37 +10,33 @@ export class DragAndDrop {
   }
 
   onMouseDown(event: Event) {
-    const game = $store.game;
+    const mouse = $store.mouse;
     const canvas = $store.canvas;
     const battleManager = $store.battleManager;
     const dragAndDrop = $store.dragAndDrop;
 
-    game.battleManager.player.deck.cardsInHand.forEach((card: Card) => {
-      if (rectRectCollision(card, game.mouse) && !card.isUnPlayable) {
+    battleManager.player.deck.cardsInHand.forEach((card: Card) => {
+      if (rectRectCollision(card, mouse) && !card.isUnPlayable) {
         battleManager.selectedCard = card;
 
         canvas.addEventListener("mousemove", dragAndDrop.onMouseMove);
-
         canvas.addEventListener("mouseup", dragAndDrop.onMouseUp);
       }
     });
   }
 
   onMouseMove(event: Event) {
-    const game = $store.game;
-
-    [game.battleManager.player, ...game.battleManager.enemies].forEach(
-      (unit: Unit) => {
-        if (rectRectCollision(game.mouse, unit)) {
-          unit.targetMark = true;
-        } else {
-          unit.targetMark = false;
-        }
-      }
-    );
-
+    const battleManager = $store.battleManager;
     const mouse = $store.mouse;
     const selectedCard = $store.battleManager.selectedCard;
+
+    [battleManager.player, ...battleManager.enemies].forEach((unit: Unit) => {
+      if (rectRectCollision(mouse, unit)) {
+        unit.targetMark = true;
+      } else {
+        unit.targetMark = false;
+      }
+    });
 
     if (selectedCard) {
       selectedCard.xPercentage = mouse.xPercentage;
@@ -50,41 +45,35 @@ export class DragAndDrop {
   }
 
   onMouseUp(event: Event) {
-    const game = $store.game;
-    const selectedCard = game.battleManager.selectedCard;
+    const battleManager = $store.battleManager;
+    const selectedCard = battleManager.selectedCard;
     const dragAndDrop = $store.dragAndDrop;
+    const mouse = $store.mouse;
 
     const target: Unit | undefined = [
-      game.battleManager.player,
-      ...game.battleManager.enemies,
-    ].find((unit: Unit) => rectRectCollision(unit, game.mouse));
+      battleManager.player,
+      ...battleManager.enemies,
+    ].find((unit: Unit) => rectRectCollision(unit, mouse));
 
     if (target) {
-      selectedCard?.playCard(game.battleManager.player, target);
-      game.main.canvas.removeEventListener("mouseup", dragAndDrop.onMouseUp);
-      game.main.canvas.removeEventListener(
-        "mousemove",
-        dragAndDrop.onMouseMove
-      );
+      selectedCard?.playCard(battleManager.player, target);
+      battleManager.checkIfUnitsDied();
 
-      [game.battleManager.player, ...game.battleManager.enemies].forEach(
-        (unit: Unit) => {
-          unit.targetMark = false;
-        }
-      );
+      $store.canvas.removeEventListener("mouseup", dragAndDrop.onMouseUp);
+      $store.canvas.removeEventListener("mousemove", dragAndDrop.onMouseMove);
+
+      [battleManager.player, ...battleManager.enemies].forEach((unit: Unit) => {
+        unit.targetMark = false;
+      });
 
       selectedCard?.deck.updateCardPositions();
-      game.battleManager.selectedCard = undefined;
+      battleManager.selectedCard = undefined;
     } else {
       selectedCard?.deck.updateCardPositions();
-      game.battleManager.selectedCard = undefined;
+      battleManager.selectedCard = undefined;
 
-      game.main.canvas.removeEventListener("mouseup", dragAndDrop.onMouseUp);
-
-      game.main.canvas.removeEventListener(
-        "mousemove",
-        dragAndDrop.onMouseMove
-      );
+      $store.canvas.removeEventListener("mouseup", dragAndDrop.onMouseUp);
+      $store.canvas.removeEventListener("mousemove", dragAndDrop.onMouseMove);
     }
   }
 }

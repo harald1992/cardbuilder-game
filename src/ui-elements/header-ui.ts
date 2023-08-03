@@ -1,16 +1,17 @@
 import { GameObject } from "../classes/game-object";
+import { Game } from "../game";
 import { roundedImage } from "../utils/utils";
 import { BattleUI } from "./battle-ui";
 
-export class EndTurnButton extends GameObject {
-  ui: BattleUI;
+export class HeaderUI extends GameObject {
+  game: Game;
 
   image = new Image();
 
-  constructor(ui: BattleUI) {
-    super(ui.game, 0.8, 0.5, 0.1, 0.05);
-    this.ui = ui;
-    this.image.src = "assets/cards/background_red.png";
+  constructor(game: Game) {
+    super(game, 0, 0, 1, 0.05);
+    this.game = game;
+    this.image.src = "assets/ui/woodpanel.jpg";
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -22,7 +23,7 @@ export class EndTurnButton extends GameObject {
     ctx.textBaseline = "middle";
 
     ctx.fillText(
-      "End Turn",
+      `Gold: ${this.game.playerGold}`,
       this.x + 0.5 * this.width,
       this.y + 0.5 * this.height
     );
@@ -35,7 +36,5 @@ export class EndTurnButton extends GameObject {
 
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     ctx.restore();
-
-    super.draw(ctx);
   }
 }

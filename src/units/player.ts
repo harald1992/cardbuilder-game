@@ -17,11 +17,11 @@ export class Player extends Unit {
       CardTitle.JUNK,
       CardTitle.JUNK,
       CardTitle.JUNK,
-      CardTitle.JUNK,
+      CardTitle.BITE,
       CardTitle.LIGHTNING_SPARK,
       CardTitle.LIBRARY,
       CardTitle.HEALING_AID,
-      CardTitle.LEGENDARY_STRIKE,
+      CardTitle.STRIKE,
       CardTitle.LIGHTNING_BOLT,
     ]);
   }

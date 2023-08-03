@@ -1,48 +1,29 @@
 import { Deck } from "../battle/deck/deck";
+import { GameObject } from "../classes/game-object";
 import { Game } from "../game";
+import { FloatingText } from "../ui-elements/floating-text";
 import { HealthBar } from "./health-bar";
 
-export class Unit {
-  xPercentage = 0;
-  yPercentage = 0;
+export class Unit extends GameObject {
   #hp = 1;
   #mp = 1;
   maxHp: number = 1;
   maxMp = 1;
   image = new Image();
   stunnedImage = new Image();
-  game: Game;
   healthBar: HealthBar;
   deck: Deck = new Deck(this);
   isStunned = false;
 
+  floatingTexts: FloatingText[] = [];
   // didTurn = false;
   team: "player" | "enemy" = "enemy";
 
   targetMark = false;
+
   // todo: remove and go to currentTeam
   get isPlayer() {
     return this.team === "player";
-  }
-
-  // set isPlayer(value: any) {
-  //   this.currentTeam
-  // }
-
-  get x() {
-    return this.xPercentage * this.game.main.width;
-  }
-
-  get y() {
-    return this.yPercentage * this.game.main.height;
-  }
-
-  get width() {
-    return 0.1 * this.game.main.width;
-  }
-
-  get height() {
-    return 0.2 * this.game.main.width;
   }
 
   get currentHp() {
@@ -53,6 +34,7 @@ export class Unit {
     if (value > this.maxHp) {
       value = this.maxHp;
     }
+
     this.#hp = value;
   }
 
@@ -69,15 +51,13 @@ export class Unit {
   }
 
   constructor(game: Game, xPercentage = 0, yPercentage = 0) {
-    this.game = game;
+    super(game, xPercentage, yPercentage, 0.1, 0.2);
 
     this.currentHp = this.maxHp;
     this.currentMp = this.maxMp;
     this.healthBar = new HealthBar(this);
     this.image.src = "assets/units/hero.jpg";
     this.stunnedImage.src = "assets/icons/lightning-spark.svg";
-    this.xPercentage = xPercentage;
-    this.yPercentage = yPercentage;
   }
 
   init() {
@@ -87,7 +67,15 @@ export class Unit {
   }
 
   update(deltaTime: number) {
+    this.floatingTexts = this.floatingTexts.filter(
+      (text: FloatingText) => !text.markedForDeletion
+    );
+
     this.deck.update(deltaTime);
+
+    this.floatingTexts.forEach((floatingText: FloatingText) =>
+      floatingText.update(deltaTime)
+    );
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -111,5 +99,24 @@ export class Unit {
       ctx.lineWidth = 3;
       ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
+
+    this.floatingTexts.forEach((floatingText: FloatingText) =>
+      floatingText.draw(ctx)
+    );
+
+    super.draw(ctx);
+  }
+
+  damage(amount: number) {
+    const floatingText = new FloatingText(this, "-" + amount);
+    this.floatingTexts.push(floatingText);
+    this.currentHp -= amount;
+  }
+
+  heal(amount: number) {
+    const floatingText = new FloatingText(this, "+" + amount);
+    this.floatingTexts.push(floatingText);
+
+    this.currentHp += amount;
   }
 }
