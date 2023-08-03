@@ -6,7 +6,7 @@ export class Player extends Unit {
   constructor(game: Game, xPercentage: number, yPercentage: number) {
     super(game, xPercentage, yPercentage);
     // this.image.src = "assets/units/player-wizard.png";
-    this.image.src = "assets/units/NwnPortraits/po_hoodshade_L.png";
+    this.image.src = "assets/units/po_hoodshade_L.png";
 
     // this.isPlayer = true;
     this.team = "player";
