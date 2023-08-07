@@ -4,24 +4,33 @@ export class MusicManager {
     this.audio = document.querySelector("audio#music") as HTMLAudioElement;
     this.audio.src =
       "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_bat_aribeth.bmu";
-    this.audio.volume = 0.2;
+    // this.audio.volume = 0.2;
+    this.audio.volume = 0;
   }
 
   playBattleMusic() {
-    // audio.volume = 0;
-    this.audio.pause();
-
-    this.audio.src =
-      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_bat_aribeth.bmu";
-    this.audio.play();
+    // prevent sound race condition resulting in error
+    const playPromise = this.audio.play();
+    if (playPromise !== null) {
+      playPromise.catch(() => {
+        this.audio.src =
+          "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_bat_aribeth.bmu";
+        // audio.volume = 0;
+        this.audio.play();
+      });
+    }
   }
 
   playOverworldMusic() {
-    this.audio.pause();
-    this.audio.src =
-      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_dag_forest.bmu";
-    // audio.volume = 0;
-    this.audio.play();
+    const playPromise = this.audio.play();
+    if (playPromise !== null) {
+      playPromise.catch(() => {
+        this.audio.src =
+          "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_ruralnite.bmu";
+        // audio.volume = 0;
+        this.audio.play();
+      });
+    }
   }
 
   stopMusic() {

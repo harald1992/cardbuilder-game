@@ -1,4 +1,3 @@
-import { GameState } from "../..";
 import { Game } from "../../game";
 import { $store } from "../../store";
 import { BattleManager } from "../battle-manager";
@@ -40,7 +39,7 @@ export class IngameMenu {
             break;
           case "nav-main-menu":
             this.toggleMenu();
-            this.game.main.changeGameState(GameState.MAINMENU);
+            this.game.goToMainMenu();
             break;
           case "store":
             console.log($store.game);
@@ -53,12 +52,7 @@ export class IngameMenu {
 
   showHideMenuOnEscape() {
     document.addEventListener("keydown", (event: KeyboardEvent) => {
-      if (
-        event.key === "Escape" &&
-        this.game.main.gameState !== GameState.MAINMENU
-      ) {
-        this.toggleMenu();
-      }
+      if (event.key === "Escape") this.toggleMenu();
     });
   }
 
@@ -72,7 +66,7 @@ export class IngameMenu {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  mainDraw(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(
       this.image,
       0,

@@ -8,21 +8,34 @@ export class GameObject {
   y = 0;
   markedForDeletion = false;
 
-  get xPercentage() {
-    return this.x / this.game.main.width || 0;
+  opacityDelay = 100;
+  opacityCounter = 0;
+  opacity = 1;
+  fade = false;
+
+  get drawX() {
+    return this.x - this.game.camera.x;
   }
 
-  set xPercentage(value: number) {
-    this.x = value * this.game.main.width || 0;
+  get drawY() {
+    return this.y - this.game.camera.y;
   }
 
-  get yPercentage() {
-    return this.y / this.game.main.height || 0;
-  }
+  // get xPercentage() {
+  //   return this.x / this.game.main.width || 0;
+  // }
 
-  set yPercentage(value: number) {
-    this.y = value * this.game.main.height || 0;
-  }
+  // set xPercentage(value: number) {
+  //   this.x = value * this.game.main.width || 0;
+  // }
+
+  // get yPercentage() {
+  //   return this.y / this.game.main.height || 0;
+  // }
+
+  // set yPercentage(value: number) {
+  //   this.y = value * this.game.main.height || 0;
+  // }
 
   get width() {
     return this.widthPercentage * this.game.main.width || 0;
@@ -34,32 +47,64 @@ export class GameObject {
 
   constructor(
     game: Game,
-    xPercentage = 0,
-    yPercentage = 0,
+    x = 0,
+    y = 0,
     widthPercentage = 0.1,
     heightPercentage = 0.1
   ) {
     this.game = game;
-    this.xPercentage = xPercentage;
-    this.yPercentage = yPercentage;
+    // this.xPercentage = xPercentage;
+    // this.yPercentage = yPercentage;
+    this.x = x;
+    this.y = y;
     this.widthPercentage = widthPercentage;
     this.heightPercentage = heightPercentage;
   }
 
-  update(deltaTime: number) {}
+  update(deltaTime: number) {
+    if (this.fade) {
+      this.setFadeOpacity(deltaTime);
+    }
+  }
+
+  setFadeOpacity(deltaTime: number) {
+    if (this.opacity < 0.1) {
+      this.markedForDeletion = true;
+    }
+    if (this.opacityCounter >= this.opacityDelay) {
+      this.opacity -= 0.1;
+      this.opacityCounter = 0;
+    } else {
+      this.opacityCounter += deltaTime;
+    }
+  }
+
+  beforeDraw(ctx: CanvasRenderingContext2D) {
+    ctx.globalAlpha = this.opacity;
+  }
+
+  mainDraw(ctx: CanvasRenderingContext2D) {}
 
   draw(ctx: CanvasRenderingContext2D) {
+    this.beforeDraw(ctx);
+    this.mainDraw(ctx);
+    this.afterDraw(ctx);
+  }
+
+  afterDraw(ctx: CanvasRenderingContext2D) {
+    ctx.globalAlpha = 1;
+
     if (this.game.main.debugMode) {
       ctx.strokeStyle = "black";
-      ctx.strokeRect(this.x, this.y, this.width, this.height);
+      ctx.strokeRect(this.drawX, this.drawY, this.width, this.height);
     }
   }
 
   updatePositions() {
     const xPercentage = this.x / this.game.main.oldWidth;
-    this.xPercentage = xPercentage;
+    this.x = xPercentage * this.game.main.width;
 
     const yPercentage = this.y / this.game.main.oldHeight;
-    this.yPercentage = yPercentage;
+    this.y = yPercentage * this.game.main.height;
   }
 }

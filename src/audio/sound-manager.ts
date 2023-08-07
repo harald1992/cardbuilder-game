@@ -3,7 +3,8 @@ export class SoundManager {
 
   constructor() {
     this.audio = document.querySelector("audio#sound") as HTMLAudioElement;
-    this.audio.volume = 0.2;
+    // this.audio.volume = 0.2;
+    this.audio.volume = 0;
   }
 
   playUiClick() {

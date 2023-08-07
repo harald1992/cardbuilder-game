@@ -1,5 +1,7 @@
 import { Card } from "../battle/deck/card";
 import { DeckAndDiscardPile } from "../battle/deck/deck-and-discard-pile";
+import { GameObject } from "../classes/game-object";
+import { Mouse } from "../mouse";
 import { $store } from "../store";
 import { Unit } from "../units/unit";
 
@@ -68,6 +70,18 @@ export function rectRectCollision(rect1: any, rect2: any) {
   );
 }
 
+export function mouseRectCollision(mouse: Mouse, rect2: GameObject) {
+  if (!mouse.x || !mouse.y) {
+    return;
+  }
+  return (
+    mouse.x < rect2.drawX + rect2.width &&
+    mouse.x + mouse.width > rect2.drawX &&
+    mouse.y < rect2.drawY + rect2.height &&
+    mouse.y + mouse.height > rect2.drawY
+  );
+}
+
 export function roundedImage(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -91,7 +105,7 @@ export function roundedImage(
 
 export function getYBottomPage(object: Unit | Card | DeckAndDiscardPile) {
   const height = object.height;
-  const gameHeight = $store.game.main.height;
+  const gameHeight = $store.main.height;
   const difference = gameHeight - height;
 
   const yPercentage = difference / gameHeight;
@@ -101,7 +115,7 @@ export function getYBottomPage(object: Unit | Card | DeckAndDiscardPile) {
 export function getXMidpage(object: Unit | Card) {
   // todo: is this really mid? Probably not
   const width = object.width;
-  const gameWidth = $store.game.main.width;
+  const gameWidth = $store.main.width;
   const difference = gameWidth - width;
 
   const xPercentage = difference / gameWidth;
@@ -110,7 +124,7 @@ export function getXMidpage(object: Unit | Card) {
 
 export function getXRightpage(object: Unit | Card) {
   const width = object.width;
-  const gameWidth = $store.game.main.width;
+  const gameWidth = $store.main.width;
   const difference = gameWidth - width;
 
   const xPercentage = difference / gameWidth;

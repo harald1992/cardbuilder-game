@@ -2,38 +2,91 @@ import { Main } from "..";
 import { Game } from "../game";
 import { $store } from "../store";
 import { GameMap } from "./gameMap";
+import { InputHandler } from "./input-handler";
+import { OverworldEnemy } from "./overworld-enemy";
+// import { KeyboardHandler } from "./keyboard-handler";
+import { OverworldPlayer } from "./overworld-player";
+import { Tile } from "./tile";
 
 export class Overworld {
-  main: Main;
+  game: Game;
   gameMap: GameMap;
+  overworldPlayer: OverworldPlayer;
+  inputHandler: InputHandler = new InputHandler(this);
+  overworldEnemies: OverworldEnemy[] = [];
 
-  get game() {
-    return this.main.game;
+  get clickableItems() {
+    return [...this.overworldEnemies, this.overworldPlayer];
   }
 
-  constructor(main: Main) {
-    this.main = main;
+  get drawableItems() {
+    return [
+      ...this.gameMap.terrainArray,
+      ...this.overworldEnemies,
+      this.overworldPlayer,
+    ];
+  }
+
+  constructor(game: Game) {
+    this.game = game;
     this.gameMap = new GameMap(this);
+    this.overworldPlayer = new OverworldPlayer(this, this.game.playerData);
   }
 
-  init() {
+  update(deltaTime: number) {
+    this.overworldEnemies = this.overworldEnemies.filter(
+      (enemy: OverworldEnemy) => !enemy.markedForDeletion
+    );
+  }
+
+  newGame() {
     this.gameMap.init();
 
-    document.addEventListener("click", this.startBattle);
+    this.addEventListeners();
+    this.spawnPlayer();
+    this.spawnEnemy();
   }
 
-  update(deltaTime: number) {}
-
-  draw(ctx: CanvasRenderingContext2D) {
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(0, 0, this.main.width, this.main.height);
-    this.gameMap.draw(ctx);
+  spawnPlayer() {
+    const { x, y } = this.getRandomStartingPosition();
+    this.overworldPlayer.x = x;
+    this.overworldPlayer.y = y;
   }
 
-  startBattle() {
-    // $store.game.init();
-    // this.main.changeGameState()
+  spawnEnemy() {
+    let overworldEnemy = new OverworldEnemy(this);
+    const { x, y } = this.getRandomStartingPosition();
+    overworldEnemy.x = x;
+    overworldEnemy.y = y;
 
-    document.removeEventListener("click", this.startBattle);
+    this.overworldEnemies.push(overworldEnemy);
+  }
+
+  getRandomStartingPosition() {
+    const possiblePositions = this.gameMap.terrainArray.filter(
+      (tile: Tile) => tile.canMove
+    );
+    const randomIndex = Math.floor(Math.random() * possiblePositions.length);
+    const x = possiblePositions[randomIndex].x;
+    const y = possiblePositions[randomIndex].y;
+    return { x, y };
+  }
+
+  // startBattle = () => {
+  //   this.removeEventListeners();
+  //   console.log("strt battle event done");
+
+  //   this.game.startBattle();
+  // };
+
+  // // todo: remove whenever we have normal event to prop the battle
+  addEventListeners() {
+    //   console.log("adding event listener");
+    //   this.game.main.canvas.addEventListener("click", this.startBattle);
+  }
+
+  removeEventListeners() {
+    // console.log("should remove event listener");
+    // this.game.main.canvas.removeEventListener("click", this.startBattle);
   }
 }

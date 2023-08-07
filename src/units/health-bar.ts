@@ -17,6 +17,7 @@ export class HealthBar {
     this.gameObject = gameObject;
   }
 
+  // todo: change to gameObject?
   draw(ctx: CanvasRenderingContext2D) {
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";

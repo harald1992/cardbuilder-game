@@ -1,19 +1,26 @@
+import { BattleManager } from "../battle/battle-manager";
 import { GameObject } from "../classes/game-object";
 import { roundedImage } from "../utils/utils";
-import { BattleUI } from "./battle-ui";
+// import { BattleUI } from "./battle-ui";
 
 export class EndTurnButton extends GameObject {
-  ui: BattleUI;
+  battleManager: BattleManager;
 
   image = new Image();
 
-  constructor(ui: BattleUI) {
-    super(ui.game, 0.8, 0.5, 0.1, 0.05);
-    this.ui = ui;
+  constructor(battleManager: BattleManager) {
+    super(
+      battleManager.game,
+      0.8 * battleManager.game.main.width,
+      0.5 * battleManager.game.main.height,
+      0.1,
+      0.05
+    );
+    this.battleManager = battleManager;
     this.image.src = "assets/cards/background_red.png";
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  mainDraw(ctx: CanvasRenderingContext2D) {
     this.drawBackgroundImage(ctx);
 
     ctx.fillStyle = "white";
@@ -35,7 +42,5 @@ export class EndTurnButton extends GameObject {
 
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     ctx.restore();
-
-    super.draw(ctx);
   }
 }

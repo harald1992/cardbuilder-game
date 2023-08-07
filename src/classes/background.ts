@@ -11,9 +11,7 @@ class Layer extends GameObject {
     this.image = image;
   }
 
-  update() {}
-
-  draw(ctx: CanvasRenderingContext2D) {
+  mainDraw(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
@@ -30,9 +28,10 @@ export class Background extends GameObject {
     this.layers = [new Layer(this.game, this.layer1image)];
   }
 
-  update() {
+  update(deltaTime: number) {
+    super.update(deltaTime);
     this.layers.forEach((layer) => {
-      layer.update();
+      layer.update(deltaTime);
     });
   }
 

@@ -12,7 +12,7 @@ export class BackgroundUI extends GameObject {
     this.woodpanel.src = "assets/ui/woodpanel.jpg";
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  mainDraw(ctx: CanvasRenderingContext2D) {
     ctx.save();
     ctx.globalAlpha = 1;
     ctx.drawImage(

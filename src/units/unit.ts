@@ -35,6 +35,9 @@ export class Unit extends GameObject {
       value = this.maxHp;
     }
 
+    if (this.currentHp <= 0) {
+      this.fade = true;
+    }
     this.#hp = value;
   }
 
@@ -67,6 +70,8 @@ export class Unit extends GameObject {
   }
 
   update(deltaTime: number) {
+    super.update(deltaTime);
+
     this.floatingTexts = this.floatingTexts.filter(
       (text: FloatingText) => !text.markedForDeletion
     );
@@ -78,7 +83,7 @@ export class Unit extends GameObject {
     );
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  mainDraw(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     this.healthBar.draw(ctx);
     this.deck.draw(ctx);
@@ -104,7 +109,7 @@ export class Unit extends GameObject {
       floatingText.draw(ctx)
     );
 
-    super.draw(ctx);
+    super.mainDraw(ctx);
   }
 
   damage(amount: number) {

@@ -3,9 +3,10 @@ import { GameObject } from "../classes/game-object";
 export class FloatingText extends GameObject {
   ob: GameObject;
   text: string;
-  delay = 100;
-  counter = 0;
-  opacity = 1;
+  // delay = 100;
+  // counter = 0;
+  // opacity = 1;
+  fade = true;
 
   constructor(ob: GameObject, text: string) {
     super(ob.game);
@@ -13,19 +14,19 @@ export class FloatingText extends GameObject {
     this.text = text;
   }
 
-  update(deltaTime: number) {
-    if (this.opacity < 0.1) {
-      this.markedForDeletion = true;
-    }
-    if (this.counter >= this.delay) {
-      this.opacity -= 0.1;
-      this.counter = 0;
-    } else {
-      this.counter += deltaTime;
-    }
-  }
+  // update(deltaTime: number) {
+  //   // if (this.opacity < 0.1) {
+  //   //   this.markedForDeletion = true;
+  //   // }
+  //   // if (this.counter >= this.delay) {
+  //   //   this.opacity -= 0.1;
+  //   //   this.counter = 0;
+  //   // } else {
+  //   //   this.counter += deltaTime;
+  //   // }
+  // }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  mainDraw(ctx: CanvasRenderingContext2D) {
     ctx.save();
     ctx.globalAlpha = this.opacity;
     ctx.font = "32px Roboto";

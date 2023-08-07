@@ -3,31 +3,44 @@ import { SoundManager } from "./audio/sound-manager";
 import { GameObject } from "./classes/game-object";
 import { Game } from "./game";
 import { MainMenu } from "./main-menu";
+import { GameState } from "./models/models";
 import { Overworld } from "./overworld/overworld";
 import { $store } from "./store";
+
+function recreateNode(el: any, withChildren: any) {
+  if (withChildren) {
+    el.parentNode.replaceChild(el.cloneNode(true), el);
+  } else {
+    var newEl = el.cloneNode(false);
+    while (el.hasChildNodes()) newEl.appendChild(el.firstChild);
+    el.parentNode.replaceChild(newEl, el);
+  }
+}
 
 declare const window: any;
 
 // initialize web components;
 
-export enum GameState {
-  MAINMENU,
-  OVERWORLD,
-  BATTLE,
-  GAMEOVER,
-}
+// export enum GameState {
+//   MAINMENU,
+//   OVERWORLD,
+//   BATTLE,
+//   GAMEOVER,
+// }
 
 export class Main {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   mainMenu: MainMenu;
-  overworld: Overworld;
-  game: Game;
+  // overworld: Overworld;
+  game: Game | undefined;
   gameContainer: HTMLElement;
   debounceTime: any;
   timeOutMs = 100;
-  previousGameState = GameState.MAINMENU;
-  gameState = GameState.MAINMENU;
+  // previousGameState = GameState.MAINMENU;
+  // gameState = GameState.MAINMENU;
+
+  isMainMenu = true;
   // background: Background;
 
   debugMode = false;
@@ -65,7 +78,7 @@ export class Main {
 
     this.calculateHeightAndWidth();
 
-    this.overworld = new Overworld(this);
+    // this.overworld = new Overworld(this);
     this.game = new Game(this);
     this.mainMenu = new MainMenu(this);
 
@@ -78,7 +91,7 @@ export class Main {
 
     this.calculateHeightAndWidth();
 
-    this.changeGameState(GameState.MAINMENU);
+    // this.changeGameState(GameState.MAINMENU);
 
     window.addEventListener("resize", (event: Event) => {
       clearTimeout(this.debounceTime);
@@ -97,15 +110,24 @@ export class Main {
   }
 
   newGame() {
-    this.changeGameState(GameState.BATTLE);
+    // this.removeEventListenersFromCanvas();
+    // this.changeGameState(GameState.OVERWORLD);
+    this.isMainMenu = false;
+    this.game = new Game(this);
     this.game.init();
-    // this.overworld.init();
+    this.game.newGame();
   }
 
   recalculateObjectPositions() {
-    this.game?.drawableItems.forEach((object: GameObject) => {
+    this.game?.drawableItems?.forEach((object: GameObject) => {
       object.updatePositions();
     });
+  }
+
+  removeEventListenersFromCanvas() {
+    // should clear lost eventlisteners
+    // recreateNode(window, true);
+    // recreateNode(this.canvas, true);
   }
 
   calculateHeightAndWidth() {
@@ -131,61 +153,75 @@ export class Main {
     this.recalculateObjectPositions();
   }
 
-  changeGameState(state: GameState) {
-    this.previousGameState = this.gameState;
+  // changeGameState(state: GameState) {
+  //   this.previousGameState = this.gameState;
 
-    switch (state) {
-      case GameState.MAINMENU:
-        this.mainMenu.mainMenuElement.style.display = "flex";
-        break;
-      case GameState.OVERWORLD:
-        this.musicManager.playOverworldMusic();
+  //   switch (state) {
+  //     case GameState.MAINMENU:
+  //       this.mainMenu.mainMenuElement.style.display = "flex";
+  //       break;
+  //     case GameState.OVERWORLD:
+  //       this.musicManager.playOverworldMusic();
+  //       break;
+  //     case GameState.BATTLE:
+  //       this.musicManager.playBattleMusic();
 
-        break;
-      case GameState.BATTLE:
-        this.musicManager.playBattleMusic();
+  //       break;
+  //     case GameState.GAMEOVER:
+  //       alert("game over");
+  //   }
 
-        break;
-      case GameState.GAMEOVER:
-        alert("game over");
-    }
+  //   this.gameState = state;
+  // }
 
-    this.gameState = state;
+  clearGame() {
+    this.game = undefined;
   }
 }
 
 window.onload = () => {
   const main = new Main();
   main.init();
-  $store.game = main.game;
+  $store.main = main;
   let lastTime = 0;
 
   function animate(timeStamp: number) {
     let deltaTime = 0;
 
     main.ctx.clearRect(0, 0, main.width, main.height);
+    main.ctx.fillStyle = "grey";
+    main.ctx.fillRect(0, 0, main.width, main.height);
 
-    switch (main.gameState) {
-      case GameState.MAINMENU:
-        main.mainMenu.draw(main.ctx);
-        main.musicManager.stopMusic();
-        break;
-      case GameState.OVERWORLD:
-        deltaTime = timeStamp - lastTime;
-        lastTime = timeStamp;
-        main.overworld.update(deltaTime);
-        main.overworld.draw(main.ctx);
-        break;
-      case GameState.BATTLE:
-        deltaTime = timeStamp - lastTime;
-        lastTime = timeStamp;
-
-        main.game.update(deltaTime);
-        main.game.draw(main.ctx);
-        break;
-      case GameState.GAMEOVER:
-        console.log("game over");
+    if (!main.isMainMenu) {
+      deltaTime = timeStamp - lastTime;
+      lastTime = timeStamp;
+      main.game?.update(deltaTime);
+      main.game?.draw(main.ctx);
+    } else {
+      main.mainMenu.draw(main.ctx);
+      main.musicManager.stopMusic();
     }
+    // switch (main.gameState) {
+    //   case GameState.MAINMENU:
+    //     main.mainMenu.draw(main.ctx);
+    //     main.musicManager.stopMusic();
+    //     break;
+    //   case GameState.OVERWORLD:
+    //     deltaTime = timeStamp - lastTime;
+    //     lastTime = timeStamp;
+    //     main.game.update(deltaTime);
+    //     main.game.draw(main.ctx);
+    //     break;
+    //   case GameState.BATTLE:
+    //     deltaTime = timeStamp - lastTime;
+    //     lastTime = timeStamp;
+
+    //     main.game.update(deltaTime);
+    //     main.game.draw(main.ctx);
+    //     break;
+    //   case GameState.GAMEOVER:
+    //     console.log("game over");
+    // }
 
     requestAnimationFrame(animate);
   }

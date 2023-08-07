@@ -67,8 +67,7 @@ export class Card extends GameObject {
   body = "body";
   effect: (caster: Unit, target: Unit) => void = (caster: Unit, target: Unit) =>
     console.log("no effect");
-  //   x: number = 2000; // not visible
-  //   y: number = 2000; // not visible
+
   background = new Image();
   image = new Image();
   costCircle = new Image();
@@ -77,13 +76,8 @@ export class Card extends GameObject {
 
   isUnPlayable = false;
 
-  constructor(
-    deck: Deck,
-    config: CardConfig,
-    xPercentage = 0,
-    yPercentage = 0
-  ) {
-    super(deck.unit.game, xPercentage, yPercentage, 0.1, 0.2);
+  constructor(deck: Deck, config: CardConfig) {
+    super(deck.unit.game, 0, 0, 0.1, 0.2);
     this.deck = deck;
     this.unit = deck.unit;
     this.cost = config.cost;
@@ -98,9 +92,7 @@ export class Card extends GameObject {
     this.costCircle.src = "assets/cards/card-cost-circle.png";
   }
 
-  update(deltaTime: number) {}
-
-  draw(ctx: CanvasRenderingContext2D) {
+  mainDraw(ctx: CanvasRenderingContext2D) {
     // ctx.globalAlpha = 0.3;
 
     this.drawCardBackground(ctx);

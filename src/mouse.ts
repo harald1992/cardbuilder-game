@@ -9,19 +9,19 @@ export class Mouse {
   canvas: HTMLCanvasElement;
   canvasPosition: DOMRect;
 
-  get xPercentage() {
-    if (!this.x) {
-      return 0;
-    }
-    return this.x / this.game.main.width;
-  }
+  // get xPercentage() {
+  //   if (!this.x) {
+  //     return 0;
+  //   }
+  //   return this.x / this.game.main.width;
+  // }
 
-  get yPercentage() {
-    if (!this.y) {
-      return 0;
-    }
-    return this.y / this.game.main.width;
-  }
+  // get yPercentage() {
+  //   if (!this.y) {
+  //     return 0;
+  //   }
+  //   return this.y / this.game.main.width;
+  // }
 
   constructor(game: Game) {
     this.game = game;
@@ -33,8 +33,8 @@ export class Mouse {
 
   init() {
     this.canvas.addEventListener("mousemove", (event: MouseEvent) => {
-      this.x = event.x - this.canvasPosition.left;
-      this.y = event.y - this.canvasPosition.top;
+      this.x = event.x - this.canvasPosition.left + this.game.camera.x;
+      this.y = event.y - this.canvasPosition.top + this.game.camera.y;
     });
 
     this.canvas.addEventListener("mouseleave", (event: MouseEvent) => {

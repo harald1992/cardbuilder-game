@@ -1,43 +1,20 @@
+import { GameObject } from "../../classes/game-object";
 import { getYBottomPage } from "../../utils/utils";
 import { Deck } from "./deck";
 
-export class DeckAndDiscardPile {
+export class DeckAndDiscardPile extends GameObject {
   deck: Deck;
-
-  widthPercentage = 0.1;
-  heightPercentage = 0.2;
-  xPercentage = 0.8;
-
   deckImage = new Image();
 
-  get yPercentage() {
-    return getYBottomPage(this) || 0;
-  }
-
-  get x() {
-    return this.xPercentage * this.deck.unit.game.main.width || 0;
-  }
-
-  get y() {
-    return this.yPercentage * this.deck.unit.game.main.height || 0;
-  }
-
-  get width() {
-    return this.widthPercentage * this.deck.unit.game.main.width;
-  }
-
-  get height() {
-    return this.heightPercentage * this.deck.unit.game.main.width;
-  }
-
   constructor(deck: Deck) {
+    super(deck.unit.game, 0, 0, 0.1, 0.2);
     this.deck = deck;
     this.deckImage.src = "assets/cardbackgrounds/po_clswizard_h.png";
+    this.x = 0.8 * deck.unit.game.main.width;
+    this.y = this.deck.unit.game.main.height - this.height;
   }
 
-  update(deltaTime: number) {}
-
-  draw(ctx: CanvasRenderingContext2D) {
+  mainDraw(ctx: CanvasRenderingContext2D) {
     ctx.font = `24px Roboto`;
 
     this.drawDeck(ctx);
@@ -57,9 +34,6 @@ export class DeckAndDiscardPile {
       this.width,
       this.height
     );
-
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(this.x, this.y, this.width, this.height);
 
     ctx.save();
     ctx.textAlign = "center";
@@ -88,8 +62,9 @@ export class DeckAndDiscardPile {
       this.deck.cardsInDiscard[this.deck.cardsInDiscard.length - 1];
 
     if (lastCardInDiscard) {
-      lastCardInDiscard.xPercentage = this.xPercentage + 0.1;
-      lastCardInDiscard.yPercentage = getYBottomPage(lastCardInDiscard);
+      lastCardInDiscard.x = this.x + 0.1 * this.deck.unit.game.main.width;
+      lastCardInDiscard.y =
+        this.deck.unit.game.main.height - lastCardInDiscard.height;
       lastCardInDiscard.draw(ctx);
     }
 

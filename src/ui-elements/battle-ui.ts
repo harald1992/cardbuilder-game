@@ -1,20 +1,21 @@
-import { Game } from "../game";
-import { EndTurnButton } from "./end-turn-button";
+// import { Game } from "../game";
+// import { EndTurnButton } from "./end-turn-button";
 
-export class BattleUI {
-  game: Game;
-  endTurnButton: EndTurnButton;
+// export class BattleUI {
+//   // split ?
+//   game: Game;
+//   endTurnButton: EndTurnButton;
 
-  get drawableItems() {
-    return this.endTurnButton;
-  }
+//   get drawableItems() {
+//     return this.endTurnButton;
+//   }
 
-  constructor(game: Game) {
-    this.game = game;
-    this.endTurnButton = new EndTurnButton(this);
-  }
+//   constructor(game: Game) {
+//     this.game = game;
+//     this.endTurnButton = new EndTurnButton(this);
+//   }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    this.endTurnButton.draw(ctx);
-  }
-}
+//   mainDraw(ctx: CanvasRenderingContext2D) {
+//     this.endTurnButton.draw(ctx);
+//   }
+// }

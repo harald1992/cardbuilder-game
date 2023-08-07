@@ -1,11 +1,20 @@
 import { Game } from "./game";
-import { rectRectCollision } from "./utils/utils";
+import { mouseRectCollision, rectRectCollision } from "./utils/utils";
 import { Mouse } from "./mouse";
 import { Card } from "./battle/deck/card";
+import { GameObject } from "./classes/game-object";
 
-export class MouseHandler {
+export class MouseHandler extends GameObject {
   game: Game;
   mouse: Mouse;
+
+  get drawX() {
+    return this.x;
+  }
+
+  get drawY() {
+    return this.y;
+  }
 
   get cursor() {
     return this.game.main.canvas.style.cursor;
@@ -15,6 +24,7 @@ export class MouseHandler {
   }
 
   constructor(game: Game) {
+    super(game);
     this.game = game;
     this.mouse = game.mouse;
   }
@@ -32,8 +42,8 @@ export class MouseHandler {
 
   mouseHoverEffects() {
     this.game.main.canvas.addEventListener("mousemove", (event: MouseEvent) => {
-      const collision = this.game.clickableItems.find((item: any) => {
-        return rectRectCollision(item, this.mouse) && !item.isUnPlayable;
+      const collision = [...this.game.clickableItems].find((item: any) => {
+        return mouseRectCollision(this.mouse, item) && !item.isUnPlayable;
       });
 
       if (collision) {
@@ -43,11 +53,15 @@ export class MouseHandler {
       }
     });
 
-    this.game.main.canvas.addEventListener("click", (event: MouseEvent) => {
-      const item = this.game.clickableItems.find((item: any) =>
-        rectRectCollision(item, this.mouse)
-      );
-      console.log(item);
-    });
+    this.game.main.canvas.addEventListener(
+      "contextmenu",
+      (event: MouseEvent) => {
+        event.preventDefault();
+        const item = [...this.game.clickableItems].find((item: any) =>
+          mouseRectCollision(this.mouse, item)
+        );
+        console.log(item);
+      }
+    );
   }
 }

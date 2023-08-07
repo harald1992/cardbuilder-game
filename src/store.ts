@@ -1,3 +1,4 @@
+import { Main } from ".";
 import { Game } from "./game";
 import { Enemy } from "./units/enemy";
 import { Player } from "./units/player";
@@ -5,35 +6,39 @@ import { Player } from "./units/player";
 declare const window: any;
 
 class Store {
-  get game() {
-    return window.game;
+  get main() {
+    return window.main;
   }
 
-  set game(game: Game) {
-    window.game = game;
+  set main(main: Main) {
+    window.main = main;
+  }
+
+  get game() {
+    return this.main.game;
   }
 
   get canvas() {
-    return this.game.main.canvas;
+    return this.main.canvas;
   }
 
   get battleManager() {
-    return this.game.battleManager;
+    return this.game?.battleManager;
   }
 
   get dragAndDrop() {
-    return this.battleManager.dragAndDrop;
+    return this.battleManager?.dragAndDrop;
   }
 
   get mouse() {
-    return this.game.mouse;
+    return this.game?.mouse;
   }
 
   constructor() {}
 
-  getPlayer(): Player {
-    return this.game.battleManager.player;
-  }
+  // getPlayer(): Player | undefined {
+  //   return this.game?.battleManager?.player;
+  // }
 
   // getGame(): Game {
   //   return window.game;

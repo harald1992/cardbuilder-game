@@ -2,7 +2,7 @@ import { BackgroundUI } from "../ui-elements/background-ui";
 import { EnemyName } from "../dictionaries/enemy-dictionary";
 import { Game } from "../game";
 import { $store } from "../store";
-import { BattleUI } from "../ui-elements/battle-ui";
+// import { BattleUI } from "../ui-elements/battle-ui";
 import { Enemy } from "../units/enemy";
 import { Player } from "../units/player";
 import { Unit } from "../units/unit";
@@ -16,6 +16,9 @@ import { Card } from "./deck/card";
 import { DragAndDrop } from "./drag-and-drop";
 import { IngameMenu } from "./battle-ui/ingame-menu";
 import { Background } from "../classes/background";
+import { GameObject } from "../classes/game-object";
+import { GameState } from "../models/models";
+import { EndTurnButton } from "../ui-elements/end-turn-button";
 
 function wait(ms: number) {
   return new Promise<void>((resolve) => {
@@ -33,18 +36,20 @@ export class BattleManager {
   battleBackground: Background;
 
   backgroundUI: BackgroundUI;
-  battleUI: BattleUI;
+  // battleUI: BattleUI;
+  endTurnButton: EndTurnButton;
   selectedCard: Card | undefined;
 
-  dragAndDrop: DragAndDrop = new DragAndDrop();
-  isGameOver = false;
+  dragAndDrop: DragAndDrop = new DragAndDrop(this);
+  // isGameOver = false;
 
   get clickableItems() {
     let clickableItems = [
       ...this.enemies,
       this.player,
       ...this.player.deck.cardsInHand,
-      this.battleUI.endTurnButton,
+      this.player.deck.deckAndDiscardPile,
+      this.endTurnButton,
     ];
 
     return clickableItems;
@@ -54,16 +59,20 @@ export class BattleManager {
     return [this.battleBackground, this.backgroundUI, ...this.clickableItems];
   }
 
-  constructor(game: Game) {
+  constructor(game: Game, player: Player, enemies: Enemy[]) {
     this.game = game;
     this.backgroundUI = new BackgroundUI(this.game);
-    this.battleUI = new BattleUI(this.game);
-    this.player = new Player(this.game, 0, 0);
+    this.endTurnButton = new EndTurnButton(this);
+    // this.battleUI = new BattleUI(this.game);
     this.battleBackground = new Background(this.game);
+
+    this.player = player;
+    this.enemies = enemies;
   }
 
   init() {
     // this.ingameMenu.init();
+    console.log("battlemanager init happening");
 
     this.battleInit();
 
@@ -71,6 +80,9 @@ export class BattleManager {
   }
 
   update(deltaTime: number) {
+    this.enemies = this.enemies.filter(
+      (enemy: GameObject) => !enemy.markedForDeletion
+    );
     // this.clickableItems.forEach((object) => object.update(deltaTime));
   }
 
@@ -81,9 +93,11 @@ export class BattleManager {
   }
 
   async gameLoop() {
-    if (this.isGameOver) {
-      return;
-    }
+    console.log("gameloop starting");
+
+    // if (this.isGameOver) {
+    //   return;
+    // }
     // await wait(500);
     this.playerUpkeep();
     await this.playerTurn();
@@ -118,22 +132,19 @@ export class BattleManager {
   }
 
   battleInit() {
-    this.player = new Player(this.game, 0, 0);
-    this.player.yPercentage = getYBottomPage(this.player);
+    this.player.x = 0;
+    this.player.y = this.game.main.height - this.player.height;
 
-    const enemy1 = new Enemy(this.game, EnemyName.BAT, 0, 0);
+    for (let i = 0; i < this.enemies.length; i++) {
+      // spacearound
+      const enemy = this.enemies[i];
+      let totalWidth = this.game.main.width - enemy.width;
+      const percentage = (i + 0.5) / this.enemies.length;
 
-    const enemy2 = new Enemy(this.game, EnemyName.SPECTRE, 0, 0);
-    enemy2.xPercentage = getXRightpage(enemy2);
+      enemy.x = percentage * totalWidth;
 
-    const enemy3 = new Enemy(this.game, EnemyName.MINOTAUR, 0, 0);
-    enemy3.xPercentage = getXMidpage(enemy3);
-
-    this.enemies = [enemy1, enemy2, enemy3];
-    [...this.enemies].forEach(
-      (unit) => (unit.y += 0.05 * this.game.main.width)
-      // clamp for header
-    );
+      enemy.y = 0.05 * this.game.main.width; // clamp for header
+    }
 
     [...this.enemies, this.player].forEach((unit) => unit.init());
   }
@@ -172,9 +183,7 @@ export class BattleManager {
   }
 
   playerTurn(): Promise<void> {
-    const battleManager = $store.battleManager;
-    const mouse = $store.mouse;
-    const canvas = $store.game.main.canvas;
+    const canvas = $store.canvas;
     this.dragAndDrop.dragAndDropCards();
 
     return new Promise<void>((resolve) => {
@@ -183,17 +192,14 @@ export class BattleManager {
         resolve();
       }
 
-      function turnEndListener(event: Event) {
-        if (rectRectCollision(battleManager.battleUI.endTurnButton, mouse)) {
+      const turnEndListener = (event: Event) => {
+        if (rectRectCollision(this.endTurnButton, this.game.mouse)) {
           canvas.removeEventListener("click", turnEndListener);
 
-          canvas.removeEventListener(
-            "mousedown",
-            $store.dragAndDrop.onMouseDown
-          );
+          canvas.removeEventListener("mousedown", this.dragAndDrop.onMouseDown);
           resolve();
         }
-      }
+      };
 
       canvas.addEventListener("click", turnEndListener);
     });
@@ -218,6 +224,10 @@ export class BattleManager {
     this.playPossibleCards(caster, target, resolve);
   }
 
+  // enum GameResult {
+  //   CONTINUE, PLAYERLOST, PLAYERWIN
+  // }
+
   checkIfUnitsDied() {
     if (this.player.currentHp <= 0) {
       return this.gameOver();
@@ -231,14 +241,13 @@ export class BattleManager {
 
     this.enemies = this.enemies.filter((enemy: Unit) => enemy.currentHp > 0);
     if (this.enemies.length === 0) {
-      console.log("You win");
-      this.init();
+      this.game.goBackToOverworld();
     }
   }
 
   gameOver() {
     console.log("game over");
-    this.isGameOver = true;
-    // this.init();
+    // this.isGameOver = true;
+    this.game.gameOver();
   }
 }

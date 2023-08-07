@@ -1,4 +1,4 @@
-import { GameState, Main } from ".";
+import { Main } from ".";
 import { Game } from "./game";
 import { $store } from "./store";
 

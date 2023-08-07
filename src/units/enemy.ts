@@ -13,8 +13,8 @@ export class Enemy extends Unit {
   constructor(
     game: Game,
     enemyName: EnemyName,
-    xPercentage: number,
-    yPercentage: number
+    xPercentage: number = 0,
+    yPercentage: number = 0
   ) {
     super(game, xPercentage, yPercentage);
     let config: EnemyConfig =
@@ -31,11 +31,11 @@ export class Enemy extends Unit {
     this.deck.allCards = getCardByTitles(this.deck, config.allCards);
   }
 
-  update(deltaTime: number) {
-    super.update(deltaTime);
-  }
+  // update(deltaTime: number) {
+  //   super.update(deltaTime);
+  // }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    super.draw(ctx);
-  }
+  // mainDraw(ctx: CanvasRenderingContext2D) {
+  //   super.draw(ctx);
+  // }
 }

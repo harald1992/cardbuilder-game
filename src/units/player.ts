@@ -6,31 +6,32 @@ export class Player extends Unit {
   constructor(game: Game, xPercentage: number, yPercentage: number) {
     super(game, xPercentage, yPercentage);
     // this.image.src = "assets/units/player-wizard.png";
-    this.image.src = "assets/units/po_hoodshade_L.png";
+    this.image.src = game.playerData.imgSrc;
 
     // this.isPlayer = true;
     this.team = "player";
-    this.maxHp = 20;
-    this.maxMp = 3;
-    this.deck.allCards = getCardByTitles(this.deck, [
-      CardTitle.JUNK,
-      CardTitle.JUNK,
-      CardTitle.JUNK,
-      CardTitle.JUNK,
-      CardTitle.BITE,
-      CardTitle.LIGHTNING_SPARK,
-      CardTitle.LIBRARY,
-      CardTitle.HEALING_AID,
-      CardTitle.STRIKE,
-      CardTitle.LIGHTNING_BOLT,
-    ]);
+    this.maxHp = game.playerData.maxHp;
+    this.maxMp = game.playerData.maxMp;
+    this.deck.allCards = getCardByTitles(this.deck, game.playerData.allCards);
+    // this.deck.allCards = getCardByTitles(this.deck, [
+    //   CardTitle.JUNK,
+    //   CardTitle.JUNK,
+    //   CardTitle.JUNK,
+    //   CardTitle.JUNK,
+    //   CardTitle.BITE,
+    //   CardTitle.LIGHTNING_SPARK,
+    //   CardTitle.LIBRARY,
+    //   CardTitle.HEALING_AID,
+    //   CardTitle.STRIKE,
+    //   CardTitle.LIGHTNING_BOLT,
+    // ]);
   }
 
-  update(deltaTime: number) {
-    super.update(deltaTime);
-  }
+  // update(deltaTime: number) {
+  //   super.update(deltaTime);
+  // }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    super.draw(ctx);
-  }
+  // draw(ctx: CanvasRenderingContext2D) {
+  //   super.draw(ctx);
+  // }
 }

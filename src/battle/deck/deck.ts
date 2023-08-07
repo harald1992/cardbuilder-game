@@ -27,7 +27,6 @@ export class Deck {
     let cardsInHandWidth =
       this.cardsInHand.length * this.cardsInHand[0].width || 0;
     let startingX = (gameWidth - cardsInHandWidth) / 2;
-    startingX = startingX / gameWidth;
 
     return startingX;
   }
@@ -36,7 +35,7 @@ export class Deck {
     const card = this.allCards[0].height;
     const gameHeight = this.unit.game.main.height;
     const difference = gameHeight - card;
-    return difference / gameHeight;
+    return difference;
   }
 
   constructor(unit: Unit) {
@@ -63,10 +62,9 @@ export class Deck {
   }
 
   updateCardPositions() {
-    const main = this.unit.game.main;
     this.cardsInHand.forEach((card: Card, index: number) => {
-      card.xPercentage = this.startingX + (index * card.width) / main.width;
-      card.yPercentage = this.startingY || 0;
+      card.x = this.startingX + index * card.width;
+      card.y = this.startingY || 0;
     });
   }
 
