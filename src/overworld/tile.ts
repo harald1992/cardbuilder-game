@@ -10,7 +10,7 @@ export class Tile extends GameObject {
   gameMap: GameMap;
 
   image = new Image();
-
+  name: string;
   canMove = true;
 
   spriteConfig?: {
@@ -26,9 +26,16 @@ export class Tile extends GameObject {
     y = 0,
     tileConfig: TileConfig = $tileDictionary[0]
   ) {
-    super(gameMap.overworld.game, x, y, 0.1, 0.1);
+    super(
+      gameMap.overworld.game,
+      x,
+      y,
+      tileConfig.width || 0.1,
+      tileConfig.height || 0.1
+    );
     this.gameMap = gameMap;
 
+    this.name = tileConfig.name;
     this.canMove = tileConfig.canMove;
     this.image.src = tileConfig.src;
     this.spriteConfig = tileConfig.spriteConfig;

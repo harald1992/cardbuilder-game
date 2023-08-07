@@ -1,139 +1,158 @@
+import { GameObject } from "../classes/game-object";
 import {
   $dungeonTileDictionary,
+  $tileDictionary,
+  // $dungeonWallDictionary,
   TileName,
 } from "../dictionaries/tile-dictionary";
+import { rectRectCollision } from "../utils/utils";
 import { Overworld } from "./overworld";
 import { Tile } from "./tile";
+import { Wall } from "./wall";
 
 export class GameMap {
   overworld: Overworld;
-  terrainArray: Tile[] = [];
+  // roomArray: Tile[] = [];
+  // wallsArray: Wall[] = [];
+  terrainArray: (Tile | Wall)[] = [];
+
+  rows = 15;
+  columns = 15;
+
+  tileSize = 0;
+
+  get mapXMax() {
+    const lastTerrain = this.terrainArray[this.terrainArray.length - 1];
+    return lastTerrain.x;
+  }
+
+  get mapYMax() {
+    const lastTerrain = this.terrainArray[this.terrainArray.length - 1];
+    return lastTerrain.y;
+  }
 
   constructor(overworld: Overworld) {
     this.overworld = overworld;
+    this.tileSize = 0.1 * this.overworld.game.main.width;
+  }
+
+  get floorTiles() {
+    // (item as any) instanceof OverworldEnemy
+    return this.terrainArray.filter((tile: GameObject) => tile instanceof Tile);
   }
 
   init() {
-    this.generateMainLayer();
+    this.generateWalls();
+
+    // this.generateRandomTiles();
+
+    this.generateRoomsAndCorridors(5);
   }
 
-  // draw(ctx: CanvasRenderingContext2D) {
-  //   this.drawTerrainTiles(ctx);
-  // }
+  generateWalls() {
+    let walls: Wall[] = [];
 
-  // drawTerrainTiles(ctx: CanvasRenderingContext2D) {
-  //   const terrainArray = this.terrainArray;
-
-  //   for (const tile of terrainArray) {
-  //     // tile.draw(ctx);
-  //   }
-  // }
-
-  // generateRandomMap() {
-  //   for (let i = 0; i < 5; i++) {
-  //     const tile = new Tile(this);
-  //     tile.x = i * tile.width;
-  //     tile.y = 0;
-  //     this.terrainArray.push(tile);
-  //   }
-  // }
-  // this.generateMainLayer();
-  // this.generateRoomsAndCorridors(5);
-  // this.generateGameObjects();
-
-  // generate random tiles at every coordinate.
-  generateMainLayer() {
-    // const map = $store.getMapSettings();
-    let terrainArray = [];
-    let rows = 5;
-    let columns = 5;
-    for (var y = 0; y < rows; ++y) {
-      for (var x = 0; x < columns; ++x) {
+    for (var y = 0; y < this.rows; ++y) {
+      for (var x = 0; x < this.columns; ++x) {
         const tileSize = 0.1 * this.overworld.game.main.width;
-        const randomDungeonTileIndex = Math.floor(
-          Math.random() * $dungeonTileDictionary.length
-        );
-        const randomTileConfig = $dungeonTileDictionary[randomDungeonTileIndex];
 
-        const newTile = new Tile(
-          this,
-          x * tileSize,
-          y * tileSize,
-          randomTileConfig
-        );
-
-        terrainArray.push(newTile);
+        const newWall = new Wall(this, x * tileSize, y * tileSize);
+        walls.push(newWall);
       }
     }
-    this.terrainArray = terrainArray;
+
+    this.terrainArray = walls;
   }
 
-  // // add organized rooms and corridors that are definitely passable
-  // generateRoomsAndCorridors(roomAmount = 3) {
-  //   const map = $store.getMapSettings();
+  changeTileToFloorTile(x: number, y: number) {
+    const tileIndex = this.getTileIndexByCoordinates(
+      x * this.tileSize,
+      y * this.tileSize
+    );
 
-  //   let rooms = [];
+    if (tileIndex) {
+      const newTile = this.generateRandomDungeonTile(x, y);
+      this.terrainArray[tileIndex] = newTile;
+    }
+  }
 
-  //   for (let i = 0; i < roomAmount; i++) {
-  //     const room = utilService.getRandomCoordinates();
+  generateRandomTiles() {
+    for (var y = 0; y < this.rows; ++y) {
+      for (var x = 0; x < this.columns; ++x) {
+        if (Math.random() < 0.1) {
+          const tileIndex = this.getTileIndexByCoordinates(
+            x * this.tileSize,
+            y * this.tileSize
+          );
 
-  //     room.x = Math.min(Math.max(room.x, 1), map.nTilesW); // clamp these so they are not on the edge
-  //     room.y = Math.min(Math.max(room.y, 1), map.nTilesH);
-  //     rooms.push(room);
-  //   }
+          if (tileIndex) {
+            const newTile = this.generateRandomDungeonTile(x, y);
+            this.terrainArray[tileIndex] = newTile;
+          }
+        }
+      }
+    }
+  }
 
-  //   for (const room of rooms) {
-  //     this.generateRoom(room.x, room.y);
-  //   }
+  // add organized rooms and corridors that are definitely passable
+  generateRoomsAndCorridors(roomAmount = 3) {
+    let rooms = [];
 
-  //   for (let p = 0; p < roomAmount - 1; p++) {
-  //     this.createPathTo(rooms[p].x, rooms[p].y, rooms[p + 1].x, rooms[p + 1].y);
-  //   }
-  // }
+    for (let i = 0; i < roomAmount; i++) {
+      const room = this.getRandomCoordinates();
 
-  // createPathTo(startX, startY, endX, endY) {
-  //   const dX = Math.sign(endX - startX);
-  //   const dY = Math.sign(endY - startY);
+      room.x = Math.min(Math.max(room.x, 1), this.columns); // clamp these so they are not on the edge
+      room.y = Math.min(Math.max(room.y, 1), this.rows);
+      rooms.push(room);
+    }
 
-  //   let currentX = startX;
-  //   let currentY = startY;
+    for (const room of rooms) {
+      this.generateRoom(room.x, room.y);
+    }
 
-  //   while (currentX != endX || currentY != endY) {
-  //     const walkDirectionX = Math.round(Math.random()) === 0;
+    for (let p = 0; p < roomAmount - 1; p++) {
+      this.createPathTo(rooms[p].x, rooms[p].y, rooms[p + 1].x, rooms[p + 1].y);
+    }
+  }
 
-  //     if (walkDirectionX && currentX != endX) {
-  //       currentX += dX;
-  //       this.changeTile(currentX, currentY, 0);
-  //     } else if (currentY !== endY) {
-  //       currentY += dY;
-  //       this.changeTile(currentX, currentY, 0);
-  //     }
-  //   }
-  // }
+  generateRoom(middleTileX: number, middleTileY: number) {
+    // let terrainArray = this.roomArray;
 
-  // changeTile(x, y, tileBlueprintNumber) {
-  //   let terrainArray = $store.getTerrainArray();
-  //   let index = utilService.getTileIndexByCoordinates(x, y);
-  //   terrainArray[index] = new Tile(tileBlueprintNumber, x, y);
-  //   $store.setTerrainArray(terrainArray);
-  // }
+    // first 3 vs 3 to test
+    for (var y = middleTileY - 1; y <= middleTileY + 1; y++) {
+      for (var x = middleTileX - 1; x <= middleTileX + 1; x++) {
+        const tileIndex = this.getTileIndexByCoordinates(
+          x * this.tileSize,
+          y * this.tileSize
+        );
 
-  // generateRoom(middleTileX, middleTileY) {
-  //   let terrainArray = $store.getTerrainArray();
+        if (tileIndex) {
+          const newTile = this.generateRandomDungeonTile(x, y);
+          this.terrainArray[tileIndex] = newTile;
+        }
+      }
+    }
+  }
 
-  //   // first 3 vs 3 to test
-  //   for (var y = middleTileY - 1; y <= middleTileY + 1; y++) {
-  //     for (var x = middleTileX - 1; x <= middleTileX + 1; x++) {
-  //       const tileIndex = utilService.getTileIndexByCoordinates(x, y);
-  //       if (tileIndex) {
-  //         const newTile = new Tile(0, x, y);
+  createPathTo(startX: number, startY: number, endX: number, endY: number) {
+    const dX = Math.sign(endX - startX);
+    const dY = Math.sign(endY - startY);
 
-  //         terrainArray[tileIndex] = newTile;
-  //       }
-  //     }
-  //   }
-  //   $store.setTerrainArray(terrainArray);
-  // }
+    let currentX = startX;
+    let currentY = startY;
+
+    while (currentX != endX || currentY != endY) {
+      const walkDirectionX = Math.round(Math.random()) === 0;
+
+      if (walkDirectionX && currentX != endX) {
+        currentX += dX;
+        this.changeTileToFloorTile(currentX, currentY);
+      } else if (currentY !== endY) {
+        currentY += dY;
+        this.changeTileToFloorTile(currentX, currentY);
+      }
+    }
+  }
 
   // generateGameObjects() {
   //   const allowedTiles = $store
@@ -154,25 +173,34 @@ export class GameMap {
   //   $store.setGameObjects(gameObjects);
   // }
 
-  // drawGrid(ctx) {
-  //   if (ctx == null) {
-  //     return;
-  //   }
-  //   const map = $store.getMapSettings();
-  //   for (var y = 0; y < map.nTilesH; ++y) {
-  //     for (var x = 0; x < map.nTilesW; ++x) {
-  //       // ctx.lineWidth = 0.1;
-  //       ctx.lineWidth = 1;
+  getRandomCoordinates() {
+    const nTilesW = this.columns;
+    const nTilesH = this.rows;
+    const x = Math.floor(Math.random() * nTilesW);
+    const y = Math.floor(Math.random() * nTilesH);
+    return { x, y };
+  }
 
-  //       ctx.strokeStyle = "gray";
+  getTileIndexByCoordinates(x: number, y: number) {
+    const object = { x, y, width: 0.1, height: 0.1 };
 
-  //       ctx.strokeRect(
-  //         x * map.tileSize,
-  //         y * map.tileSize,
-  //         map.tileSize,
-  //         map.tileSize
-  //       );
-  //     }
-  //   }
-  // }
+    return this.terrainArray.findIndex((tile: Tile | Wall) => {
+      return rectRectCollision(tile, object);
+    });
+  }
+
+  generateRandomDungeonTile(x: number, y: number): Tile {
+    const randomDungeonTileIndex = Math.floor(
+      Math.random() * $dungeonTileDictionary.length
+    );
+    const randomTileConfig = $dungeonTileDictionary[randomDungeonTileIndex];
+
+    const newTile = new Tile(
+      this,
+      x * this.tileSize,
+      y * this.tileSize,
+      randomTileConfig
+    );
+    return newTile;
+  }
 }

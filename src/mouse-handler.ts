@@ -42,9 +42,13 @@ export class MouseHandler extends GameObject {
 
   mouseHoverEffects() {
     this.game.main.canvas.addEventListener("mousemove", (event: MouseEvent) => {
-      const collision = [...this.game.clickableItems].find((item: any) => {
+      let collision = [...this.game.clickableItems].find((item: any) => {
         return mouseRectCollision(this.mouse, item) && !item.isUnPlayable;
       });
+
+      // let uiCollision = [this.game.uiItems].find((item: any) => {
+      //   return mouseRectCollision(this.mouse, item);
+      // });
 
       if (collision) {
         this.cursor = "pointer";
@@ -60,6 +64,9 @@ export class MouseHandler extends GameObject {
         const item = [...this.game.clickableItems].find((item: any) =>
           mouseRectCollision(this.mouse, item)
         );
+        // let uiCollision = [this.game.uiItems].find((item: any) => {
+        //   return mouseRectCollision(this.mouse, item);
+        // });
         console.log(item);
       }
     );

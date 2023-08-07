@@ -19,6 +19,8 @@ export interface TileConfig {
     cutSizeX: number;
     cutSizeY: number;
   };
+  width?: number;
+  height?: number;
 }
 
 export const $tileDictionary: TileConfig[] = [
@@ -35,6 +37,29 @@ export const $tileDictionary: TileConfig[] = [
 ];
 
 export const $dungeonTileDictionary: TileConfig[] = [
+  {
+    name: "Dungeon Floor Big Tiles 1",
+    canMove: true,
+    src: "assets/RF_Catacombs_v1.0/mainlevbuild.png",
+    spriteConfig: {
+      sourceX: 736,
+      sourceY: 210,
+      cutSizeX: 32,
+      cutSizeY: 32,
+    },
+  },
+  {
+    name: "Dungeon Floor Big Tiles 2",
+    canMove: true,
+    src: "assets/RF_Catacombs_v1.0/mainlevbuild.png",
+    spriteConfig: {
+      sourceX: 784,
+      sourceY: 210,
+      cutSizeX: 32,
+      cutSizeY: 32,
+    },
+  },
+
   {
     name: "Dungeon Floor 1",
     canMove: true,
@@ -102,3 +127,25 @@ export const $dungeonTileDictionary: TileConfig[] = [
     },
   },
 ];
+
+// export const $dungeonWallDictionary: TileConfig[] = [
+//   {
+//     name: "WallNorth",
+//     canMove: false,
+//     src: "assets/RF_Catacombs_v1.0/mainlevbuild.png",
+//     // spriteConfig: {
+//     //   sourceX: 59,
+//     //   sourceY: 336,
+//     //   cutSizeX: 202,
+//     //   cutSizeY: 78,
+//     // },
+//     spriteConfig: {
+//       sourceX: 59,
+//       sourceY: 336,
+//       cutSizeX: 202,
+//       cutSizeY: 78,
+//     },
+//     width: 0.4,
+//     height: 0.2,
+//   },
+// ];

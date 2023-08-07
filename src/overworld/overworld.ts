@@ -7,6 +7,7 @@ import { OverworldEnemy } from "./overworld-enemy";
 // import { KeyboardHandler } from "./keyboard-handler";
 import { OverworldPlayer } from "./overworld-player";
 import { Tile } from "./tile";
+import { Wall } from "./wall";
 
 export class Overworld {
   game: Game;
@@ -64,11 +65,12 @@ export class Overworld {
 
   getRandomStartingPosition() {
     const possiblePositions = this.gameMap.terrainArray.filter(
-      (tile: Tile) => tile.canMove
+      (tile: Tile | Wall) => tile.canMove
     );
+
     const randomIndex = Math.floor(Math.random() * possiblePositions.length);
-    const x = possiblePositions[randomIndex].x;
-    const y = possiblePositions[randomIndex].y;
+    const x = possiblePositions[randomIndex]?.x || 0;
+    const y = possiblePositions[randomIndex]?.y || 0;
     return { x, y };
   }
 

@@ -58,9 +58,9 @@ export class Game {
 
   get clickableItems() {
     if (this.gameState === GameState.OVERWORLD) {
-      return [...(this.overworld?.clickableItems || []), this.headerUI];
+      return [...(this.overworld?.clickableItems || [])];
     } else if (this.gameState === GameState.BATTLE) {
-      return [...(this.battleManager?.clickableItems || []), this.headerUI];
+      return [...(this.battleManager?.clickableItems || [])];
     } else {
       return [];
     }
@@ -68,12 +68,16 @@ export class Game {
 
   get drawableItems() {
     if (this.gameState === GameState.OVERWORLD) {
-      return [...(this.overworld?.drawableItems || []), this.headerUI];
+      return [...(this.overworld?.drawableItems || [])];
     } else if (this.gameState === GameState.BATTLE) {
-      return [...(this.battleManager?.drawableItems || []), this.headerUI];
+      return [...(this.battleManager?.drawableItems || [])];
     } else {
       return [];
     }
+  }
+
+  get uiItems() {
+    return this.headerUI;
   }
 
   constructor(main: Main) {
@@ -96,6 +100,8 @@ export class Game {
     this.drawableItems?.forEach((item: GameObject) => {
       item.draw(ctx);
     });
+
+    this.uiItems.draw(ctx);
 
     // if (this.main.debugMode) {
     //   ctx.strokeStyle = "black";

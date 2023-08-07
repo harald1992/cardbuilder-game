@@ -3,22 +3,38 @@ import { Game } from "../game";
 import { roundedImage } from "../utils/utils";
 // import { BattleUI } from "./battle-ui";
 
-export class HeaderUI extends GameObject {
+export class HeaderUI {
   game: Game;
-
   image = new Image();
+
+  get x() {
+    return this.game.camera.x;
+  }
+
+  get y() {
+    return this.game.camera.y;
+  }
 
   get drawX() {
     // so mouse collisions always work
-    return this.x;
+    return 0;
   }
 
   get drawY() {
-    return this.x;
+    // return this.game.camera.y;
+    return 0;
+  }
+
+  get width() {
+    return 1 * this.game.main.width;
+  }
+
+  get height() {
+    return 0.05 * this.game.main.height;
   }
 
   constructor(game: Game) {
-    super(game, 0, 0, 1, 0.05);
+    // super(game, 0, 0, 1, 0.05);
     this.game = game;
     this.image.src = "assets/ui/woodpanel.jpg";
   }
@@ -33,8 +49,8 @@ export class HeaderUI extends GameObject {
 
     ctx.fillText(
       `Gold: ${this.game.playerGold}`,
-      this.x + 0.5 * this.width,
-      this.y + 0.5 * this.height
+      this.drawX + 0.5 * this.width,
+      this.drawY + 0.5 * this.height
     );
   }
 

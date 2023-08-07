@@ -4,6 +4,7 @@ import { rectRectCollision } from "../utils/utils";
 import { Overworld } from "./overworld";
 import { OverworldEnemy } from "./overworld-enemy";
 import { Tile } from "./tile";
+import { Wall } from "./wall";
 
 export class OverworldPlayer extends GameObject {
   overworld: Overworld;
@@ -18,12 +19,14 @@ export class OverworldPlayer extends GameObject {
     super(overworld.game);
     this.overworld = overworld;
     this.image.src = playerData.imgSrc;
+    this.widthPercentage = 0.07;
+    this.heightPercentage = 0.07;
   }
 
   update(deltaTime: number) {
     super.update(deltaTime);
 
-    this.checkCollision();
+    this.updatePlayerPosition(this.overworld.inputHandler.keys);
   }
 
   move(x: number, y: number) {
@@ -40,43 +43,71 @@ export class OverworldPlayer extends GameObject {
 
   // Update the player's position based on input
   updatePlayerPosition(keys: any) {
+    let newPositions = {
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+    };
+
     if (keys.ArrowUp) {
       let newY = this.y - this.speed;
       if (newY <= 0.01) {
         newY = 0.01;
       }
-      this.y = newY;
+      newPositions.y = newY;
     }
     if (keys.ArrowDown) {
-      // todo: clamp to max width/height?
-      this.y += this.speed;
+      let newY = this.y + this.speed;
+      if (newY >= this.overworld.gameMap.mapYMax) {
+        newY = this.overworld.gameMap.mapYMax;
+      }
+      newPositions.y = newY;
     }
     if (keys.ArrowLeft) {
       let newX = this.x - this.speed;
       if (newX <= 0.01) {
         newX = 0.01;
       }
-      this.x = newX;
+      newPositions.x = newX;
     }
     if (keys.ArrowRight) {
-      // todo: clamp to max width/height?
-      this.x += this.speed;
+      let newX = this.x + this.speed;
+      if (newX >= this.overworld.gameMap.mapXMax) {
+        newX = this.overworld.gameMap.mapXMax;
+      }
+      newPositions.x = newX;
     }
+
+    this.checkCollision(newPositions);
   }
 
-  checkCollision() {
-    const collisionItems = this.overworld.clickableItems.filter(
+  checkCollision(newPositions: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }) {
+    let allowedToMove = true;
+
+    let collisionTiles = this.overworld.gameMap.terrainArray.filter(
+      (item: GameObject) => rectRectCollision(item, newPositions)
+    );
+
+    if (collisionTiles.some((item: Tile | Wall) => !item.canMove)) {
+      allowedToMove = false;
+    }
+
+    const collisionObjects = this.overworld.clickableItems.filter(
       (item: GameObject) =>
-        rectRectCollision(item, this) &&
+        rectRectCollision(item, newPositions) &&
         !((item as any) instanceof OverworldPlayer)
     );
 
-    if (collisionItems.length === 0) {
-      this.updatePlayerPosition(this.overworld.inputHandler.keys);
-    } else {
-      collisionItems.forEach((item: GameObject) => {
+    if (collisionObjects.length !== 0) {
+      allowedToMove = false;
+      collisionObjects.forEach((item: GameObject) => {
         if ((item as any) instanceof OverworldEnemy) {
-          console.log("collision");
           this.overworld.overworldEnemies =
             this.overworld.overworldEnemies.filter(
               (enemy: OverworldEnemy) => enemy !== item
@@ -85,6 +116,11 @@ export class OverworldPlayer extends GameObject {
           this.overworld.game.startBattle((item as OverworldEnemy).enemies);
         }
       });
+    }
+
+    if (allowedToMove) {
+      this.x = newPositions.x;
+      this.y = newPositions.y;
     }
   }
 }
