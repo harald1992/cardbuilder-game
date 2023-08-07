@@ -1,4 +1,7 @@
-import { TileName } from "../dictionaries/tile-dictionary";
+import {
+  $dungeonTileDictionary,
+  TileName,
+} from "../dictionaries/tile-dictionary";
 import { Overworld } from "./overworld";
 import { Tile } from "./tile";
 
@@ -14,17 +17,17 @@ export class GameMap {
     this.generateMainLayer();
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    this.drawTerrainTiles(ctx);
-  }
+  // draw(ctx: CanvasRenderingContext2D) {
+  //   this.drawTerrainTiles(ctx);
+  // }
 
-  drawTerrainTiles(ctx: CanvasRenderingContext2D) {
-    const terrainArray = this.terrainArray;
+  // drawTerrainTiles(ctx: CanvasRenderingContext2D) {
+  //   const terrainArray = this.terrainArray;
 
-    for (const tile of terrainArray) {
-      // tile.draw(ctx);
-    }
-  }
+  //   for (const tile of terrainArray) {
+  //     // tile.draw(ctx);
+  //   }
+  // }
 
   // generateRandomMap() {
   //   for (let i = 0; i < 5; i++) {
@@ -47,9 +50,17 @@ export class GameMap {
     for (var y = 0; y < rows; ++y) {
       for (var x = 0; x < columns; ++x) {
         const tileSize = 0.1 * this.overworld.game.main.width;
-        const tileName = Math.random() < 0.5 ? TileName.STONE : TileName.PIT;
+        const randomDungeonTileIndex = Math.floor(
+          Math.random() * $dungeonTileDictionary.length
+        );
+        const randomTileConfig = $dungeonTileDictionary[randomDungeonTileIndex];
 
-        const newTile = new Tile(this, x * tileSize, y * tileSize, tileName);
+        const newTile = new Tile(
+          this,
+          x * tileSize,
+          y * tileSize,
+          randomTileConfig
+        );
 
         terrainArray.push(newTile);
       }

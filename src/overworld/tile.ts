@@ -13,25 +13,48 @@ export class Tile extends GameObject {
 
   canMove = true;
 
+  spriteConfig?: {
+    sourceX: number;
+    sourceY: number;
+    cutSizeX: number;
+    cutSizeY: number;
+  };
+
   constructor(
     gameMap: GameMap,
     x = 0,
     y = 0,
-    tileName: TileName = TileName.STONE
+    tileConfig: TileConfig = $tileDictionary[0]
   ) {
     super(gameMap.overworld.game, x, y, 0.1, 0.1);
     this.gameMap = gameMap;
 
-    let tileConfig: TileConfig =
-      $tileDictionary.find(
-        (enemyConfig: TileConfig) => enemyConfig.name === tileName
-      ) || $tileDictionary[0];
-
     this.canMove = tileConfig.canMove;
     this.image.src = tileConfig.src;
+    this.spriteConfig = tileConfig.spriteConfig;
   }
 
   mainDraw(ctx: CanvasRenderingContext2D) {
-    ctx.drawImage(this.image, this.drawX, this.drawY, this.width, this.height);
+    if (this.spriteConfig) {
+      ctx.drawImage(
+        this.image,
+        this.spriteConfig.sourceX,
+        this.spriteConfig.sourceY,
+        this.spriteConfig.cutSizeX,
+        this.spriteConfig.cutSizeY,
+        this.drawX,
+        this.drawY,
+        this.width,
+        this.height
+      );
+    } else {
+      ctx.drawImage(
+        this.image,
+        this.drawX,
+        this.drawY,
+        this.width,
+        this.height
+      );
+    }
   }
 }
