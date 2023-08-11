@@ -18,7 +18,6 @@ export class DragAndDrop {
   }
 
   dragAndDropCards = () => {
-    // const canvas = $store.canvas;
     this.canvas.addEventListener("mousedown", this.onMouseDown);
   };
 
@@ -26,11 +25,6 @@ export class DragAndDrop {
     if (!this.battleManager) {
       return;
     }
-
-    // const mouse = $store.mouse;
-    // const canvas = $store.canvas;
-    // const battleManager = $store.battleManager;
-    // const dragAndDrop = $store.dragAndDrop;
 
     this.battleManager?.player.deck.cardsInHand.forEach((card: Card) => {
       if (mouseRectCollision(this.mouse!, card) && !card.isUnPlayable) {
@@ -48,11 +42,6 @@ export class DragAndDrop {
     if (!this.battleManager) {
       return;
     }
-
-    // const battleManager = $store.battleManager;
-    // const mouse = $store.mouse;
-    // const selectedCard = $store.battleManager.selectedCard;
-    // const selectedCard = this.battleManager?.selectedCard;
 
     [this.battleManager.player, ...(this.battleManager.enemies || [])].forEach(
       (unit: Unit) => {
@@ -74,10 +63,6 @@ export class DragAndDrop {
     if (!this.battleManager) {
       return;
     }
-    // const battleManager = $store.battleManager;
-    // const selectedCard = battleManager.selectedCard;
-    // const dragAndDrop = $store.dragAndDrop;
-    // const mouse = $store.mouse;
 
     const target: Unit | undefined = [
       this.battleManager.player,

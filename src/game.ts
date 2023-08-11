@@ -1,5 +1,4 @@
 import { Main } from ".";
-import { MainMenu } from "./main-menu";
 import { Mouse } from "./mouse";
 import { MouseHandler } from "./mouse-handler";
 import { BattleManager } from "./battle/battle-manager";
@@ -131,13 +130,6 @@ export class Game {
     });
 
     this.uiItems.draw(ctx);
-
-    // if (this.main.debugMode) {
-    //   ctx.strokeStyle = "black";
-    //   this.drawableItems?.forEach((item) => {
-    //     ctx.strokeRect(item.x, item.y, item.width, item.height);
-    //   });
-    // }
   }
 
   init() {

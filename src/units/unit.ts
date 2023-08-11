@@ -16,7 +16,6 @@ export class Unit extends GameObject {
   isStunned = false;
 
   floatingTexts: FloatingText[] = [];
-  // didTurn = false;
   team: "player" | "enemy" = "enemy";
 
   targetMark = false;

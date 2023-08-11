@@ -12,12 +12,10 @@ import { Wall } from "./wall";
 
 export class GameMap {
   overworld: Overworld;
-  // roomArray: Tile[] = [];
-  // wallsArray: Wall[] = [];
   terrainArray: (Tile | Wall)[] = [];
 
-  rows = 15;
-  columns = 15;
+  rows = 10;
+  columns = 10;
 
   tileSize = 0;
 
@@ -37,14 +35,13 @@ export class GameMap {
   }
 
   get floorTiles() {
-    // (item as any) instanceof OverworldEnemy
-    return this.terrainArray.filter((tile: GameObject) => tile instanceof Tile);
+    return [...this.terrainArray].filter(
+      (tile: GameObject) => tile instanceof Tile
+    );
   }
 
   init() {
     this.generateWalls();
-
-    // this.generateRandomTiles();
 
     this.generateRoomsAndCorridors(5);
   }
@@ -116,8 +113,6 @@ export class GameMap {
   }
 
   generateRoom(middleTileX: number, middleTileY: number) {
-    // let terrainArray = this.roomArray;
-
     // first 3 vs 3 to test
     for (var y = middleTileY - 1; y <= middleTileY + 1; y++) {
       for (var x = middleTileX - 1; x <= middleTileX + 1; x++) {
@@ -126,7 +121,10 @@ export class GameMap {
           y * this.tileSize
         );
 
-        if (tileIndex) {
+        if (tileIndex && x <= this.columns && y <= this.rows) {
+          console.log(x, y);
+          console.log(this.columns, this.rows);
+
           const newTile = this.generateRandomDungeonTile(x, y);
           this.terrainArray[tileIndex] = newTile;
         }

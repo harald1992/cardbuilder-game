@@ -1,23 +1,13 @@
 import { BackgroundUI } from "../ui-elements/background-ui";
-import { EnemyName } from "../dictionaries/enemy-dictionary";
 import { Game } from "../game";
 import { $store } from "../store";
-// import { BattleUI } from "../ui-elements/battle-ui";
 import { Enemy } from "../units/enemy";
 import { Player } from "../units/player";
 import { Unit } from "../units/unit";
-import {
-  getXMidpage,
-  getXRightpage,
-  getYBottomPage,
-  rectRectCollision,
-} from "../utils/utils";
+import { rectRectCollision } from "../utils/utils";
 import { Card } from "./deck/card";
 import { DragAndDrop } from "./drag-and-drop";
-import { IngameMenu } from "./battle-ui/ingame-menu";
 import { Background } from "../classes/background";
-import { GameObject } from "../classes/game-object";
-import { GameState } from "../models/models";
 import { EndTurnButton } from "../ui-elements/end-turn-button";
 
 function wait(ms: number) {
@@ -32,16 +22,13 @@ export class BattleManager {
   game: Game;
   player: Player;
   enemies: Unit[] = [];
-  // ingameMenu: IngameMenu = new IngameMenu(this);
   battleBackground: Background;
 
   backgroundUI: BackgroundUI;
-  // battleUI: BattleUI;
   endTurnButton: EndTurnButton;
   selectedCard: Card | undefined;
 
   dragAndDrop: DragAndDrop = new DragAndDrop(this);
-  // isGameOver = false;
 
   get clickableItems() {
     let clickableItems = [
@@ -63,7 +50,6 @@ export class BattleManager {
     this.game = game;
     this.backgroundUI = new BackgroundUI(this.game);
     this.endTurnButton = new EndTurnButton(this);
-    // this.battleUI = new BattleUI(this.game);
     this.battleBackground = new Background(this.game);
 
     this.player = player;
@@ -71,25 +57,11 @@ export class BattleManager {
   }
 
   init() {
-    // this.ingameMenu.init();
     console.log("battlemanager init happening");
 
     this.battleInit();
 
     this.gameLoop();
-  }
-
-  update(deltaTime: number) {
-    this.enemies = this.enemies.filter(
-      (enemy: GameObject) => !enemy.markedForDeletion
-    );
-    // this.clickableItems.forEach((object) => object.update(deltaTime));
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    // [this.backgroundUI, ...this.clickableItems].forEach((object) =>
-    //   object.draw(ctx)
-    // );
   }
 
   async gameLoop() {
@@ -157,6 +129,7 @@ export class BattleManager {
 
   async performAllEnemyTurns(enemies: Unit[], resolveCpuTurn: Function) {
     for await (const enemy of enemies) {
+      await wait(500);
       await this.performEnemyUnitTurn(enemy);
     }
 
@@ -177,7 +150,7 @@ export class BattleManager {
       setTimeout(() => {
         this.playPossibleCards(enemy, this.player, resolve);
 
-        // resolve();
+        // resolve(); // resolve happens in playPossibleCards function
       }, 1000); //the attack will happen after 1 second,
     });
   }
@@ -205,7 +178,9 @@ export class BattleManager {
     });
   }
 
-  playPossibleCards(caster: Unit, target: Unit, resolve: Function) {
+  async playPossibleCards(caster: Unit, target: Unit, resolve: Function) {
+    await wait(500);
+
     const possibleCardsToPlay = [...caster.deck.cardsInHand].filter(
       (card: Card) => card.cost <= caster.currentMp && !card.isUnPlayable
     );
@@ -216,6 +191,7 @@ export class BattleManager {
     const randomCard = possibleCardsToPlay[randomIndex];
     if (randomCard) {
       randomCard.playCard(caster, target);
+
       if (caster.currentHp <= 0) {
         resolve(); // end turn if character kills himself
       }
@@ -224,30 +200,31 @@ export class BattleManager {
     this.playPossibleCards(caster, target, resolve);
   }
 
-  // enum GameResult {
-  //   CONTINUE, PLAYERLOST, PLAYERWIN
-  // }
-
   checkIfUnitsDied() {
     if (this.player.currentHp <= 0) {
+      console.log("player currentHP <= 0");
+
       return this.gameOver();
     }
-    const enemiesDied = this.enemies.filter(
+    const enemiesDied = [...this.enemies].filter(
       (enemy: Unit) => enemy.currentHp <= 0
     );
     enemiesDied.forEach((enemy: Unit) => {
       this.player.game.playerGold += enemy.maxHp;
     });
 
-    this.enemies = this.enemies.filter((enemy: Unit) => enemy.currentHp > 0);
+    this.enemies = [...this.enemies].filter(
+      (enemy: Unit) => enemy.currentHp > 0
+    );
     if (this.enemies.length === 0) {
+      console.log("enemies length = 0");
+
       this.game.goBackToOverworld();
     }
   }
 
   gameOver() {
     console.log("game over");
-    // this.isGameOver = true;
     this.game.gameOver();
   }
 }

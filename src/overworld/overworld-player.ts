@@ -112,10 +112,9 @@ export class OverworldPlayer extends GameObject {
       allowedToMove = false;
       collisionObjects.forEach((item: GameObject) => {
         if ((item as any) instanceof OverworldEnemy) {
-          this.overworld.overworldEnemies =
-            this.overworld.overworldEnemies.filter(
-              (enemy: OverworldEnemy) => enemy !== item
-            );
+          this.overworld.overworldEnemies = [
+            ...this.overworld.overworldEnemies,
+          ].filter((enemy: OverworldEnemy) => enemy !== item);
 
           this.overworld.game.startBattle((item as OverworldEnemy).enemies);
         }
@@ -126,8 +125,6 @@ export class OverworldPlayer extends GameObject {
       allowedToMove &&
       (this.x !== newPositions.x || this.y !== newPositions.y)
     ) {
-      console.log("allowed to move??");
-
       this.sprite.setAnimation("walkRight");
 
       this.x = newPositions.x;

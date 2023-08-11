@@ -16,19 +16,19 @@ export type EnemyConfig = {
 };
 
 export const $enemyDictionary: EnemyConfig[] = [
-  {
-    name: EnemyName.TEMPLATE,
-    imgSrc: "assets/units/po_hu_m_99_h.png",
-    maxHp: 1,
-    maxMp: 1,
-    allCards: [
-      CardTitle.JUNK,
-      CardTitle.JUNK,
-      CardTitle.JUNK,
-      CardTitle.JUNK,
-      CardTitle.JUNK,
-    ],
-  },
+  // {
+  //   name: EnemyName.TEMPLATE,
+  //   imgSrc: "assets/units/po_hu_m_99_h.png",
+  //   maxHp: 1,
+  //   maxMp: 1,
+  //   allCards: [
+  //     CardTitle.JUNK,
+  //     CardTitle.JUNK,
+  //     CardTitle.JUNK,
+  //     CardTitle.JUNK,
+  //     CardTitle.JUNK,
+  //   ],
+  // },
   {
     name: EnemyName.BAT,
     imgSrc: "assets/units/po_a_bat_h.png",

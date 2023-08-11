@@ -122,11 +122,3 @@ export const $cardDictionary: CardConfig[] = [
     },
   },
 ];
-
-// export let $cardDictionary: (() => Card)[] = [];
-
-// for (const card of cards) {
-//   const cardFunction = () => createCardElement(card);
-
-//   $cardDictionary.push(cardFunction);
-// }

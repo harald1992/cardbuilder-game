@@ -34,16 +34,10 @@ export class Overworld {
     this.overworldPlayer = new OverworldPlayer(this, this.game.playerData);
   }
 
-  update(deltaTime: number) {
-    this.overworldEnemies = this.overworldEnemies.filter(
-      (enemy: OverworldEnemy) => !enemy.markedForDeletion
-    );
-  }
-
   newGame() {
     this.gameMap.init();
+    this.overworldPlayer = new OverworldPlayer(this, this.game.playerData);
 
-    this.addEventListeners();
     this.spawnPlayer();
     this.spawnEnemy();
     this.spawnEnemy();
@@ -74,23 +68,5 @@ export class Overworld {
     const x = possiblePositions[randomIndex]?.x || 0;
     const y = possiblePositions[randomIndex]?.y || 0;
     return { x, y };
-  }
-
-  // startBattle = () => {
-  //   this.removeEventListeners();
-  //   console.log("strt battle event done");
-
-  //   this.game.startBattle();
-  // };
-
-  // // todo: remove whenever we have normal event to prop the battle
-  addEventListeners() {
-    //   console.log("adding event listener");
-    //   this.game.main.canvas.addEventListener("click", this.startBattle);
-  }
-
-  removeEventListeners() {
-    // console.log("should remove event listener");
-    // this.game.main.canvas.removeEventListener("click", this.startBattle);
   }
 }
