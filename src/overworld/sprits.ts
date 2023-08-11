@@ -9,7 +9,8 @@ export class Sprite {
   spriteConfig: SpriteConfig;
 
   currentAnimation: number[][] = [[0, 0]]; // x and y;
-  currentAnimationName = "idleRight";
+  currentAnimationType: "idle" | "walk" = "idle";
+  currentAnimationOrientation: "Right" | "Left" = "Right";
   currentAnimationFrame = 0;
 
   animationFrameLimit = 16;
@@ -60,16 +61,26 @@ export class Sprite {
     this.updateAnimationProgress();
   }
 
-  setAnimation(animationName: string) {
-    if (this.currentAnimationName === animationName) {
+  setAnimation(animationType: "idle" | "walk") {
+    if (this.currentAnimationType === animationType) {
       return;
     }
-    let currentAnimation = (this.spriteConfig.animations as any)[animationName];
+    let currentAnimation = (this.spriteConfig.animations as any)[
+      animationType + this.currentAnimationOrientation
+    ];
 
     if (currentAnimation) {
       this.currentAnimation = currentAnimation;
-      this.currentAnimationName = animationName;
+      this.currentAnimationType = animationType;
       this.currentAnimationFrame = 0;
     }
+  }
+
+  setOrientation(orientation: "Right" | "Left") {
+    this.currentAnimationOrientation = orientation;
+
+    this.currentAnimation = (this.spriteConfig.animations as any)[
+      this.currentAnimationType + this.currentAnimationOrientation
+    ];
   }
 }

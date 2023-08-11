@@ -96,7 +96,7 @@ export class GameMap {
     let rooms = [];
 
     for (let i = 0; i < roomAmount; i++) {
-      const room = this.getRandomCoordinates();
+      const room = this.getRandomUnusedCoordinates();
 
       room.x = Math.min(Math.max(room.x, 1), this.columns); // clamp these so they are not on the edge
       room.y = Math.min(Math.max(room.y, 1), this.rows);
@@ -171,7 +171,35 @@ export class GameMap {
   //   $store.setGameObjects(gameObjects);
   // }
 
-  getRandomCoordinates() {
+  getRandomUnusedCoordinates(): { x: number; y: number } {
+    let { x, y } = this.getRandomCoordinates();
+    let object = {
+      x: x * this.tileSize,
+      y: y * this.tileSize,
+      width: 0.1,
+      height: 0.1,
+    };
+
+    while (
+      [...this.overworld.clickableItems].some((ob: GameObject) =>
+        rectRectCollision(object, ob)
+      )
+    ) {
+      x = this.getRandomCoordinates().x;
+      y = this.getRandomCoordinates().y;
+
+      object = {
+        x: x * this.tileSize,
+        y: y * this.tileSize,
+        width: 0.1,
+        height: 0.1,
+      };
+    }
+
+    return { x, y };
+  }
+
+  getRandomCoordinates(): { x: number; y: number } {
     const nTilesW = this.columns;
     const nTilesH = this.rows;
     const x = Math.floor(Math.random() * nTilesW);

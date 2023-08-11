@@ -83,6 +83,12 @@ export class OverworldPlayer extends GameObject {
       newPositions.x = newX;
     }
 
+    if (newPositions.x > this.x) {
+      this.sprite.setOrientation("Right");
+    } else if (newPositions.x < this.x) {
+      this.sprite.setOrientation("Left");
+    }
+
     this.checkCollision(newPositions);
   }
 
@@ -125,12 +131,11 @@ export class OverworldPlayer extends GameObject {
       allowedToMove &&
       (this.x !== newPositions.x || this.y !== newPositions.y)
     ) {
-      this.sprite.setAnimation("walkRight");
-
+      this.sprite.setAnimation("walk");
       this.x = newPositions.x;
       this.y = newPositions.y;
     } else {
-      this.sprite.setAnimation("idleRight");
+      this.sprite.setAnimation("idle");
     }
   }
 }

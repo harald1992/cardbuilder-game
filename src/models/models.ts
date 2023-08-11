@@ -8,6 +8,8 @@ export interface SpriteConfig {
   animations: {
     idleRight: number[][]; // x and y
     walkRight: number[][]; // x and y
+    idleLeft: number[][]; // x and y
+    walkLeft: number[][]; // x and y
   };
   cutConfig: {
     sourceX: number;
