@@ -27,7 +27,13 @@ export class OverworldEnemy extends GameObject {
   }
 
   mainDraw(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "black";
-    ctx.fillRect(this.drawX, this.drawY, this.width, this.height);
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(this.drawX, this.drawY, this.width, this.height);
+    ctx.fillStyle = "white";
+    ctx.fillText(
+      "Enemy",
+      this.drawX + 0.5 * this.width,
+      this.drawY + 0.5 * this.height
+    );
   }
 }

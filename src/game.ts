@@ -10,7 +10,7 @@ import { EnemyConfig, EnemyName } from "./dictionaries/enemy-dictionary";
 import { Enemy } from "./units/enemy";
 import { GameObject } from "./classes/game-object";
 import { Player } from "./units/player";
-import { GameState } from "./models/models";
+import { GameState, SpriteConfig } from "./models/models";
 import { CardTitle } from "./dictionaries/card-dictionary";
 import { Camera } from "./camera";
 
@@ -20,6 +20,7 @@ export type PlayerData = {
   allCards: CardTitle[];
   maxHp: number;
   maxMp: number;
+  spriteConfig?: SpriteConfig;
 };
 
 export class Game {
@@ -54,6 +55,34 @@ export class Game {
     ],
     maxHp: 20,
     maxMp: 3,
+
+    spriteConfig: {
+      src: "assets/swordman pack/swordman_1.png",
+      animations: {
+        idleRight: [
+          [0, 0],
+          [1, 0],
+          [2, 0],
+          [3, 0],
+          [4, 0],
+          [5, 0],
+        ],
+        walkRight: [
+          [0, 1],
+          [1, 1],
+          [2, 1],
+          [3, 1],
+          [4, 1],
+          [5, 1],
+        ],
+      },
+      cutConfig: {
+        sourceX: 0,
+        sourceY: 0,
+        cutSizeX: 32,
+        cutSizeY: 32,
+      },
+    },
   };
 
   get clickableItems() {

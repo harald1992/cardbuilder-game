@@ -3,6 +3,7 @@ import { PlayerData } from "../game";
 import { rectRectCollision } from "../utils/utils";
 import { Overworld } from "./overworld";
 import { OverworldEnemy } from "./overworld-enemy";
+import { Sprite } from "./sprits";
 import { Tile } from "./tile";
 import { Wall } from "./wall";
 
@@ -12,13 +13,17 @@ export class OverworldPlayer extends GameObject {
   speedX = 0;
 
   speedY = 0;
-  image = new Image();
+  portrait = new Image();
   isPlayer = true;
+
+  sprite: Sprite;
 
   constructor(overworld: Overworld, playerData: PlayerData) {
     super(overworld.game);
     this.overworld = overworld;
-    this.image.src = playerData.imgSrc;
+    this.portrait.src = playerData.imgSrc;
+
+    this.sprite = new Sprite(this, playerData.spriteConfig);
     this.widthPercentage = 0.07;
     this.heightPercentage = 0.07;
   }
@@ -34,11 +39,10 @@ export class OverworldPlayer extends GameObject {
     this.speedY = y;
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  mainDraw(ctx: CanvasRenderingContext2D) {
     ctx.strokeStyle = "black";
     ctx.strokeRect(this.drawX, this.drawY, this.width, this.height);
-
-    ctx.drawImage(this.image, this.drawX, this.drawY, this.width, this.height);
+    this.sprite.draw(ctx);
   }
 
   // Update the player's position based on input
@@ -118,9 +122,18 @@ export class OverworldPlayer extends GameObject {
       });
     }
 
-    if (allowedToMove) {
+    if (
+      allowedToMove &&
+      (this.x !== newPositions.x || this.y !== newPositions.y)
+    ) {
+      console.log("allowed to move??");
+
+      this.sprite.setAnimation("walkRight");
+
       this.x = newPositions.x;
       this.y = newPositions.y;
+    } else {
+      this.sprite.setAnimation("idleRight");
     }
   }
 }

@@ -83,27 +83,27 @@ export class Wall extends GameObject {
     let x = this.drawX + 0.9 * this.width;
     let w = 0.1 * this.width;
     ctx.fillRect(x, this.drawY, w, this.height);
-    ctx.strokeRect(x, this.drawY, w, this.height);
+    // ctx.strokeRect(x, this.drawY, w, this.height);
   }
 
   drawLeftWall(ctx: CanvasRenderingContext2D): void {
     let x = this.drawX;
     let w = 0.1 * this.width;
     ctx.fillRect(x, this.drawY, w, this.height);
-    ctx.strokeRect(x, this.drawY, w, this.height);
+    // ctx.strokeRect(x, this.drawY, w, this.height);
   }
 
   drawTopWall(ctx: CanvasRenderingContext2D): void {
     // let x = this.drawX + 0.9 * this.width;
     let h = 0.1 * this.height;
     ctx.fillRect(this.drawX, this.drawY, this.width, h);
-    ctx.strokeRect(this.drawX, this.drawY, this.width, h);
+    // ctx.strokeRect(this.drawX, this.drawY, this.width, h);
   }
 
   drawBottomWall(ctx: CanvasRenderingContext2D): void {
     let y = this.drawY + 0.9 * this.height;
     let h = 0.1 * this.height;
     ctx.fillRect(this.drawX, y, this.width, h);
-    ctx.strokeRect(this.drawX, y, this.width, h);
+    // ctx.strokeRect(this.drawX, y, this.width, h);
   }
 }

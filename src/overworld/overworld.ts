@@ -46,6 +46,8 @@ export class Overworld {
     this.addEventListeners();
     this.spawnPlayer();
     this.spawnEnemy();
+    this.spawnEnemy();
+    this.spawnEnemy();
   }
 
   spawnPlayer() {
