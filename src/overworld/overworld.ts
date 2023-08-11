@@ -1,6 +1,8 @@
 import { Main } from "..";
+import { GameObject } from "../classes/game-object";
 import { Game } from "../game";
 import { $store } from "../store";
+import { rectRectCollision } from "../utils/utils";
 import { GameMap } from "./gameMap";
 import { InputHandler } from "./input-handler";
 import { OverworldEnemy } from "./overworld-enemy";
@@ -45,28 +47,58 @@ export class Overworld {
   }
 
   spawnPlayer() {
-    const { x, y } = this.getRandomStartingPosition();
+    const { x, y } = this.getRandomUnusedPosition();
     this.overworldPlayer.x = x;
     this.overworldPlayer.y = y;
   }
 
   spawnEnemy() {
     let overworldEnemy = new OverworldEnemy(this);
-    const { x, y } = this.getRandomStartingPosition();
+    const { x, y } = this.getRandomUnusedPosition();
     overworldEnemy.x = x;
     overworldEnemy.y = y;
 
     this.overworldEnemies.push(overworldEnemy);
   }
 
-  getRandomStartingPosition() {
+  getRandomUnusedPosition(): { x: number; y: number } {
     const possiblePositions = this.gameMap.terrainArray.filter(
       (tile: Tile | Wall) => tile.canMove
     );
 
+    if (this.clickableItems.length > possiblePositions.length) {
+      console.error("not enough room to place object");
+      return { x: 0, y: 0 };
+    }
+
     const randomIndex = Math.floor(Math.random() * possiblePositions.length);
     const x = possiblePositions[randomIndex]?.x || 0;
     const y = possiblePositions[randomIndex]?.y || 0;
+
+    let object = {
+      x: x,
+      y: y,
+      width: 0.1,
+      height: 0.1,
+    };
+
+    while (
+      [...this.clickableItems].some((ob: GameObject) =>
+        rectRectCollision(object, ob)
+      )
+    ) {
+      const randomIndex = Math.floor(Math.random() * possiblePositions.length);
+
+      const x = possiblePositions[randomIndex]?.x || 0;
+      const y = possiblePositions[randomIndex]?.y || 0;
+      object = {
+        x: x,
+        y: y,
+        width: 0.1,
+        height: 0.1,
+      };
+    }
+
     return { x, y };
   }
 }
