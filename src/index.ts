@@ -3,8 +3,6 @@ import { SoundManager } from "./audio/sound-manager";
 import { GameObject } from "./classes/game-object";
 import { Game } from "./game";
 import { MainMenu } from "./main-menu";
-import { GameState } from "./models/models";
-import { Overworld } from "./overworld/overworld";
 import { $store } from "./store";
 
 function recreateNode(el: any, withChildren: any) {
@@ -18,15 +16,6 @@ function recreateNode(el: any, withChildren: any) {
 }
 
 declare const window: any;
-
-// initialize web components;
-
-// export enum GameState {
-//   MAINMENU,
-//   OVERWORLD,
-//   BATTLE,
-//   GAMEOVER,
-// }
 
 export class Main {
   canvas: HTMLCanvasElement;
@@ -189,8 +178,8 @@ window.onload = () => {
     let deltaTime = 0;
 
     main.ctx.clearRect(0, 0, main.width, main.height);
-    main.ctx.fillStyle = "grey";
-    main.ctx.fillRect(0, 0, main.width, main.height);
+    // main.ctx.fillStyle = "grey";
+    // main.ctx.fillRect(0, 0, main.width, main.height);
 
     if (!main.isMainMenu) {
       deltaTime = timeStamp - lastTime;

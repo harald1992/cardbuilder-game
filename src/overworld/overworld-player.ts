@@ -1,6 +1,7 @@
 import { GameObject } from "../classes/game-object";
 import { PlayerData } from "../game";
-import { rectRectCollision } from "../utils/utils";
+import { $gameOverlayEffects } from "../global/game-overlay-effects";
+import { rectRectCollision, wait } from "../utils/utils";
 import { Overworld } from "./overworld";
 import { OverworldEnemy } from "./overworld-enemy";
 import { Sprite } from "./sprits";
@@ -18,6 +19,8 @@ export class OverworldPlayer extends GameObject {
 
   sprite: Sprite;
 
+  pausePlayer = false;
+
   constructor(overworld: Overworld, playerData: PlayerData) {
     super(overworld.game);
     this.overworld = overworld;
@@ -31,6 +34,9 @@ export class OverworldPlayer extends GameObject {
   update(deltaTime: number) {
     super.update(deltaTime);
 
+    if (this.pausePlayer) {
+      return;
+    }
     this.updatePlayerPosition(this.overworld.inputHandler.keys);
   }
 
@@ -40,8 +46,6 @@ export class OverworldPlayer extends GameObject {
   }
 
   mainDraw(ctx: CanvasRenderingContext2D) {
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(this.drawX, this.drawY, this.width, this.height);
     this.sprite.draw(ctx);
   }
 
@@ -118,11 +122,19 @@ export class OverworldPlayer extends GameObject {
       allowedToMove = false;
       collisionObjects.forEach((item: GameObject) => {
         if ((item as any) instanceof OverworldEnemy) {
-          this.overworld.overworldEnemies = [
-            ...this.overworld.overworldEnemies,
-          ].filter((enemy: OverworldEnemy) => enemy !== item);
+          // item.fade = true;
+          this.pausePlayer = true;
 
-          this.overworld.game.startBattle((item as OverworldEnemy).enemies);
+          item.fade = true;
+          $gameOverlayEffects.fade();
+
+          setTimeout(() => {
+            this.overworld.overworldEnemies = [
+              ...this.overworld.overworldEnemies,
+            ].filter((enemy: OverworldEnemy) => enemy !== item);
+
+            this.overworld.game.startBattle((item as OverworldEnemy).enemies);
+          }, 500);
         }
       });
     }

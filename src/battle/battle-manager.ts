@@ -4,19 +4,11 @@ import { $store } from "../store";
 import { Enemy } from "../units/enemy";
 import { Player } from "../units/player";
 import { Unit } from "../units/unit";
-import { rectRectCollision } from "../utils/utils";
+import { rectRectCollision, wait } from "../utils/utils";
 import { Card } from "./deck/card";
 import { DragAndDrop } from "./drag-and-drop";
 import { Background } from "../classes/background";
 import { EndTurnButton } from "../ui-elements/end-turn-button";
-
-function wait(ms: number) {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, ms);
-  });
-}
 
 export class BattleManager {
   game: Game;

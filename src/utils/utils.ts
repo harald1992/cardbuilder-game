@@ -130,3 +130,11 @@ export function getXRightpage(object: Unit | Card) {
   const xPercentage = difference / gameWidth;
   return xPercentage;
 }
+
+export function wait(ms: number) {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+}

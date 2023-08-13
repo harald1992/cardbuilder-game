@@ -44,6 +44,7 @@ export const $dungeonTileDictionary: TileConfig[] = [
     spriteConfig: {
       sourceX: 736,
       sourceY: 210,
+      // sourceY: 208, // new
       cutSizeX: 32,
       cutSizeY: 32,
     },
@@ -127,25 +128,3 @@ export const $dungeonTileDictionary: TileConfig[] = [
     },
   },
 ];
-
-// export const $dungeonWallDictionary: TileConfig[] = [
-//   {
-//     name: "WallNorth",
-//     canMove: false,
-//     src: "assets/RF_Catacombs_v1.0/mainlevbuild.png",
-//     // spriteConfig: {
-//     //   sourceX: 59,
-//     //   sourceY: 336,
-//     //   cutSizeX: 202,
-//     //   cutSizeY: 78,
-//     // },
-//     spriteConfig: {
-//       sourceX: 59,
-//       sourceY: 336,
-//       cutSizeX: 202,
-//       cutSizeY: 78,
-//     },
-//     width: 0.4,
-//     height: 0.2,
-//   },
-// ];

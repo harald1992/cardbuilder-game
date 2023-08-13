@@ -1,7 +1,5 @@
-import { Main } from "..";
 import { GameObject } from "../classes/game-object";
 import { Game } from "../game";
-import { $store } from "../store";
 import { rectRectCollision } from "../utils/utils";
 import { GameMap } from "./gameMap";
 import { InputHandler } from "./input-handler";
@@ -34,6 +32,20 @@ export class Overworld {
     this.game = game;
     this.gameMap = new GameMap(this);
     this.overworldPlayer = new OverworldPlayer(this, this.game.playerData);
+  }
+
+  // update(deltaTime: number) {
+  //   this.overworldEnemies = [...this.overworldEnemies].filter(
+  //     (enemy: OverworldEnemy) => !enemy.markedForDeletion
+  //   );
+  // }
+
+  // draw(ctx: CanvasRenderingContext2D) {
+  //   this.drawableItems.forEach((item: any) => item.draw(ctx));
+  // }
+
+  init() {
+    this.overworldPlayer.pausePlayer = false;
   }
 
   newGame() {

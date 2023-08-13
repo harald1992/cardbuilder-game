@@ -21,22 +21,6 @@ export class GameObject {
     return this.y - this.game.camera.y;
   }
 
-  // get xPercentage() {
-  //   return this.x / this.game.main.width || 0;
-  // }
-
-  // set xPercentage(value: number) {
-  //   this.x = value * this.game.main.width || 0;
-  // }
-
-  // get yPercentage() {
-  //   return this.y / this.game.main.height || 0;
-  // }
-
-  // set yPercentage(value: number) {
-  //   this.y = value * this.game.main.height || 0;
-  // }
-
   get width() {
     return this.widthPercentage * this.game.main.width || 0;
   }
@@ -53,8 +37,6 @@ export class GameObject {
     heightPercentage = 0.1
   ) {
     this.game = game;
-    // this.xPercentage = xPercentage;
-    // this.yPercentage = yPercentage;
     this.x = x;
     this.y = y;
     this.widthPercentage = widthPercentage;

@@ -175,6 +175,7 @@ export class Game {
     // enemies.push(enemy3);
 
     this.battleManager = new BattleManager(this, player, army);
+
     this.battleManager.init();
     this.gameState = GameState.BATTLE;
   }
@@ -186,6 +187,7 @@ export class Game {
     this.battleManager?.dragAndDrop?.removeEventListeners();
     this.battleManager = undefined;
     this.gameState = GameState.OVERWORLD;
+    this.overworld?.init();
 
     // this.overworld?.addEventListeners();
   }
