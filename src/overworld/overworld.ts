@@ -1,7 +1,7 @@
 import { GameObject } from "../classes/game-object";
 import { Game } from "../game";
 import { rectRectCollision } from "../utils/utils";
-import { GameMap } from "./gameMap";
+import { GameMap } from "./game-map";
 import { InputHandler } from "./input-handler";
 import { OverworldEnemy } from "./overworld-enemy";
 // import { KeyboardHandler } from "./keyboard-handler";
@@ -53,9 +53,9 @@ export class Overworld {
     this.overworldPlayer = new OverworldPlayer(this, this.game.playerData);
 
     this.spawnPlayer();
-    this.spawnEnemy();
-    this.spawnEnemy();
-    this.spawnEnemy();
+    // this.spawnEnemy();
+    // this.spawnEnemy();
+    // this.spawnEnemy();
   }
 
   spawnPlayer() {

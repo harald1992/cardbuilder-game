@@ -61,13 +61,14 @@ export class MouseHandler extends GameObject {
       "contextmenu",
       (event: MouseEvent) => {
         event.preventDefault();
-        const item = [...this.game.clickableItems].find((item: any) =>
-          mouseRectCollision(this.mouse, item)
-        );
+        const items = [
+          ...this.game.clickableItems,
+          ...(this.game.overworld?.gameMap.terrainArray || []),
+        ].find((item: any) => mouseRectCollision(this.mouse, item));
         // let uiCollision = [this.game.uiItems].find((item: any) => {
         //   return mouseRectCollision(this.mouse, item);
         // });
-        console.log(item);
+        console.log(items);
       }
     );
   }

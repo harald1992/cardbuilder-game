@@ -1,39 +1,67 @@
 export class MusicManager {
-  audio: HTMLAudioElement;
+  mainMenuAudio: HTMLAudioElement = new Audio();
+  overworldAudio: HTMLAudioElement = new Audio();
+  battleAudio: HTMLAudioElement = new Audio();
+
+  get allAudio() {
+    return [this.mainMenuAudio, this.overworldAudio, this.battleAudio];
+  }
+
   constructor() {
-    this.audio = document.querySelector("audio#music") as HTMLAudioElement;
-    this.audio.src =
-      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_bat_aribeth.bmu";
-    // this.audio.volume = 0.2;
-    this.audio.volume = 0;
+    this.mainMenuAudio.src =
+      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_autorun.wav";
+
+    this.overworldAudio.src =
+      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_x2fireplane.bmu";
+
+    this.battleAudio.src =
+      "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_bat_x2hell.bmu";
+
+    this.initAllAudio();
+  }
+
+  initAllAudio() {
+    this.allAudio.forEach((audio: HTMLAudioElement) => {
+      audio.volume = 0;
+      audio.addEventListener("ended", (e) => {
+        console.log(e);
+        audio.play();
+      });
+    });
+  }
+
+  stopAllAudio() {
+    this.allAudio.forEach((audio: HTMLAudioElement) => audio.pause());
   }
 
   playBattleMusic() {
+    this.stopAllAudio();
     // prevent sound race condition resulting in error
-    const playPromise = this.audio.play();
+    const playPromise = this.battleAudio.play();
+
     if (playPromise !== null) {
       playPromise.catch(() => {
-        this.audio.src =
-          "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_bat_aribeth.bmu";
-        // audio.volume = 0;
-        this.audio.play();
+        this.battleAudio.volume = 0.2;
+        this.battleAudio.play();
       });
     }
   }
 
   playOverworldMusic() {
-    const playPromise = this.audio.play();
+    this.stopAllAudio();
+
+    // prevent sound race condition resulting in error
+    const playPromise = this.overworldAudio.play();
+
     if (playPromise !== null) {
       playPromise.catch(() => {
-        this.audio.src =
-          "assets/Neverwinter Nights Definitive Edition Assets/mus/mus_ruralnite.bmu";
-        // audio.volume = 0;
-        this.audio.play();
+        this.overworldAudio.volume = 0.2;
+        this.overworldAudio.play();
       });
     }
   }
 
-  stopMusic() {
-    this.audio.pause();
-  }
+  // stopMusic() {
+  //   this.overworldAudio.pause();
+  // }
 }

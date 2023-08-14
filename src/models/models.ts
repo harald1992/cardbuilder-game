@@ -18,3 +18,8 @@ export interface SpriteConfig {
     cutSizeY: number;
   };
 }
+
+export enum TileType {
+  WALL,
+  FLOOR,
+}

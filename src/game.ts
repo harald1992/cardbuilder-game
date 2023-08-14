@@ -162,6 +162,7 @@ export class Game {
 
     this.overworld?.newGame();
     this.gameState = GameState.OVERWORLD;
+    this.main.musicManager.playOverworldMusic();
   }
 
   startBattle(enemies: EnemyConfig[]) {

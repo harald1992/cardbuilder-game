@@ -12,10 +12,20 @@
 
   <body>
     <div class="game-container">
+      <!-- <div class="splash-overlay">
+        <button class="start-game-button">Start Game</button>
+        <p>Loading...</p>
+        <img src="assets/backgrounds/main-menu.jpg" />
+      </div> -->
+
       <div class="game-overlay"></div>
       <div class="backdrop" style="display: none"></div>
 
       <canvas id="canvas-1"></canvas>
+      <!-- <canvas
+        id="mapgenerator-canvas"
+        style="z-index: 100; width: 80%; height: 100%"
+      ></canvas> -->
 
       <div class="card-container" id="enemy-card-container"></div>
 
@@ -55,10 +65,10 @@
       id="sound"
     ></audio>
 
-    <audio
+    <!-- <audio
       src="assets/Neverwinter Nights Definitive Edition Assets/mus/mus_dag_forest.bmu"
       id="music"
-    ></audio>
+    ></audio>  -->
   </body>
 
   <script src="bundle.js" type="module"></script>

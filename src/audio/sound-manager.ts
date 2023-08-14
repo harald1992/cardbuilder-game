@@ -1,17 +1,18 @@
 export class SoundManager {
-  audio: HTMLAudioElement;
+  uiClickAudio: HTMLAudioElement;
 
   constructor() {
-    this.audio = document.querySelector("audio#sound") as HTMLAudioElement;
-    // this.audio.volume = 0.2;
-    this.audio.volume = 0;
+    this.uiClickAudio = document.querySelector(
+      "audio#sound"
+    ) as HTMLAudioElement;
+    this.uiClickAudio.volume = 0.1;
   }
 
   playUiClick() {
-    const playPromise = this.audio.play();
+    const playPromise = this.uiClickAudio.play();
     if (playPromise !== null) {
       playPromise.catch(() => {
-        this.audio.play();
+        this.uiClickAudio.play();
       });
     }
   }

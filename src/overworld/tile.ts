@@ -1,10 +1,11 @@
 import { GameObject } from "../classes/game-object";
 import {
+  $dungeonTileDictionary,
   $tileDictionary,
   TileConfig,
   TileName,
 } from "../dictionaries/tile-dictionary";
-import { GameMap } from "./gameMap";
+import { GameMap } from "./game-map";
 
 export class Tile extends GameObject {
   gameMap: GameMap;
@@ -24,7 +25,7 @@ export class Tile extends GameObject {
     gameMap: GameMap,
     x = 0,
     y = 0,
-    tileConfig: TileConfig = $tileDictionary[0]
+    tileConfig: TileConfig = $dungeonTileDictionary[0]
   ) {
     super(
       gameMap.overworld.game,
@@ -42,6 +43,8 @@ export class Tile extends GameObject {
   }
 
   mainDraw(ctx: CanvasRenderingContext2D) {
+    this.drawNoise(ctx);
+
     if (this.spriteConfig) {
       ctx.drawImage(
         this.image,
@@ -61,6 +64,30 @@ export class Tile extends GameObject {
         this.drawY,
         this.width,
         this.height
+      );
+    }
+  }
+
+  drawNoise(ctx: CanvasRenderingContext2D) {
+    if (this.spriteConfig) {
+      ctx.drawImage(
+        this.image,
+        this.spriteConfig.sourceX,
+        this.spriteConfig.sourceY,
+        this.spriteConfig.cutSizeX,
+        this.spriteConfig.cutSizeY,
+        this.drawX - 3,
+        this.drawY - 3,
+        this.width + 3,
+        this.height + 3
+      );
+    } else {
+      ctx.drawImage(
+        this.image,
+        this.drawX - 3,
+        this.drawY - 3,
+        this.width + 3,
+        this.height + 3
       );
     }
   }

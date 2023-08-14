@@ -1,6 +1,6 @@
 import { GameObject } from "../classes/game-object";
 import { rectRectCollision } from "../utils/utils";
-import { GameMap } from "./gameMap";
+import { GameMap } from "./game-map";
 import { Tile } from "./tile";
 
 function isTopOfThis(thisOb: GameObject, tile: GameObject) {
@@ -49,13 +49,15 @@ function isLeftOfThis(thisOb: GameObject, tile: GameObject) {
 
 export class Wall extends GameObject {
   gameMap: GameMap;
-  canMove = false;
+  canMove = true; // Todo: set to false
   constructor(gameMap: GameMap, x = 0, y = 0) {
     super(gameMap.overworld.game, x, y, 0.1, 0.1);
     this.gameMap = gameMap;
   }
 
   mainDraw(ctx: CanvasRenderingContext2D): void {
+    this.drawNoise(ctx);
+
     ctx.fillStyle = "black";
     ctx.fillRect(this.drawX, this.drawY, this.width, this.height);
 
@@ -77,6 +79,16 @@ export class Wall extends GameObject {
     }
 
     // todo: also draw Corners. And simplify this above
+  }
+
+  drawNoise(ctx: CanvasRenderingContext2D) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(
+      this.drawX - 1,
+      this.drawY - 1,
+      this.width + 1,
+      this.height + 1
+    );
   }
 
   drawRightWall(ctx: CanvasRenderingContext2D): void {

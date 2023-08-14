@@ -3,6 +3,7 @@ import { SoundManager } from "./audio/sound-manager";
 import { GameObject } from "./classes/game-object";
 import { Game } from "./game";
 import { MainMenu } from "./main-menu";
+// import { MapGenerator } from "./overworld/map-generation/map-generator";
 import { $store } from "./store";
 
 function recreateNode(el: any, withChildren: any) {
@@ -142,33 +143,16 @@ export class Main {
     this.recalculateObjectPositions();
   }
 
-  // changeGameState(state: GameState) {
-  //   this.previousGameState = this.gameState;
-
-  //   switch (state) {
-  //     case GameState.MAINMENU:
-  //       this.mainMenu.mainMenuElement.style.display = "flex";
-  //       break;
-  //     case GameState.OVERWORLD:
-  //       this.musicManager.playOverworldMusic();
-  //       break;
-  //     case GameState.BATTLE:
-  //       this.musicManager.playBattleMusic();
-
-  //       break;
-  //     case GameState.GAMEOVER:
-  //       alert("game over");
-  //   }
-
-  //   this.gameState = state;
-  // }
-
   clearGame() {
     this.game = undefined;
   }
 }
 
 window.onload = () => {
+  // createMap();
+  // const mapGenerator: MapGenerator = new MapGenerator();
+  // mapGenerator.createMap();
+
   const main = new Main();
   main.init();
   $store.main = main;
@@ -188,29 +172,7 @@ window.onload = () => {
       main.game?.draw(main.ctx);
     } else {
       main.mainMenu.draw(main.ctx);
-      main.musicManager.stopMusic();
     }
-    // switch (main.gameState) {
-    //   case GameState.MAINMENU:
-    //     main.mainMenu.draw(main.ctx);
-    //     main.musicManager.stopMusic();
-    //     break;
-    //   case GameState.OVERWORLD:
-    //     deltaTime = timeStamp - lastTime;
-    //     lastTime = timeStamp;
-    //     main.game.update(deltaTime);
-    //     main.game.draw(main.ctx);
-    //     break;
-    //   case GameState.BATTLE:
-    //     deltaTime = timeStamp - lastTime;
-    //     lastTime = timeStamp;
-
-    //     main.game.update(deltaTime);
-    //     main.game.draw(main.ctx);
-    //     break;
-    //   case GameState.GAMEOVER:
-    //     console.log("game over");
-    // }
 
     requestAnimationFrame(animate);
   }
