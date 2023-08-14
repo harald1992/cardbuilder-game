@@ -17,8 +17,8 @@ export class GameMap {
   terrainArray: (Tile | Wall)[] = [];
 
   map: Cell[] = [];
-  rows = 10;
-  columns = 10;
+  rows = 15;
+  columns = 15;
 
   // amountOfRooms = 3;
   rooms: Room[] = [];
@@ -63,7 +63,7 @@ export class GameMap {
 
   generateRandomDungeon() {
     this.createGrid();
-    this.generateRooms(3);
+    this.generateRooms(4);
   }
 
   createGrid() {
@@ -75,12 +75,14 @@ export class GameMap {
     }
   }
 
-  generateRooms(amountOfRooms = 0) {
+  generateRooms(amountOfRooms = 5) {
     for (var i = 0; i < amountOfRooms; i++) {
       var newRoom = this.createRandomNonCollidingRoom();
       this.rooms.push(newRoom);
 
       if (i > 0) {
+        console.log("making coridor");
+
         //make corridors
         this.hCorridor(
           this.rooms[i - 1].center.x,
@@ -88,12 +90,12 @@ export class GameMap {
           this.rooms[i - 1].center.y,
           newRoom.center.y
         );
-        // vCorridor(
-        //   rooms[i - 1].center[0],
-        //   room.center[0],
-        //   rooms[i - 1].center[1],
-        //   room.center[1]
-        // );
+        this.vCorridor(
+          this.rooms[i - 1].center.x,
+          newRoom.center.x,
+          this.rooms[i - 1].center.y,
+          newRoom.center.y
+        );
       }
     }
 
@@ -104,9 +106,16 @@ export class GameMap {
     let newRoom: Room = this.createRandomRoom();
     const createNewRoom = () => {
       newRoom = this.createRandomRoom();
-      let collideWithOtherRooms = this.rooms.some((room: Room) =>
-        rectRectCollision(room, newRoom)
-      );
+      const roomCollision = {
+        x: newRoom.x - 1,
+        y: newRoom.y - 1,
+        width: newRoom.width + 2,
+        height: newRoom.height + 2,
+      };
+
+      let collideWithOtherRooms = this.rooms.some((room: Room) => {
+        return rectRectCollision(room, roomCollision);
+      });
       if (collideWithOtherRooms) {
         createNewRoom();
       }
@@ -117,10 +126,10 @@ export class GameMap {
   }
 
   createRandomRoom() {
-    let x = clamp(Math.floor(Math.random() * this.rows), 1, this.rows - 2);
+    let x = clamp(Math.floor(Math.random() * this.rows), 2, this.rows - 2);
     let y = clamp(
       Math.floor(Math.random() * this.columns),
-      1,
+      2,
       this.columns - 2
     );
 
@@ -128,82 +137,97 @@ export class GameMap {
     return room;
   }
 
+  /*horizontal corridor creator */
   hCorridor(x1: number, x2: number, y1: number, y2: number) {
-    let disX = 0;
-    //horizontal corridor creator
+    let disX = Math.abs(x2 - x1) + 1; //find the distance between rooms
+    let corridorW = 1;
+
     if (x1 > x2) {
       //if the first room is further towards the right then the second one
-      disX = x1 - x2; //find the distance between rooms
-      disX += 1;
 
       this.map.forEach((cell: Cell) => {
         if (
           cell.x >= x2 &&
           cell.x < x2 + disX &&
-          cell.y < y2 + 1 &&
-          cell.y > y2 - 1
+          cell.y === y2
+          // cell.y < y2 + corridorW &&
+          // cell.y > y2 - corridorW
         ) {
+          // console.log(cell);
+
           cell.tileType = TileType.FLOOR;
         }
       });
     } //if the second room is further towards the right then the first one
     else {
-      disX = x2 - x1; //find the distance between rooms
-      disX += 1;
-
       this.map.forEach((cell: Cell) => {
         if (
           cell.x >= x1 &&
           cell.x < x1 + disX &&
-          cell.y < y1 + 1 &&
-          cell.y > y1 - 1
+          cell.y === y1
+          // cell.y < y1 + corridorW &&
+          // cell.y > y1 - corridorW
+        ) {
+          // console.log(cell);
+
+          cell.tileType = TileType.FLOOR;
+        }
+      });
+    }
+  }
+
+  vCorridor(x1: number, x2: number, y1: number, y2: number) {
+    //vertical corridor creator
+    let x: number = 0;
+    let disX = Math.abs(x2 - x1) + 1; //find the distance between rooms
+    let disY = Math.abs(y2 - y1) + 1; //find the distance between rooms
+    // console.log(disX, disY);
+
+    let corridorW = 1;
+
+    if (y1 > y2) {
+      //if the first room is further towards the bottom then the second one
+
+      // if (x2 + (disX - 1) > x1 + (disX - 1)) {
+      //   //find the correct x coord
+      //   x = x2;
+      // } else {
+      //   x = x2 + (disX - 1);
+      // }
+
+      this.map.forEach((cell: Cell) => {
+        if (
+          cell.y >= y2 &&
+          cell.y < y2 + disY &&
+          cell.x === x2
+          // cell.x < x + corridorW &&
+          // cell.x > x - corridorW
         ) {
           cell.tileType = TileType.FLOOR;
         }
       });
-
-      // for (var i = 0; i < grid.length; i++) {
-      //   grid[i].carveH(disX, x1, y1); //carve out corridor
+    } //if the second room is further towards the bottom then the first one
+    else {
+      // if (x1 + (disX - 1) > x2 + (disX - 1)) {
+      //   //find the correct x coord
+      //   x = x1;
+      // } else {
+      //   x = x1 + (disX - 1);
       // }
+
+      this.map.forEach((cell: Cell) => {
+        if (
+          cell.y >= y1 &&
+          cell.y < y1 + disY &&
+          cell.x === x1
+          // cell.x < x + corridorW &&
+          // cell.x > x - corridorW
+        ) {
+          cell.tileType = TileType.FLOOR;
+        }
+      });
     }
   }
-
-  // function vCorridor(x1, x2, y1, y2) {
-  //   //vertical corridor creator
-  //   var x;
-
-  //   if (y1 > y2) {
-  //     //if the first room is further towards the bottom then the second one
-  //     disY = y1 - y2; //find the distance between rooms
-  //     disY += 1;
-
-  //     if (x2 + (disX - 1) > x1 + (disX - 1)) {
-  //       //find the correct x coord
-  //       x = x2;
-  //     } else {
-  //       x = x2 + (disX - 1);
-  //     }
-
-  //     for (var i = 0; i < grid.length; i++) {
-  //       grid[i].carveV(disY, x, y2); //carve out corridor
-  //     }
-  //   } //if the second room is further towards the bottom then the first one
-  //   else {
-  //     disY = y2 - y1; //find the distance between rooms
-  //     disY += 1;
-
-  //     if (x1 + (disX - 1) > x2 + (disX - 1)) {
-  //       //find the correct x coord
-  //       x = x1;
-  //     } else {
-  //       x = x1 + (disX - 1);
-  //     }
-
-  //     for (var i = 0; i < grid.length; i++) {
-  //       grid[i].carveV(disY, x, y1); //carve out corridor
-  //     }
-  //   }
-  // }
 
   incoorporateRoomsIntoTerrainArray() {
     this.rooms.forEach((room: Room) => {
