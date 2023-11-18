@@ -33,16 +33,6 @@ export class Overworld {
     this.overworldPlayer = new OverworldPlayer(this, this.game.playerData);
   }
 
-  // update(deltaTime: number) {
-  //   this.overworldEnemies = [...this.overworldEnemies].filter(
-  //     (enemy: OverworldEnemy) => !enemy.markedForDeletion
-  //   );
-  // }
-
-  // draw(ctx: CanvasRenderingContext2D) {
-  //   this.drawableItems.forEach((item: any) => item.draw(ctx));
-  // }
-
   init() {
     this.overworldPlayer.pausePlayer = false;
   }

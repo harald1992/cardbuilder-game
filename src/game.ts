@@ -12,6 +12,7 @@ import { Player } from "./units/player";
 import { GameState, SpriteConfig } from "./models/models";
 import { CardTitle } from "./dictionaries/card-dictionary";
 import { Camera } from "./camera";
+import { $gameOverlayEffects } from "./global/game-overlay-effects";
 
 export type PlayerData = {
   name: string;
@@ -131,7 +132,6 @@ export class Game {
 
     this.mouse = new Mouse(this);
     this.mouseHandler = new MouseHandler(this);
-    // this.battleManager = new BattleManager(this);
     this.ingameMenu = new IngameMenu(this);
     this.camera = new Camera(this);
   }
@@ -172,9 +172,6 @@ export class Game {
 
     const army = enemies.map((enemy) => new Enemy(this, enemy.name));
 
-    // const enemy3 = new Enemy(this, EnemyName.MINOTAUR, 0, 0);
-    // enemies.push(enemy3);
-
     this.battleManager = new BattleManager(this, player, army);
 
     this.battleManager.init();
@@ -199,9 +196,12 @@ export class Game {
   }
 
   gameOver() {
-    this.main.isMainMenu = true;
-    this.main.mainMenu.mainMenuElement.style.display = "flex";
+    $gameOverlayEffects.fade();
 
-    this.main.clearGame();
+    setTimeout(() => {
+      this.main.isMainMenu = true;
+      this.main.mainMenu.mainMenuElement.style.display = "flex";
+      this.main.clearGame();
+    }, 500);
   }
 }

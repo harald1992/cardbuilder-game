@@ -100,7 +100,6 @@ export class Main {
   }
 
   newGame() {
-    // this.removeEventListenersFromCanvas();
     // this.changeGameState(GameState.OVERWORLD);
     this.isMainMenu = false;
     this.game = new Game(this);
@@ -112,12 +111,6 @@ export class Main {
     this.game?.drawableItems?.forEach((object: GameObject) => {
       object.updatePositions();
     });
-  }
-
-  removeEventListenersFromCanvas() {
-    // should clear lost eventlisteners
-    // recreateNode(window, true);
-    // recreateNode(this.canvas, true);
   }
 
   calculateHeightAndWidth() {
@@ -158,8 +151,6 @@ window.onload = () => {
     let deltaTime = 0;
 
     main.ctx.clearRect(0, 0, main.width, main.height);
-    // main.ctx.fillStyle = "grey";
-    // main.ctx.fillRect(0, 0, main.width, main.height);
 
     if (!main.isMainMenu) {
       deltaTime = timeStamp - lastTime;
