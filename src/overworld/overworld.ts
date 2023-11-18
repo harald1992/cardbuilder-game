@@ -53,6 +53,8 @@ export class Overworld {
     this.overworldPlayer = new OverworldPlayer(this, this.game.playerData);
 
     this.spawnPlayer();
+    console.log(this.gameMap.terrainArray);
+
     // this.spawnEnemy();
     // this.spawnEnemy();
     // this.spawnEnemy();

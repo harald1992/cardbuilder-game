@@ -1,4 +1,3 @@
-import { GameObject } from "../classes/game-object";
 import { SpriteConfig } from "../models/models";
 import { OverworldPlayer } from "./overworld-player";
 

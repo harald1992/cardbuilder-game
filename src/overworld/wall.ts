@@ -1,7 +1,6 @@
 import { GameObject } from "../classes/game-object";
 import { rectRectCollision } from "../utils/utils";
 import { GameMap } from "./game-map";
-import { Tile } from "./tile";
 
 function isTopOfThis(thisOb: GameObject, tile: GameObject) {
   const ob = {
@@ -65,6 +64,8 @@ export class Wall extends GameObject {
 
     ctx.fillStyle = "#18181a";
     ctx.strokeStyle = "grey";
+
+    // TODO: do this only at initializing, so this check isn't done every time.
     if (roomArray.find((tile: GameObject) => isTopOfThis(this, tile))) {
       this.drawTopWall(ctx);
     }
