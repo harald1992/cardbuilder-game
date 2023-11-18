@@ -1,5 +1,5 @@
 import { GameObject } from "../classes/game-object";
-import { getNewDungeon } from "./map-generation-working/createMap";
+import { getNewDungeon } from "./map-generation-working/create-dungeon";
 import { Overworld } from "./overworld";
 import { Tile } from "./tile";
 import { Wall } from "./wall";

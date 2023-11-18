@@ -149,10 +149,6 @@ export class Main {
 }
 
 window.onload = () => {
-  // createMap();
-  // const mapGenerator: MapGenerator = new MapGenerator();
-  // mapGenerator.createMap();
-
   const main = new Main();
   main.init();
   $store.main = main;

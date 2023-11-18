@@ -4,7 +4,6 @@ import { rectRectCollision } from "../utils/utils";
 import { GameMap } from "./game-map";
 import { InputHandler } from "./input-handler";
 import { OverworldEnemy } from "./overworld-enemy";
-// import { KeyboardHandler } from "./keyboard-handler";
 import { OverworldPlayer } from "./overworld-player";
 import { Tile } from "./tile";
 import { Wall } from "./wall";
@@ -51,13 +50,8 @@ export class Overworld {
   newGame() {
     this.gameMap.init();
     this.overworldPlayer = new OverworldPlayer(this, this.game.playerData);
-
     this.spawnPlayer();
-    console.log(this.gameMap.terrainArray);
-
-    // this.spawnEnemy();
-    // this.spawnEnemy();
-    // this.spawnEnemy();
+    this.spawnEnemy();
   }
 
   spawnPlayer() {

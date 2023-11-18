@@ -4,7 +4,7 @@ import { $gameOverlayEffects } from "../global/game-overlay-effects";
 import { rectRectCollision, wait } from "../utils/utils";
 import { Overworld } from "./overworld";
 import { OverworldEnemy } from "./overworld-enemy";
-import { Sprite } from "./sprits";
+import { Sprite } from "./sprite";
 import { Tile } from "./tile";
 import { Wall } from "./wall";
 

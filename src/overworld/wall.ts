@@ -48,7 +48,7 @@ function isLeftOfThis(thisOb: GameObject, tile: GameObject) {
 
 export class Wall extends GameObject {
   gameMap: GameMap;
-  canMove = true; // Todo: set to false
+  canMove = false;
   constructor(gameMap: GameMap, x = 0, y = 0) {
     super(gameMap.overworld.game, x, y, 0.1, 0.1);
     this.gameMap = gameMap;
